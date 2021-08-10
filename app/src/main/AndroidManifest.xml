@@ -52,6 +52,10 @@
         android:name=".WikipediaApp"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.pointzi.APP_KEY"
+            android:value="PZDynamic_bison" />
+
         <!-- Multi-window support on Samsung devices -->
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
