@@ -6,6 +6,9 @@ stages:
 
 dev:bison:build:
   stage: build
+  only:
+    refs:
+    - zebra
   rules:
     - if: '$RELEASE_VERSION != "true"'
   script:
@@ -19,28 +22,24 @@ dev:bison:build:
 
 dev:zebra:build:
   stage: build
-  rules:
-    - if: '$RELEASE_VERSION != "true"'
+  only:
+    refs:
+    - zebra
   script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleDevZebraDebug
+    - sed -i 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml 
+    - ./gradlew --refresh-dependencies --stacktrace assembleDev
+    - appcenter distribute release \
+        --group Collaborators \
+        --file "<path to apk>" \
+        --release-notes 'Zebra release with dev version of sdk' \
+        --app "PZDynamic_zebra" \
+        --token "${APP_CENTER_TOKEN}" \
+        --quiet
   tags:
     - android
   artifacts:
     paths:
       - app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk
-    expire_in: 10 h
-
-dev:bdd:build:
-  stage: build
-  rules:
-    - if: '$RELEASE_VERSION != "true"'
-  script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleDevBDDDebug
-  tags:
-    - android
-  artifacts:
-    paths:
-      - app/build/outputs/apk/devBDD/debug/app-devBDD-debug.apk
     expire_in: 10 h
 
 prod:bison:build:
@@ -80,19 +79,6 @@ prod:demo:build:
   artifacts:
     paths:
       - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
-    expire_in: 10 h
-
-prod:beta:build:
-  stage: build
-  rules:
-    - if: '$RELEASE_VERSION == "true"'
-  script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleBetaDebug;
-  tags:
-    - android
-  artifacts:
-    paths:
-      - app/build/outputs/apk/beta/debug/app-beta-debug.apk
     expire_in: 10 h
 
 
