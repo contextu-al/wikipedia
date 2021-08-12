@@ -1,0 +1,174 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+stages:
+  - build
+  - upload
+
+dev:bison:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION != "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleDevBisonDebug
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/devBison/debug/app-devBison-debug.apk
+    expire_in: 10 h
+
+dev:zebra:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION != "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleDevZebraDebug
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk
+    expire_in: 10 h
+
+dev:bdd:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION != "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleDevBDDDebug
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/devBDD/debug/app-devBDD-debug.apk
+    expire_in: 10 h
+
+prod:bison:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleProdBisonDebug
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/prodBison/debug/app-prodBison-debug.apk
+    expire_in: 10 h
+
+prod:zebra:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleProdZebraDebug
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/prodZebra/debug/app-prodZebra-debug.apk
+    expire_in: 10 h
+
+prod:demo:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleProdDemoDebug;
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
+    expire_in: 10 h
+
+prod:beta:build:
+  stage: build
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleBetaDebug;
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/beta/debug/app-beta-debug.apk
+    expire_in: 10 h
+
+
+dev:bison:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION != "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadDevBisonDebug
+  tags:
+    - android
+  needs:
+    - dev:bison:build
+
+dev:zebra:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION != "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadDevZebraDebug
+  tags:
+    - android
+  needs:
+    - dev:zebra:build
+
+dev:bdd:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION != "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadDevBDDDebug
+  tags:
+    - android
+  needs:
+    - dev:bdd:build
+
+prod:bison:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadProdBisonDebug
+  tags:
+    - android
+  needs:
+    - prod:bison:build
+
+prod:zebra:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadProdZebraDebug
+  tags:
+    - android
+  needs:
+    - prod:zebra:build
+
+prod:demo:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadProdDemoDebug
+  tags:
+    - android
+  needs:
+    - prod:demo:build
+
+prod:beta:upload:
+  stage: upload
+  rules:
+    - if: '$RELEASE_VERSION == "true"'
+  script:
+    - ./gradlew --stacktrace appCenterUploadBetaDebug
+  tags:
+    - android
+  needs:
+    - prod:beta:build
