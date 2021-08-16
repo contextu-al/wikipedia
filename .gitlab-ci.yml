@@ -198,14 +198,3 @@ prod:demo:upload:
   needs:
     - prod:demo:build
 
-prod:beta:upload:
-  stage: upload
-  only:
-    refs:
-    - beta
-  script:
-    - ./gradlew --stacktrace appCenterUploadBetaDebug
-  tags:
-    - android
-  needs:
-    - prod:beta:build
