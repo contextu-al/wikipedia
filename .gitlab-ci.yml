@@ -40,7 +40,7 @@ dev:zebra:build:
     - zebra
   script:
     - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
-    - ./gradlew --refresh-dependencies --stacktrace assembleDev
+    - docker run -v $PWD:/build/ -it androidsdk/android-30:latest bash -c './gradlew --refresh-dependencies --stacktrace assemble'
     - appcenter distribute release \
         --group Collaborators \
         --file "app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk" \
