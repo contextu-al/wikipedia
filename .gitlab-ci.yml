@@ -39,7 +39,7 @@ dev:zebra:build:
     refs:
     - zebra
   script:
-    - sed -i 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml 
+    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
     - ./gradlew --refresh-dependencies --stacktrace assembleDev
     - appcenter distribute release \
         --group Collaborators \
