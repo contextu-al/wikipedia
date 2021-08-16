@@ -112,6 +112,19 @@ prod:demo:build:
       - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
     expire_in: 10 h
 
+dev:bdd:build:
+  stage: build
+  only:
+    refs:
+    - bdd
+  script:
+    - ./gradlew --refresh-dependencies --stacktrace assembleProdDemoDebug;
+  tags:
+    - android
+  artifacts:
+    paths:
+      - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
+    expire_in: 10 h
 
 dev:bison:upload:
   stage: upload
