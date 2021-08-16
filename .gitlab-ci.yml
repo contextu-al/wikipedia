@@ -17,8 +17,8 @@ dev:bison:build:
     refs:
     - bison_dev
   script:
-    - sed -i 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
-    - docker run -v .:/opt/wikipedia-android/ -it androidsdk/android-30:latest ./gradlew --refresh-dependencies --stacktrace assembleDevBisonDebug
+    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
+    - docker run -v $PWD:/build/ -it androidsdk/android-30:latest bash -c './gradlew --refresh-dependencies --stacktrace assemble'
     - appcenter distribute release \
         --group Collaborators \
         --file "app/build/outputs/apk/devBison/debug/app-devBison-debug.apk" \
