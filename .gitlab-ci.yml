@@ -45,7 +45,7 @@ dev:zebra:build:
         --group Collaborators
         --file "app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk"
         --release-notes 'Zebra release with dev version of sdk'
-        --app "PZDynamic_zebra"
+        --app "qa/.Wiki-Dev-PZDynamic_zebra"
         --token "${APP_CENTER_TOKEN}"
         --quiet
   tags:
