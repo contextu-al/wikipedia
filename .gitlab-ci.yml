@@ -41,13 +41,6 @@ dev:zebra:build:
   script:
     - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
     - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleAlphaDebug'
-    - appcenter distribute release
-        --group Collaborators
-        --file "app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk"
-        --release-notes 'Zebra release with dev version of sdk'
-        --app "qa/.Wiki-Dev-PZDynamic_zebra"
-        --token "${APP_CENTER_TOKEN}"
-        --quiet
   tags:
     - android
   artifacts:
@@ -130,6 +123,13 @@ dev:zebra:upload:
     - zebra
   script:
     - ./gradlew --stacktrace appCenterUploadDevZebraDebug
+    - appcenter distribute release
+        --group Collaborators
+        --file "app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk"
+        --release-notes 'Zebra release with dev version of sdk'
+        --app "qa/.Wiki-Dev-PZDynamic_zebra"
+        --token "${APP_CENTER_TOKEN}"
+        --quiet
   tags:
     - android
   needs:
