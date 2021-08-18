@@ -40,12 +40,12 @@ dev:zebra:build:
     - zebra
   script:
     - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleAlphaDebug'
+    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
   tags:
     - android
   artifacts:
     paths:
-      - app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk
+      - app/build/outputs/apk/debug/app-debug.apk
     expire_in: 10 h
 
 prod:bison:build:
