@@ -126,7 +126,7 @@ dev:zebra:upload:
         --group Collaborators
         --file "app/build/outputs/apk/debug/app-debug.apk"
         --release-notes 'Zebra release with dev version of sdk'
-        --app "qa/.Wiki-Dev-PZDynamic_zebra"
+        --app "Streethawk/.Wiki-Dev-PZDynamic_zebra"
         --token "${APP_CENTER_TOKEN}"
         --quiet
   tags:
