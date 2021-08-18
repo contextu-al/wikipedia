@@ -122,7 +122,6 @@ dev:zebra:upload:
     refs:
     - zebra
   script:
-    - ./gradlew --stacktrace appCenterUploadDevZebraDebug
     - appcenter distribute release
         --group Collaborators
         --file "app/build/outputs/apk/devZebra/debug/app-devZebra-debug.apk"
