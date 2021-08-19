@@ -15,15 +15,14 @@ dev:bison:build:
   stage: build
   only:
     refs:
-    - bison_dev
+    - main
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assemble'
+    - docker run -v $PWD:/build/ -t pointzi-sdk-android:latest bash -c 'cd /build; ./gradlew assemble'
     - appcenter distribute release \
         --group Collaborators \
         --file "app/build/outputs/apk/devBison/debug/app-devBison-debug.apk" \
-        --release-notes 'Bison release with dev version of sdk' \
-        --app "PZDynamic_zebra" \
+        --release-notes 'Dev version of sdk, with bison app' \
+        --app "wikipedia-dev-bison" \
         --token "${APP_CENTER_TOKEN}" \
         --quiet
   tags:
@@ -37,10 +36,17 @@ dev:zebra:build:
   stage: build
   only:
     refs:
-    - zebra
+    - dev
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_bison/g' app/src/main/AndroidManifest.xml
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
+    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
+    - docker run -v $PWD:/build/ -t pointzi-sdk-android:latest bash -c 'cd /build; ./gradlew assemble'
+    - appcenter distribute release \
+        --group Collaborators \
+        --file "app/build/outputs/apk/devBison/debug/app-devBison-debug.apk" \
+        --release-notes 'Wikipedia release with dev version of sdk,talking to george.pointzi.com' \
+        --app "wikipedia-dev-zebra" \
+        --token "${APP_CENTER_TOKEN}" \
+        --quiet
   tags:
     - android
   artifacts:
