@@ -128,6 +128,7 @@ apply from: '../gradle/src/checkstyle.gradle'
 apply from: '../gradle/src/ktlint.gradle'
 
 dependencies {
+   // implementation (files('libs/pointzi-sdk-android-release.aar'))
 
     // To keep the Maven Central dependencies up-to-date
     // use http://gradleplease.appspot.com/ or http://search.maven.org/.
@@ -167,7 +168,7 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
+    implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
 
     implementation 'me.relex:circleindicator:2.1.6'
 
