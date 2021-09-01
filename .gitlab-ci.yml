@@ -40,7 +40,7 @@ dev:zebra:build:
     refs:
     - zebra
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
+    - sed -i.bak 's/PZDynamic_bison/PZDynamic_bison/g' app/src/main/AndroidManifest.xml
     - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
   tags:
     - android
@@ -126,8 +126,8 @@ dev:zebra:upload:
     - appcenter distribute release
         --group Collaborators
         --file "app/build/outputs/apk/debug/app-debug.apk"
-        --release-notes 'Zebra release with dev version of sdk'
-        --app "Streethawk/.Wiki-Dev-PZDynamic_zebra"
+        --release-notes 'Bison release with dev version of sdk'
+        --app "Pointzi/Wikipedia-Dev-Bison(PZDynamic_bison)"
         --token "${APP_CENTER_TOKEN}"
         --quiet
   tags:
