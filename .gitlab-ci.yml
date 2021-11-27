@@ -9,7 +9,6 @@ variables:
 
 stages:
   - build
-  - upload
 
 dev:bison:build:
   stage: build
@@ -17,13 +16,12 @@ dev:bison:build:
     refs:
     - bison_dev
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
     - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assemble'
     - appcenter distribute release \
         --group Collaborators \
         --file "app/build/outputs/apk/devBison/debug/app-devBison-debug.apk" \
         --release-notes 'Bison release with dev version of sdk' \
-        --app "PZDynamic_zebra" \
+        --app "PZDynamic_bison" \
         --token "${APP_CENTER_TOKEN}" \
         --quiet
   tags:
@@ -39,8 +37,15 @@ dev:zebra:build:
     refs:
     - zebra
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_bison/g' app/src/main/AndroidManifest.xml
+    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
     - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
+    - appcenter distribute release \
+        --group Collaborators \
+        --file "app/build/outputs/apk/debug/app-debug.apk" \
+        --release-notes 'Zebra release with dev version of sdk' \
+        --app "PZDynamic_zebra" \
+        --token "${APP_CENTER_TOKEN}" \
+        --quiet
   tags:
     - android
   artifacts:
@@ -54,7 +59,14 @@ prod:bison:build:
     refs:
     - bison
   script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleProdBisonDebug
+    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assemble'
+    - appcenter distribute release \
+        --group Collaborators \
+        --file "app/build/outputs/apk/prodBison/debug/app-prodBison-debug.apk" \
+        --release-notes 'Bison release with release version of sdk' \
+        --app "PZDynamic_bison" \
+        --token "${APP_CENTER_TOKEN}" \
+        --quiet
   tags:
     - android
   artifacts:
@@ -68,7 +80,15 @@ prod:zebra:build:
     refs:
     - zebra_prod
   script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleProdZebraDebug
+    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
+    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
+    - appcenter distribute release \
+        --group Collaborators \
+        --file "app/build/outputs/apk/prodZebra/app-prodZebra-debug.apk" \
+        --release-notes 'Zebra release with release version of sdk' \
+        --app "PZDynamic_zebra" \
+        --token "${APP_CENTER_TOKEN}" \
+        --quiet
   tags:
     - android
   artifacts:
@@ -82,103 +102,19 @@ prod:demo:build:
     refs:
     - demo
   script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleProdDemoDebug;
-  tags:
-    - android
-  artifacts:
-    paths:
-      - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
-    expire_in: 10 h
-
-dev:bdd:build:
-  stage: build
-  only:
-    refs:
-    - bdd
-  script:
-    - ./gradlew --refresh-dependencies --stacktrace assembleProdDemoDebug;
-  tags:
-    - android
-  artifacts:
-    paths:
-      - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
-    expire_in: 10 h
-
-dev:bison:upload:
-  stage: upload
-  only:
-    refs:
-    - bison_dev
-  script:
-    - ./gradlew --stacktrace appCenterUploadDevBisonDebug
-  tags:
-    - android
-  needs:
-    - dev:bison:build
-
-dev:zebra:upload:
-  stage: upload
-  only:
-    refs:
-    - zebra
-  script:
-    - appcenter distribute release
-        --group Collaborators
-        --file "app/build/outputs/apk/debug/app-debug.apk"
-        --release-notes 'Bison release with dev version of sdk'
-        --app "Pointzi/Wikipedia-Dev-Bison(PZDynamic_bison)"
-        --token "${APP_CENTER_TOKEN}"
+    - sed -i.bak 's/PZDynamic_bison/wikipedia_demo/g' app/src/main/AndroidManifest.xml
+    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
+    - appcenter distribute release \
+        --group Collaborators \
+        --file "app/build/outputs/apk/prodDemo/app-prodDemo-debug.apk" \
+        --release-notes 'Wikipedia release with release version of sdk' \
+        --app "wikipedia_demo" \
+        --token "${APP_CENTER_TOKEN}" \
         --quiet
   tags:
     - android
-  needs:
-    - dev:zebra:build
-
-dev:bdd:upload:
-  stage: upload
-  only:
-    refs:
-    - bdd
-  script:
-    - ./gradlew --stacktrace appCenterUploadDevBDDDebug
-  tags:
-    - android
-  needs:
-    - dev:bdd:build
-
-prod:bison:upload:
-  stage: upload
-  only:
-    refs:
-    - bison
-  script:
-    - ./gradlew --stacktrace appCenterUploadProdBisonDebug
-  tags:
-    - android
-  needs:
-    - prod:bison:build
-
-prod:zebra:upload:
-  stage: upload
-  only:
-    refs:
-    - zebra_prod
-  script:
-    - ./gradlew --stacktrace appCenterUploadProdZebraDebug
-  tags:
-    - android
-  needs:
-    - prod:zebra:build
-
-prod:demo:upload:
-  stage: upload
-  only:
-    refs:
-    - demo
-  script:
-    - ./gradlew --stacktrace appCenterUploadProdDemoDebug
-  tags:
-    - android
-  needs:
-    - prod:demo:build
+  artifacts:
+    paths:
+      - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
+    expire_in: 10 h
 
