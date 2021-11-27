@@ -41,7 +41,7 @@ dev:zebra:build:
     - appcenter distribute release \
         --group Collaborators \
         --file "app/build/outputs/apk/debug/app-debug.apk" \
-        --release-notes 'Zebra release with dev version of sdk' \
+        --release-notes 'Bison release with dev version of sdk' \
         --app "PZDynamic_zebra" \
         --token "${APP_CENTER_TOKEN}" \
         --quiet
