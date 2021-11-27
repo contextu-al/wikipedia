@@ -38,12 +38,12 @@ dev:zebra:build:
     - zebra
   script:
     - ./gradlew assembleDebug
-    - appcenter distribute release \
-        --group Collaborators \
-        --file "app/build/outputs/apk/debug/app-debug.apk" \
-        --release-notes 'Bison release with dev version of sdk' \
-        --app "Pointzi/Wikipedia-Dev-Bison-PZDynamic_bison" \
-        --token "${APP_CENTER_TOKEN}" \
+    - appcenter distribute release
+        --group Collaborators
+        --file "app/build/outputs/apk/debug/app-debug.apk"
+        --release-notes 'Bison release with dev version of sdk'
+        --app "Pointzi/Wikipedia-Dev-Bison-PZDynamic_bison"
+        --token "${APP_CENTER_TOKEN}"
         --quiet
   tags:
     - android
