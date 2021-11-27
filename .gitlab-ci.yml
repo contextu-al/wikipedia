@@ -37,7 +37,7 @@ dev:zebra:build:
     refs:
     - zebra
   script:
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
+    - docker build -t androidsdk/android-30 .
     - appcenter distribute release \
         --group Collaborators \
         --file "app/build/outputs/apk/debug/app-debug.apk" \
