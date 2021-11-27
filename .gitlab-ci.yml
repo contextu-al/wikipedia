@@ -37,7 +37,6 @@ dev:zebra:build:
     refs:
     - zebra
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
     - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
     - appcenter distribute release \
         --group Collaborators \
