@@ -48,13 +48,15 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setLogLevel(LogLevel.DEBUG)
+       // setLogLevel(LogLevel.DEBUG)
 
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         val date = simpleDateFormat.format(Date())
 
-        setUserId("pz-wiki-dev-test-bison $date")
+       setUserId("pz-wiki-dev-bison $date")
+
+        //setUserId("iportal58@t.com")
 
         setShortcuts(this)
         setImageZoomHelper()

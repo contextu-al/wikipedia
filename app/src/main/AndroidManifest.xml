@@ -50,6 +50,7 @@
         android:icon="@mipmap/launcher"
         android:label="@string/app_name"
         android:name=".WikipediaApp"
+        android:testOnly="false"
         android:theme="@style/AppTheme">
 
         <meta-data

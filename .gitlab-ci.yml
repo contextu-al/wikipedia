@@ -7,7 +7,6 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   BUILD_TYPE: release
 
-
 stages:
   - build
   - upload
