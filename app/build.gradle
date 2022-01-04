@@ -147,7 +147,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
 
-    implementation "com.pointzi.dev:pointzi:2.+"
+    implementation "com.pointzi:pointzi:2.+"
 
     implementation "com.google.android.material:material:1.4.0"
     implementation "androidx.core:core-ktx:1.6.0"
