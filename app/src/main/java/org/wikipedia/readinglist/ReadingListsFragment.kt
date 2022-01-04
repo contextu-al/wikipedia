@@ -38,12 +38,7 @@ import org.wikipedia.readinglist.database.ReadingListPage
 import org.wikipedia.readinglist.sync.ReadingListSyncAdapter
 import org.wikipedia.readinglist.sync.ReadingListSyncEvent
 import org.wikipedia.settings.Prefs
-import org.wikipedia.util.DeviceUtil
-import org.wikipedia.util.DimenUtil
-import org.wikipedia.util.FeedbackUtil
-import org.wikipedia.util.ResourceUtil
-import org.wikipedia.util.ShareUtil
-import org.wikipedia.util.StringUtil
+import org.wikipedia.util.*
 import org.wikipedia.util.log.L
 import org.wikipedia.views.*
 import java.util.*
@@ -116,12 +111,6 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
     override fun onPause() {
         super.onPause()
         actionMode?.finish()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if ((requireActivity() as MainActivity).isCurrentFragmentSelected(this)) {
-            inflater.inflate(R.menu.menu_reading_lists, menu)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -455,13 +444,9 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
             return false
         }
 
-        override fun onThumbClick(item: ReadingListPage?) {
-            onClick(item)
-        }
-
         override fun onActionClick(item: ReadingListPage?, view: View) {
             item?.let {
-                if (Prefs.isDownloadOnlyOverWiFiEnabled() && !DeviceUtil.isOnWiFi &&
+                if (Prefs.isDownloadOnlyOverWiFiEnabled && !DeviceUtil.isOnWiFi &&
                         it.status == ReadingListPage.STATUS_QUEUE_FOR_SAVE) {
                     it.offline = false
                 }
@@ -541,9 +526,9 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
                 }
             } else if (event is ArticleSavedOrDeletedEvent) {
                 if (event.isAdded) {
-                    if (Prefs.getReadingListsPageSaveCount() < SAVE_COUNT_LIMIT) {
+                    if (Prefs.readingListsPageSaveCount < SAVE_COUNT_LIMIT) {
                         showReadingListsSyncDialog()
-                        Prefs.setReadingListsPageSaveCount(Prefs.getReadingListsPageSaveCount() + 1)
+                        Prefs.readingListsPageSaveCount = Prefs.readingListsPageSaveCount + 1
                     }
                 }
             }
@@ -551,7 +536,7 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
     }
 
     private fun showReadingListsSyncDialog() {
-        if (!Prefs.isReadingListSyncEnabled()) {
+        if (!Prefs.isReadingListSyncEnabled) {
             if (AccountUtil.isLoggedIn) {
                 ReadingListSyncBehaviorDialogs.promptEnableSyncDialog(requireActivity())
             } else {
@@ -565,18 +550,18 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
         if (!searchQuery.isNullOrEmpty()) {
             return
         }
-        if (AccountUtil.isLoggedIn && !Prefs.isReadingListSyncEnabled() &&
-                Prefs.isReadingListSyncReminderEnabled() && !ReadingListSyncAdapter.isDisabledByRemoteConfig) {
+        if (AccountUtil.isLoggedIn && !Prefs.isReadingListSyncEnabled &&
+                Prefs.isReadingListSyncReminderEnabled && !ReadingListSyncAdapter.isDisabledByRemoteConfig) {
             binding.onboardingView.setMessageTitle(getString(R.string.reading_lists_sync_reminder_title))
             binding.onboardingView.setMessageText(StringUtil.fromHtml(getString(R.string.reading_lists_sync_reminder_text)).toString())
             binding.onboardingView.setImageResource(ResourceUtil.getThemedAttributeId(requireContext(), R.attr.sync_reading_list_prompt_drawable), true)
             binding.onboardingView.setPositiveButton(R.string.reading_lists_sync_reminder_action, { ReadingListSyncAdapter.setSyncEnabledWithSetup() }, true)
             binding.onboardingView.setNegativeButton(R.string.reading_lists_ignore_button, {
                 binding.onboardingView.visibility = View.GONE
-                Prefs.setReadingListSyncReminderEnabled(false)
+                Prefs.isReadingListSyncReminderEnabled = false
             }, false)
             binding.onboardingView.visibility = View.VISIBLE
-        } else if (!AccountUtil.isLoggedIn && Prefs.isReadingListLoginReminderEnabled() && !ReadingListSyncAdapter.isDisabledByRemoteConfig) {
+        } else if (!AccountUtil.isLoggedIn && Prefs.isReadingListLoginReminderEnabled && !ReadingListSyncAdapter.isDisabledByRemoteConfig) {
             binding.onboardingView.setMessageTitle(getString(R.string.reading_list_login_reminder_title))
             binding.onboardingView.setMessageText(getString(R.string.reading_lists_login_reminder_text))
             binding.onboardingView.setImageResource(ResourceUtil.getThemedAttributeId(requireContext(), R.attr.sync_reading_list_prompt_drawable), true)
@@ -587,7 +572,7 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
             }, true)
             binding.onboardingView.setNegativeButton(R.string.reading_lists_ignore_button, {
                 binding.onboardingView.visibility = View.GONE
-                Prefs.setReadingListLoginReminderEnabled(false)
+                Prefs.isReadingListLoginReminderEnabled = false
                 updateEmptyState(null)
             }, false)
             binding.onboardingView.visibility = View.VISIBLE
@@ -609,7 +594,7 @@ class ReadingListsFragment : Fragment(), SortReadingListsDialog.Callback, Readin
                 ReadingListSyncBehaviorDialogs.promptLogInToSyncDialog(fragment.requireActivity())
                 swipeRefreshLayout.isRefreshing = false
             } else {
-                Prefs.setReadingListSyncEnabled(true)
+                Prefs.isReadingListSyncEnabled = true
                 ReadingListSyncAdapter.manualSyncWithRefresh()
             }
         }

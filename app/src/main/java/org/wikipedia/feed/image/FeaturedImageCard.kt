@@ -1,6 +1,7 @@
 package org.wikipedia.feed.image
 
 import android.net.Uri
+import androidx.core.net.toUri
 import org.wikipedia.R
 import org.wikipedia.dataclient.WikiSite
 import org.wikipedia.feed.model.CardType
@@ -13,7 +14,7 @@ class FeaturedImageCard(private val featuredImage: FeaturedImage,
                         wiki: WikiSite) : WikiSiteCard(wiki) {
 
     override fun title(): String {
-        return L10nUtil.getStringForArticleLanguage(wikiSite().languageCode(), R.string.view_featured_image_card_title)
+        return L10nUtil.getStringForArticleLanguage(wikiSite().languageCode, R.string.view_featured_image_card_title)
     }
 
     override fun subtitle(): String {
@@ -21,7 +22,7 @@ class FeaturedImageCard(private val featuredImage: FeaturedImage,
     }
 
     override fun image(): Uri? {
-        return if (featuredImage.thumbnailUrl.isEmpty()) null else Uri.parse(featuredImage.thumbnailUrl)
+        return featuredImage.thumbnailUrl.ifEmpty { null }?.toUri()
     }
 
     override fun type(): CardType {

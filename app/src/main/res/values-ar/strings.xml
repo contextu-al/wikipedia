@@ -17,6 +17,7 @@
 * Kassem7899
 * Maroen1990
 * Meno25
+* Michel Bakni
 * Mido
 * Mojackjutaily
 * Mr. Ibrahem
@@ -26,6 +27,7 @@
 * Shbib Al-Subaie
 * Sonic N800
 * Tala Ali
+* Ulhvulgv
 * Youssef
 * بدارين
 * ديفيد
@@ -65,6 +67,10 @@
   <string name="app_settings">إعدادات التطبيق</string>
   <string name="search_tab_tooltip">انقر فوق الرمز مرة أخرى لبدء كتابة مصطلح البحث مباشرةً.</string>
   <string name="history_list_title">التاريخ</string>
+  <string name="image_content_description">صورة: %s</string>
+  <string name="page_content_description">الصفحة: %s</string>
+  <string name="wikimedia_commons">ويكيميديا كومنز</string>
+  <string name="wikidata">ويكي بيانات</string>
   <string name="dialog_title_clear_history">مسح تاريخ التصفح</string>
   <string name="dialog_message_clear_history">هذا سيحذف تاريخ تصفحك كاملا، وسيغلق أي تبويبات مفتوحة. هل أنت متأكد؟</string>
   <string name="dialog_message_clear_history_yes">نعم</string>
@@ -86,6 +92,7 @@
   <string name="feed_card_add_to_list">أضف إلى قائمة القراءة</string>
   <string name="feed_card_add_to_default_list">احفظ</string>
   <string name="menu_page_share">شارك الوصلة</string>
+  <string name="menu_article_share">شن</string>
   <string name="menu_page_open_a_new_tab">افتح تبويبا جديدًا</string>
   <string name="menu_page_new_tab">تبويب جديد</string>
   <string name="menu_page_reading_lists">قوائم القراءة</string>
@@ -175,7 +182,7 @@
   <string name="create_account_passwords_mismatch_error">كلمتا السر لا تتطابقان</string>
   <string name="create_account_email_error">عنوان البريد الإلكتروني غير صحيح</string>
   <string name="create_account_username_error">أحرف غير صالحة في اسم المستخدم</string>
-  <string name="create_account_password_error">كلمة المرور غير صالحة</string>
+  <string name="create_account_password_error">كلمة المرور يجب أن تكون من 8 أحرف على الأقل</string>
   <string name="create_account_generic_error">تعذّر إنشاء الحساب</string>
   <string name="create_account_next">التالي</string>
   <string name="email_recommendation_dialog_title">إنشاء حساب بدون عنوان بريد إلكتروني؟</string>
@@ -189,6 +196,7 @@
   <string name="create_account_ip_block_help_url">https://en.wikipedia.org/wiki/Help:I_have_been_blocked</string>
   <string name="create_account_ip_block_details">التفاصيل</string>
   <string name="preferences_general_heading">عام</string>
+  <string name="preferences_account_heading">الحساب</string>
   <string name="wikipedia_app_faq">الأسئلة المتكررة عن تطبيق ويكيبيديا</string>
   <string name="send_feedback">إرسال الملاحظات على التطبيق</string>
   <string name="create_account_account_created_toast">تم إنشاء الحساب!</string>
@@ -217,6 +225,7 @@
   <string name="page_protected_can_not_edit_title">هذه الصفحة محمية</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">أضف لقائمة المراقبة</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_text">كن على اطلاع بما يحدث على المقالات التي تهمك. اضغط على قائمة الخيارات واختر &lt;b&gt;أضف لقائمة المراقبة&lt;/b&gt; لرؤية التغييرات على المقالة.</string>
+  <string name="page_notification_tooltip">إشعاراتك موجودة هنا الآن.</string>
   <string name="settings_item_preferences">الإعدادات</string>
   <string name="settings_activity_title">الإعدادات</string>
   <string name="about_description">حول تطبيق ويكيبيديا</string>
@@ -315,6 +324,7 @@
   <string name="gallery_save_success">حُفظ الملف بنجاح.</string>
   <string name="gallery_error_video_failed">لا يمكن تشغيل الفيديو.</string>
   <string name="gallery_save_image_write_permission_rationale">صلاحية الكتابة في ذاكرة التخزين على جهازك مطلوبة لحفظ الصور.</string>
+  <string name="gallery_edit_button_content_description">عدِّل تعليق الصورة</string>
   <string name="gallery_add_image_caption_button">إضافة شرح الصورة</string>
   <string name="gallery_add_image_caption_in_language_button">إضافة تسمية توضيحية للصورة (%s)</string>
   <string name="err_cannot_save_file">تعذّر حفظ الملف</string>
@@ -626,7 +636,12 @@
   <string name="preference_title_notification_mention">إشارة</string>
   <string name="preference_summary_notification_mention">شخص ما يذكرك في صفحة</string>
   <string name="preference_title_notification_user_talk">صفحة النقاش</string>
-  <string name="preference_summary_notification_user_talk">رسائل من صفحات النقاش</string>
+  <string name="preference_summary_notification_user_talk" fuzzy="true">رسائل من صفحات النقاش</string>
+  <string name="preference_title_notification_user_rights">تغييرات صلاحيات المستخدم</string>
+  <string name="preference_title_notification_article_linked">وصلات إلى المقالات التي أنشأتها</string>
+  <string name="preference_category_display_settings">إعدادات العرض</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">ويكيبيديا</string>
+  <string name="notifications_channel_group_wikipedia_notifications_description">إشعارات من ويكيبيديا</string>
   <string name="view_because_you_read_card_title">لأنك قرأت</string>
   <string name="view_random_card_title">صفحات عشوائية</string>
   <string name="view_random_article_card_title">مقالة عشوائية</string>
@@ -783,6 +798,7 @@
   <string name="suggested_edits_image_preview_dialog_licensing">الترخيص</string>
   <string name="suggested_edits_image_preview_dialog_more_info">المزيد من المعلومات</string>
   <string name="suggested_edits_image_preview_dialog_file_page_link_text">صفحة الملف على ويكيميديا ​​كومنز</string>
+  <string name="suggested_edits_image_preview_dialog_file_page_wikipedia_link_text">صفحة ملف في ويكيبيديا</string>
   <string name="suggested_edits_article_cta_image_tags">أضف وسوم الصور</string>
   <string name="suggested_edits_article_cta_image_caption">إضافة شرح الصورة</string>
   <string name="suggested_edits_article_cta_image_caption_in_language">إضافة شرح الصورة (%s)</string>
@@ -846,6 +862,8 @@
   <string name="suggested_edits_what_is_text">تقدم التعديلات المقترحة فرصًا للمساهمات الصغيرة والحيوية في ويكيبيديا.</string>
   <string name="suggested_edits_learn_more">معرفة المزيد</string>
   <string name="suggested_edits_paused_title">إيقاف مؤقت</string>
+  <string name="suggested_edits_disabled_title">مُعطَّل</string>
+  <string name="suggested_edits_ip_blocked_title">عنوان بروتوكول إنترنت محجوب</string>
   <string name="suggested_edits_last_edited">آخر تعديل</string>
   <string name="suggested_edits_last_edited_never">أبدا</string>
   <string name="suggested_edits_task_new">جديد</string>
@@ -859,6 +877,7 @@
   <string name="suggested_edits_contribution_image_label">صورة</string>
   <string name="suggested_edits_contribution_article_label">مقالة</string>
   <string name="suggested_edits_contribution_views">%s مشاهدة</string>
+  <string name="suggested_edits_contribution_seen_text">شوهدت %s مرة في آخر 30 يوماً</string>
   <string name="suggested_edits_contribution_date_yesterday_text">أمس</string>
   <string name="suggested_edits_encourage_account_creation_title">هل تعلم أنه بإمكان الجميع تعديل ويكيبيديا؟</string>
   <string name="suggested_edits_encourage_account_creation_message">التعديلات المقترحة هي طريقة جديدة لتحرير ويكيبيديا على الأندرويد. تُساعدك على إجراء مساهمات صغيرة ولكنها حيوية في ويكيبيديا.\nهدفنا هو جعل التحرير أسهل وأكثر مرونة للجميع! سجّل الدخول أو انضم لويكيبيديا للبدء.</string>
@@ -870,6 +889,7 @@
   <string name="file_page_add_image_caption_button">إضافة تعليق الصورة</string>
   <string name="file_page_add_image_tags_button">أضف وسوم الصور</string>
   <string name="file_page_suggestion_reason">سبب الاقتراح</string>
+  <string name="file_page_edit_button_content_description">عدِّل %s</string>
   <string name="description_edit_revert_subtitle">شكرا للتحرير في ويكيبيديا!</string>
   <string name="description_edit_revert_intro">نحن نعلم أنك جربت أفضل ما لديك، ولكن كان أحد المراجعين قلقا، من بين الأسباب المحتملة لاسترجاع تعديلك ما يلي:</string>
   <string name="description_edit_revert_reason1">مساهمتك لا تتبع أحد &lt;a href=\"%1$s\"&gt;الإرشادات&lt;/a&gt;.</string>
@@ -964,7 +984,7 @@
   <string name="talk_title">نقاش</string>
   <string name="talk_user_title">نقاش: %s</string>
   <string name="talk_new_topic">موضوع جديد</string>
-  <string name="talk_new_topic_submitted" fuzzy="true">الموضوع مقدم.</string>
+  <string name="talk_new_topic_submitted">أُضيف الموضوع</string>
   <string name="talk_page_empty">صفحة النقاش هذه فارغة.</string>
   <string name="talk_add_reply">رد</string>
   <string name="talk_no_subject">(بدون موضوع)</string>
@@ -973,16 +993,20 @@
   <string name="talk_message_hint">صياغة رسالة</string>
   <string name="talk_message_empty">لا يمكن أن تكون الرسالة فارغة.</string>
   <string name="talk_subject_empty">لا يمكن أن يكون الموضوع فارغًا.</string>
-  <string name="talk_response_submitted" fuzzy="true">تم إرسال الرد.</string>
+  <string name="talk_response_submitted">نُشِر الرد.</string>
   <string name="talk_snackbar_undo">تراجع</string>
   <string name="talk_last_modified">&lt;b&gt;آخر تعديل %1$s&lt;/b&gt; بواسطة %2$s</string>
+  <string name="talk_snackbar_survey_text">شكراً لاستخدام صفحات النقاش. هل يمكنك مساعدتنا في تحسين التطبيق من خلال المشاركة في استطلاع؟</string>
+  <string name="talk_snackbar_survey_action_text">ابدأ</string>
   <string name="menu_option_share_edit">شارك التعديل</string>
   <string name="menu_option_user_profile">ملف %s</string>
   <string name="menu_option_user_contributions">مساهمات %s</string>
   <string name="watchlist_details_watching_label">تُراقب</string>
   <string name="watchlist_details_watch_label">راقب</string>
+  <string name="watchlist_details_next_edit">التعديل التالي</string>
+  <string name="watchlist_details_prev_edit">التعديل السابق</string>
   <string name="thank_label">شكر</string>
-  <string name="go_to_user_page">اذهب لصفحة المستخدم</string>
+  <string name="view_user_page">View user page</string>
   <string name="thank_dialog_title_text">إرسال الشكر علنًا</string>
   <string name="thank_dialog_text">\"الشكر\" هي طريقةٌ سهلةٌ لإظهار التقدير لعمل أحد المحررين في ويكيبيديا. لا يمكن التراجع عن \"الشكر\" وهي معروضةٌ علنًا.</string>
   <string name="thank_dialog_positive_button_text">إرسال شكر</string>

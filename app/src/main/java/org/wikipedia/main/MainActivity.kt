@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.view.ActionMode
@@ -16,16 +15,11 @@ import com.pointzi.Pointzi.setUserId
 import com.pointzi.debug.LogLevel
 import org.wikipedia.Constants
 import org.wikipedia.R
-import org.wikipedia.WikipediaApp
 import org.wikipedia.activity.SingleFragmentActivity
-import org.wikipedia.appshortcuts.AppShortcuts.Companion.setShortcuts
 import org.wikipedia.databinding.ActivityMainBinding
 import org.wikipedia.navtab.NavTab
 import org.wikipedia.onboarding.InitialOnboardingActivity
-import org.wikipedia.page.PageActivity
-import org.wikipedia.page.tabs.TabActivity
 import org.wikipedia.settings.Prefs
-import org.wikipedia.suggestededits.SuggestedEditsTasksFragment
 import org.wikipedia.util.DimenUtil
 import org.wikipedia.util.FeedbackUtil
 import org.wikipedia.util.ResourceUtil
@@ -36,9 +30,7 @@ import java.util.*
 class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callback {
     private lateinit var binding: ActivityMainBinding
 
-    private var tabCountsView: TabCountsView? = null
     private var controlNavTabInFragment = false
-    private var showTabCountsAnimation = false
 
     override fun inflateAndSetContentView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -60,15 +52,15 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
         setShortcuts(this)
         setImageZoomHelper()
-     /*   if (Prefs.isInitialOnboardingEnabled() && savedInstanceState == null) {
+        if (Prefs.isInitialOnboardingEnabled && savedInstanceState == null) {
             // Updating preference so the search multilingual tooltip
             // is not shown again for first time users
-            Prefs.setMultilingualSearchTutorialEnabled(false)
+            Prefs.isMultilingualSearchTutorialEnabled = false
 
             // Use startActivityForResult to avoid preload the Feed contents before finishing the initial onboarding.
             // The ACTIVITY_REQUEST_INITIAL_ONBOARDING has not been used in any onActivityResult
             startActivityForResult(InitialOnboardingActivity.newIntent(this), Constants.ACTIVITY_REQUEST_INITIAL_ONBOARDING)
-        }*/
+        }
         setNavigationBarColor(ResourceUtil.getThemedColor(this, R.attr.nav_tab_background_color))
         setSupportActionBar(binding.mainToolbar)
         supportActionBar?.title = ""
@@ -81,38 +73,6 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         invalidateOptionsMenu()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        fragment.requestUpdateToolbarElevation()
-        val tabsItem = menu.findItem(R.id.menu_tabs)
-        if (WikipediaApp.getInstance().tabCount < 1 || fragment.currentFragment is SuggestedEditsTasksFragment) {
-            tabsItem.isVisible = false
-            tabCountsView = null
-        } else {
-            tabsItem.isVisible = true
-            tabCountsView = TabCountsView(this, null)
-            tabCountsView!!.setOnClickListener {
-                if (WikipediaApp.getInstance().tabCount == 1) {
-                    startActivity(PageActivity.newIntent(this@MainActivity))
-                } else {
-                    startActivityForResult(TabActivity.newIntent(this@MainActivity), Constants.ACTIVITY_REQUEST_BROWSE_TABS)
-                }
-            }
-            tabCountsView!!.updateTabCount(showTabCountsAnimation)
-            tabCountsView!!.contentDescription = getString(R.string.menu_page_show_tabs)
-            tabsItem.actionView = tabCountsView
-            tabsItem.expandActionView()
-            FeedbackUtil.setButtonLongPressToast(tabCountsView!!)
-            showTabCountsAnimation = false
-        }
-        return true
-    }
-
     override fun createFragment(): MainFragment {
         return MainFragment.newInstance()
     }
@@ -123,20 +83,15 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
             binding.mainToolbar.title = ""
             controlNavTabInFragment = false
         } else {
-            if (tab == NavTab.SEARCH && Prefs.shouldShowSearchTabTooltip()) {
+            if (tab == NavTab.SEARCH && Prefs.showSearchTabTooltip) {
                 FeedbackUtil.showTooltip(this, fragment.binding.mainNavTabLayout.findViewById(NavTab.SEARCH.id()), getString(R.string.search_tab_tooltip), aboveOrBelow = true, autoDismiss = false)
-                Prefs.setShowSearchTabTooltip(false)
+                Prefs.showSearchTabTooltip = false
             }
             binding.mainToolbarWordmark.visibility = View.GONE
             binding.mainToolbar.setTitle(tab.text())
             controlNavTabInFragment = true
         }
         fragment.requestUpdateToolbarElevation()
-    }
-
-    override fun updateTabCountsView() {
-        showTabCountsAnimation = true
-        invalidateOptionsMenu()
     }
 
     override fun onSupportActionModeStarted(mode: ActionMode) {
@@ -186,6 +141,10 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
     fun getToolbar(): Toolbar {
         return binding.mainToolbar
+    }
+
+    override fun onUnreadNotification() {
+        fragment.updateNotificationDot(true)
     }
 
     private fun setToolbarElevationDefault() {

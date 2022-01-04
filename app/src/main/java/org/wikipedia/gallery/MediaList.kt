@@ -1,5 +1,8 @@
 package org.wikipedia.gallery
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class MediaList {
 
     private val revision: String? = null
@@ -9,7 +12,7 @@ class MediaList {
     fun getItems(vararg types: String): MutableList<MediaListItem> {
         val list = mutableListOf<MediaListItem>()
         items?.let { mediaList ->
-            list.addAll(mediaList.filter { it.showInGallery() && types.contains(it.type) })
+            list.addAll(mediaList.filter { it.showInGallery && types.contains(it.type) })
         }
         return list
     }

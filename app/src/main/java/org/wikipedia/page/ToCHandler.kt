@@ -87,9 +87,9 @@ class ToCHandler internal constructor(private val fragment: PageFragment,
     fun setupToC(page: Page?, wiki: WikiSite) {
         page?.let {
             adapter.setPage(it)
-            rtl = L10nUtil.isLangRTL(wiki.languageCode())
+            rtl = L10nUtil.isLangRTL(wiki.languageCode)
             tocList.rtl = rtl
-            L10nUtil.setConditionalLayoutDirection(containerView, wiki.languageCode())
+            L10nUtil.setConditionalLayoutDirection(containerView, wiki.languageCode)
             containerView.updateLayoutParams<DrawerLayout.LayoutParams> {
                 gravity = if (rtl) Gravity.LEFT else Gravity.RIGHT
             }
@@ -201,7 +201,7 @@ class ToCHandler internal constructor(private val fragment: PageFragment,
             val section = getItem(position)
             val sectionHeading = newConvertView!!.findViewById<TextView>(R.id.page_toc_item_text)
             val sectionBullet = newConvertView.findViewById<View>(R.id.page_toc_item_bullet)
-            sectionHeading.text = StringUtil.fromHtml(section.heading)
+            sectionHeading.text = StringUtil.fromHtml(section.title)
             var textSize = TOC_SUBSECTION_TEXT_SIZE
             when {
                 section.isLead -> {

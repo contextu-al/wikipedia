@@ -25,7 +25,6 @@ class MenuNavTabDialog : ExtendedBottomSheetDialogFragment() {
     interface Callback {
         fun usernameClick()
         fun loginClick()
-        fun notificationsClick()
         fun talkClick()
         fun settingsClick()
         fun watchlistClick()
@@ -43,11 +42,6 @@ class MenuNavTabDialog : ExtendedBottomSheetDialogFragment() {
             } else {
                 callback()?.loginClick()
             }
-            dismiss()
-        }
-
-        binding.mainDrawerNotificationsContainer.setOnClickListener {
-            callback()?.notificationsClick()
             dismiss()
         }
 
@@ -98,7 +92,7 @@ class MenuNavTabDialog : ExtendedBottomSheetDialogFragment() {
             binding.mainDrawerAccountName.text = AccountUtil.userName
             binding.mainDrawerAccountName.visibility = View.VISIBLE
             binding.mainDrawerLoginButton.visibility = View.GONE
-            binding.mainDrawerNotificationsContainer.visibility = View.VISIBLE
+            binding.mainDrawerLoginOpenExternalIcon.visibility = View.VISIBLE
             binding.mainDrawerTalkContainer.visibility = View.VISIBLE
             binding.mainDrawerWatchlistContainer.visibility = View.VISIBLE
         } else {
@@ -108,7 +102,7 @@ class MenuNavTabDialog : ExtendedBottomSheetDialogFragment() {
             binding.mainDrawerLoginButton.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
             binding.mainDrawerLoginButton.text = getString(R.string.main_drawer_login)
             binding.mainDrawerLoginButton.setTextColor(getThemedColor(requireContext(), R.attr.colorAccent))
-            binding.mainDrawerNotificationsContainer.visibility = View.GONE
+            binding.mainDrawerLoginOpenExternalIcon.visibility = View.GONE
             binding.mainDrawerTalkContainer.visibility = View.GONE
             binding.mainDrawerWatchlistContainer.visibility = View.GONE
         }

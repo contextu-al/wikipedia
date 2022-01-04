@@ -5,24 +5,24 @@ import androidx.core.app.NotificationManagerCompat
 import org.json.JSONObject
 import org.wikipedia.Constants
 import org.wikipedia.WikipediaApp
-import org.wikipedia.notifications.Notification
 import org.wikipedia.notifications.NotificationPollBroadcastReceiver
+import org.wikipedia.notifications.db.Notification
 
 class NotificationInteractionFunnel(app: WikipediaApp, private val id: Long, private val wiki: String, private val type: String?) : Funnel(app, SCHEMA_NAME, REV_ID) {
 
-    constructor(app: WikipediaApp, notification: Notification) : this(app, notification.id(), notification.wiki(), notification.type())
+    constructor(app: WikipediaApp, notification: Notification) : this(app, notification.id, notification.wiki, notification.type)
 
     override fun preprocessData(eventData: JSONObject): JSONObject {
         preprocessData(eventData, "notification_id", id)
         preprocessData(eventData, "notification_wiki", wiki)
-        preprocessData(eventData, "notification_type", type)
+        preprocessData(eventData, "notification_type", type.orEmpty())
         return super.preprocessData(eventData)
     }
 
     override fun preprocessSessionToken(eventData: JSONObject) {}
 
     fun logMarkRead(selectionToken: Long?) {
-        log("action_rank", 0, "selection_token", selectionToken)
+        log("action_rank", 0, "selection_token", selectionToken.toString())
     }
 
     fun logIncoming() {
@@ -30,7 +30,7 @@ class NotificationInteractionFunnel(app: WikipediaApp, private val id: Long, pri
     }
 
     fun logAction(index: Int, link: Notification.Link) {
-        log("action_rank", index, "action_icon", link.icon)
+        log("action_rank", index, "action_icon", link.icon())
     }
 
     fun logClicked() {

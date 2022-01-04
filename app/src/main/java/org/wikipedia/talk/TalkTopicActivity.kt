@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -21,6 +23,7 @@ import org.wikipedia.activity.BaseActivity
 import org.wikipedia.analytics.EditFunnel
 import org.wikipedia.analytics.LoginFunnel
 import org.wikipedia.analytics.TalkFunnel
+import org.wikipedia.analytics.eventplatform.EditAttemptStepEvent
 import org.wikipedia.auth.AccountUtil
 import org.wikipedia.csrf.CsrfTokenClient
 import org.wikipedia.database.AppDatabase
@@ -31,6 +34,7 @@ import org.wikipedia.dataclient.okhttp.HttpStatusException
 import org.wikipedia.dataclient.page.TalkPage
 import org.wikipedia.history.HistoryEntry
 import org.wikipedia.login.LoginActivity
+import org.wikipedia.notifications.AnonymousNotificationHelper
 import org.wikipedia.page.*
 import org.wikipedia.page.linkpreview.LinkPreviewDialog
 import org.wikipedia.readinglist.AddToReadingListDialog
@@ -77,7 +81,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         linkHandler.wikiSite = pageTitle.wikiSite
         topicId = intent.extras?.getInt(EXTRA_TOPIC, -1)!!
 
-        L10nUtil.setConditionalLayoutDirection(binding.talkRefreshView, pageTitle.wikiSite.languageCode())
+        L10nUtil.setConditionalLayoutDirection(binding.talkRefreshView, pageTitle.wikiSite.languageCode)
         binding.talkRefreshView.setColorSchemeResources(ResourceUtil.getThemedAttributeId(this, R.attr.colorAccent))
 
         binding.talkRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -94,6 +98,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         binding.talkReplyButton.setOnClickListener {
             talkFunnel.logReplyClick()
             editFunnel.logStart()
+            EditAttemptStepEvent.logInit(pageTitle.wikiSite.languageCode)
             replyClicked()
         }
 
@@ -123,6 +128,22 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         onInitialLoad()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_talk_topic, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.menu_talk_topic_share -> {
+                ShareUtil.shareText(this, getString(R.string.talk_share_discussion_subject, topic?.html?.ifEmpty { getString(R.string.talk_no_subject) }), pageTitle.uri + "#" + StringUtil.addUnderscores(topic?.html))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun replyClicked() {
         replyActive = true
         binding.talkRecyclerView.adapter?.notifyDataSetChanged()
@@ -130,10 +151,10 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         binding.replySaveButton.visibility = View.VISIBLE
         binding.replyTextLayout.visibility = View.VISIBLE
         binding.licenseText.visibility = View.VISIBLE
-        DeviceUtil.showSoftKeyboard(binding.replyTextLayout)
         binding.talkScrollContainer.postDelayed({
             if (!isDestroyed) {
                 binding.talkScrollContainer.fullScroll(View.FOCUS_DOWN)
+                DeviceUtil.showSoftKeyboard(binding.replyTextLayout)
                 binding.replyTextLayout.requestFocus()
             }
         }, 500)
@@ -180,6 +201,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
             binding.licenseText.visibility = View.VISIBLE
             binding.replySubjectLayout.requestFocus()
             editFunnel.logStart()
+            EditAttemptStepEvent.logInit(pageTitle.wikiSite.languageCode)
         } else {
             replyActive = false
             binding.replyEditText.setText("")
@@ -249,7 +271,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
 
     private fun showLinkPreviewOrNavigate(title: PageTitle) {
         if (title.namespace() == Namespace.USER_TALK || title.namespace() == Namespace.TALK) {
-            startActivity(TalkTopicsActivity.newIntent(this, title.pageTitleForTalkPage(), Constants.InvokeSource.TALK_ACTIVITY))
+            startActivity(TalkTopicsActivity.newIntent(this, title, Constants.InvokeSource.TALK_ACTIVITY))
         } else {
             bottomSheetPresenter.show(supportFragmentManager,
                     LinkPreviewDialog.newInstance(HistoryEntry(title, HistoryEntry.SOURCE_TALK_TOPIC), null))
@@ -260,9 +282,11 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         return topicId == TalkTopicsActivity.NEW_TOPIC_ID
     }
 
-    // TODO: remove when the API fixes it
     private fun shouldHideReplyButton(): Boolean {
-        return topicId == -1
+        // Hide the reply button when:
+        // a) The topic ID is -1, which means the API couldn't parse it properly (TODO: wait until fixed)
+        // b) The name of the topic is empty, implying that this is the topmost "header" section.
+        return topicId == -1 || topic?.html.orEmpty().trim().isEmpty()
     }
 
     internal inner class TalkReplyHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
@@ -277,22 +301,26 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         }
     }
 
-    internal inner class TalkReplyItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    internal inner class TalkReplyItemAdapter : RecyclerView.Adapter<TalkReplyHolder>() {
         override fun getItemCount(): Int {
             return topic?.replies?.size ?: 0
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, type: Int): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, type: Int): TalkReplyHolder {
             return TalkReplyHolder(layoutInflater.inflate(R.layout.item_talk_reply, parent, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
-            (holder as TalkReplyHolder).bindItem(topic?.replies!![pos], pos == itemCount - 1)
+        override fun onBindViewHolder(holder: TalkReplyHolder, pos: Int) {
+            holder.bindItem(topic?.replies!![pos], pos == itemCount - 1)
         }
     }
 
     internal inner class TalkLinkHandler internal constructor(context: Context) : LinkHandler(context) {
         override fun onMediaLinkClicked(title: PageTitle) {
+            // TODO
+        }
+
+        override fun onDiffLinkClicked(title: PageTitle, revisionId: Long) {
             // TODO
         }
 
@@ -313,6 +341,9 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         undoneBody = body
         undoneSubject = subject
 
+        editFunnel.logSaveAttempt()
+        EditAttemptStepEvent.logSaveAttempt(pageTitle.wikiSite.languageCode)
+
         if (isNewTopic() && subject.isEmpty()) {
             binding.replySubjectLayout.error = getString(R.string.talk_subject_empty)
             binding.replySubjectLayout.requestFocus()
@@ -323,14 +354,9 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
             return
         }
 
-        // if the message is not signed, then sign it explicitly
-        if (!body.endsWith("~~~~")) {
-            body += " ~~~~"
-        }
-        if (!isNewTopic()) {
-            // add two explicit newlines at the beginning, to delineate this message as a new paragraph.
-            body = "\n\n" + body
-        }
+        val topicDepth = topic?.replies?.lastOrNull()?.depth ?: 0
+
+        body = addDefaultFormatting(body, topicDepth, isNewTopic())
 
         binding.talkProgressBar.visibility = View.VISIBLE
         binding.replySaveButton.isEnabled = false
@@ -371,6 +397,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     showUndoSnackbar = true
+                    AnonymousNotificationHelper.onEditSubmitted()
                     waitForUpdatedRevision(it.edit!!.newRevId)
                 }, {
                     onSaveError(it)
@@ -406,6 +433,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         binding.talkProgressBar.visibility = View.GONE
         binding.replySaveButton.isEnabled = true
         editFunnel.logSaved(newRevision)
+        EditAttemptStepEvent.logSaveSuccess(pageTitle.wikiSite.languageCode)
 
         if (isNewTopic()) {
             Intent().let {
@@ -423,7 +451,9 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
 
     private fun onSaveError(t: Throwable) {
         editFunnel.logError(t.message)
+        EditAttemptStepEvent.logSaveFailure(pageTitle.wikiSite.languageCode)
         binding.talkProgressBar.visibility = View.GONE
+        binding.replySaveButton.isEnabled = true
         FeedbackUtil.showError(this, t)
     }
 
@@ -486,6 +516,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         if (replyActive && !isNewTopic()) {
             onInitialLoad()
         } else {
+            setResult(RESULT_BACK_FROM_TOPIC)
             super.onBackPressed()
         }
     }
@@ -496,6 +527,7 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
         const val EXTRA_SUBJECT = "subject"
         const val EXTRA_BODY = "body"
         const val RESULT_EDIT_SUCCESS = 1
+        const val RESULT_BACK_FROM_TOPIC = 2
         const val RESULT_NEW_REVISION_ID = "newRevisionId"
 
         fun newIntent(context: Context, pageTitle: PageTitle, topicId: Int, invokeSource: Constants.InvokeSource, undoneSubject: String? = null, undoneBody: String? = null): Intent {
@@ -505,6 +537,19 @@ class TalkTopicActivity : BaseActivity(), LinkPreviewDialog.Callback {
                     .putExtra(EXTRA_SUBJECT, undoneSubject ?: "")
                     .putExtra(EXTRA_BODY, undoneBody ?: "")
                     .putExtra(Constants.INTENT_EXTRA_INVOKE_SOURCE, invokeSource)
+        }
+
+        fun addDefaultFormatting(text: String, topicDepth: Int, newTopic: Boolean = false): String {
+            var body = ":".repeat(if (newTopic) 0 else topicDepth + 1) + text
+            // if the message is not signed, then sign it explicitly
+            if (!body.endsWith("~~~~")) {
+                body += " ~~~~"
+            }
+            if (!newTopic) {
+                // add two explicit newlines at the beginning, to delineate this message as a new paragraph.
+                body = "\n\n" + body
+            }
+            return body
         }
     }
 }

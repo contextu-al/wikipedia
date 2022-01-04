@@ -18,7 +18,7 @@ import org.wikipedia.auth.AccountUtil.updateAccount
 import org.wikipedia.createaccount.CreateAccountActivity
 import org.wikipedia.databinding.ActivityLoginBinding
 import org.wikipedia.login.LoginClient.LoginFailedException
-import org.wikipedia.notifications.NotificationPollBroadcastReceiver.Companion.pollNotifications
+import org.wikipedia.notifications.PollNotificationService
 import org.wikipedia.page.PageTitle
 import org.wikipedia.push.WikipediaFirebaseMessagingService.Companion.updateSubscription
 import org.wikipedia.readinglist.sync.ReadingListSyncAdapter
@@ -58,7 +58,7 @@ class LoginActivity : BaseActivity() {
 
         loginSource = intent.getStringExtra(LOGIN_REQUEST_SOURCE).orEmpty()
         if (loginSource.isNotEmpty() && loginSource == LoginFunnel.SOURCE_SUGGESTED_EDITS) {
-            Prefs.setSuggestedEditsHighestPriorityEnabled(true)
+            Prefs.isSuggestedEditsHighestPriorityEnabled = true
         }
 
         // always go to account creation before logging in
@@ -143,7 +143,7 @@ class LoginActivity : BaseActivity() {
             if (loginSource == LoginFunnel.SOURCE_EDIT) {
                 funnel.logStart(
                         LoginFunnel.SOURCE_EDIT,
-                        intent.getStringExtra(EDIT_SESSION_TOKEN)
+                        intent.getStringExtra(EDIT_SESSION_TOKEN).orEmpty()
                 )
             } else {
                 funnel.logStart(loginSource)
@@ -168,11 +168,11 @@ class LoginActivity : BaseActivity() {
         // Set reading list syncing to enabled (without the explicit setup instruction),
         // so that the sync adapter can run at least once and check whether syncing is enabled
         // on the server side.
-        Prefs.setReadingListSyncEnabled(true)
-        Prefs.setReadingListPagesDeletedIds(emptySet())
-        Prefs.setReadingListsDeletedIds(emptySet())
+        Prefs.isReadingListSyncEnabled = true
+        Prefs.readingListPagesDeletedIds = emptySet()
+        Prefs.readingListsDeletedIds = emptySet()
         ReadingListSyncAdapter.manualSyncWithForce()
-        pollNotifications(WikipediaApp.getInstance())
+        PollNotificationService.schedulePollNotificationJob(this)
         updateSubscription()
         finish()
     }

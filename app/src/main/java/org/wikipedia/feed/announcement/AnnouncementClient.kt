@@ -50,9 +50,9 @@ class AnnouncementClient : FeedClient {
             val now = Date()
             for (announcement in announcements) {
                 if (shouldShow(announcement, country, now)) {
-                    when (announcement.type()) {
+                    when (announcement.type) {
                         Announcement.SURVEY -> cards.add(SurveyCard(announcement))
-                        Announcement.FUNDRAISING -> if (announcement.placement() == Announcement.PLACEMENT_FEED) {
+                        Announcement.FUNDRAISING -> if (announcement.placement == Announcement.PLACEMENT_FEED) {
                             cards.add(FundraisingCard(announcement))
                         }
                         else -> cards.add(AnnouncementCard(announcement))
@@ -64,49 +64,47 @@ class AnnouncementClient : FeedClient {
 
         @JvmStatic
         fun shouldShow(announcement: Announcement?, country: String?, date: Date): Boolean {
-            return (announcement != null && (announcement.platforms().contains(PLATFORM_CODE) ||
-                    announcement.platforms().contains(PLATFORM_CODE_NEW)) &&
+            return (announcement != null && !announcement.platforms.isNullOrEmpty() && (announcement.platforms.contains(PLATFORM_CODE) ||
+                    announcement.platforms.contains(PLATFORM_CODE_NEW)) &&
                     matchesCountryCode(announcement, country) && matchesDate(announcement, date) &&
                     matchesVersionCodes(announcement.minVersion(), announcement.maxVersion()) && matchesConditions(announcement))
         }
 
         private fun matchesCountryCode(announcement: Announcement, country: String?): Boolean {
             var countryCode = country
-            val announcementsCountryOverride = Prefs.getAnnouncementsCountryOverride()
+            val announcementsCountryOverride = Prefs.announcementsCountryOverride
             if (!announcementsCountryOverride.isNullOrEmpty()) {
                 countryCode = announcementsCountryOverride
             }
-            return if (countryCode.isNullOrEmpty()) {
+            return if (countryCode.isNullOrEmpty() || announcement.countries.isNullOrEmpty()) {
                 false
-            } else announcement.countries().contains(countryCode)
+            } else announcement.countries.contains(countryCode)
         }
 
         private fun matchesDate(announcement: Announcement, date: Date): Boolean {
-            if (Prefs.ignoreDateForAnnouncements()) {
+            if (Prefs.ignoreDateForAnnouncements) {
                 return true
             }
-            return if (announcement.startTime() != null && announcement.startTime()!!.after(date)) {
-                false
-            } else announcement.endTime() == null || !announcement.endTime()!!.before(date)
+            return announcement.startTime()?.before(date) == true && announcement.endTime()?.after(date) == true
         }
 
         private fun matchesConditions(announcement: Announcement): Boolean {
-            if (announcement.beta() != null && announcement.beta() != ReleaseUtil.isPreProdRelease) {
+            if (announcement.beta != null && announcement.beta != ReleaseUtil.isPreProdRelease) {
                 return false
             }
-            return if (announcement.loggedIn() != null && announcement.loggedIn() != AccountUtil.isLoggedIn) {
+            return if (announcement.loggedIn != null && announcement.loggedIn != AccountUtil.isLoggedIn) {
                 false
-            } else announcement.readingListSyncEnabled() == null || announcement.readingListSyncEnabled() == Prefs.isReadingListSyncEnabled()
+            } else announcement.readingListSyncEnabled == null || announcement.readingListSyncEnabled == Prefs.isReadingListSyncEnabled
         }
 
-        private fun matchesVersionCodes(minVersion: String?, maxVersion: String?): Boolean {
-            val versionCode = if (Prefs.announcementsVersionCode() > 0) Prefs.announcementsVersionCode()
+        private fun matchesVersionCodes(minVersion: Int, maxVersion: Int): Boolean {
+            val versionCode = if (Prefs.announcementsVersionCode > 0) Prefs.announcementsVersionCode
             else WikipediaApp.getInstance().versionCode
             try {
-                if (!minVersion.isNullOrEmpty() && minVersion.toInt() > versionCode) {
+                if (minVersion != -1 && minVersion > versionCode) {
                     return false
                 }
-                if (!maxVersion.isNullOrEmpty() && maxVersion.toInt() < versionCode) {
+                if (maxVersion != -1 && maxVersion < versionCode) {
                     return false
                 }
             } catch (e: NumberFormatException) {

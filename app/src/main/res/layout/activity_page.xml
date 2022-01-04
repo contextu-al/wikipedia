@@ -51,7 +51,7 @@
                         android:drawablePadding="8dp"
                         android:paddingStart="12dp"
                         android:layout_marginEnd="4dp"
-                        app:drawableTint="?attr/material_theme_de_emphasised_color"
+                        app:drawableTint="?attr/toolbar_icon_color"
                         app:drawableStartCompat="@drawable/ic_search_themed_24dp"/>
 
                     <org.wikipedia.views.TabCountsView
@@ -59,6 +59,12 @@
                         android:layout_width="48dp"
                         android:layout_height="match_parent"
                         android:contentDescription="@string/menu_page_show_tabs" />
+
+                    <org.wikipedia.views.NotificationButtonView
+                        android:id="@+id/page_toolbar_button_notifications"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/notifications_activity_title"/>
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/page_toolbar_button_show_overflow_menu"
@@ -71,7 +77,8 @@
                         android:clickable="true"
                         android:focusable="true"
                         app:srcCompat="@drawable/ic_more_vert_themed_24dp"
-                        app:tint="?attr/material_theme_de_emphasised_color" />
+                        app:tint="?attr/toolbar_icon_color" />
+
                 </LinearLayout>
             </androidx.appcompat.widget.Toolbar>
 

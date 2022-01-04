@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.skydoves.balloon.*
@@ -170,8 +171,9 @@ object FeedbackUtil {
     }
 
     @JvmStatic
-    fun showTooltip(activity: Activity, anchor: View, text: CharSequence, aboveOrBelow: Boolean, autoDismiss: Boolean): Balloon {
-        return showTooltip(activity, getTooltip(anchor.context, text, autoDismiss), anchor, aboveOrBelow, autoDismiss)
+    fun showTooltip(activity: Activity, anchor: View, text: CharSequence, aboveOrBelow: Boolean,
+                    autoDismiss: Boolean, arrowAnchorPadding: Int = 0, topOrBottomMargin: Int = 0): Balloon {
+        return showTooltip(activity, getTooltip(anchor.context, text, autoDismiss, arrowAnchorPadding, topOrBottomMargin, aboveOrBelow), anchor, aboveOrBelow, autoDismiss)
     }
 
     @JvmStatic
@@ -192,7 +194,8 @@ object FeedbackUtil {
         return balloon
     }
 
-    fun getTooltip(context: Context, text: CharSequence, autoDismiss: Boolean, showDismissButton: Boolean = false): Balloon {
+    fun getTooltip(context: Context, text: CharSequence, autoDismiss: Boolean, arrowAnchorPadding: Int = 0,
+                   topOrBottomMargin: Int = 0, aboveOrBelow: Boolean = false, showDismissButton: Boolean = false): Balloon {
         val binding = ViewPlainTextTooltipBinding.inflate(LayoutInflater.from(context))
         binding.textView.text = text
         if (showDismissButton) {
@@ -206,11 +209,14 @@ object FeedbackUtil {
             setArrowSize(24)
             setMarginLeft(8)
             setMarginRight(8)
+            setMarginTop(if (aboveOrBelow) 0 else topOrBottomMargin)
+            setMarginBottom(if (aboveOrBelow) topOrBottomMargin else 0)
             setBackgroundColorResource(ResourceUtil.getThemedAttributeId(context, R.attr.colorAccent))
             setDismissWhenTouchOutside(autoDismiss)
             setLayout(binding.root)
             setWidth(BalloonSizeSpec.WRAP)
             setHeight(BalloonSizeSpec.WRAP)
+            setArrowAlignAnchorPadding(arrowAnchorPadding)
         }
 
         binding.buttonView.setOnClickListener {
@@ -241,25 +247,14 @@ object FeedbackUtil {
     }
 
     private fun findBestView(activity: Activity): View {
-        return when (activity) {
-            is MainActivity -> {
-                activity.findViewById(R.id.fragment_main_coordinator)
-            }
-            is PageActivity -> {
-                activity.findViewById(R.id.fragment_page_coordinator)
-            }
-            is RandomActivity -> {
-                activity.findViewById(R.id.random_coordinator_layout)
-            }
-            is ReadingListActivity -> {
-                activity.findViewById(R.id.fragment_reading_list_coordinator)
-            }
-            is SuggestionsActivity -> {
-                activity.findViewById(R.id.suggestedEditsCardsCoordinator)
-            }
-            else -> {
-                activity.findViewById(android.R.id.content)
-            }
+        val viewId = when (activity) {
+            is MainActivity -> R.id.fragment_main_coordinator
+            is PageActivity -> R.id.fragment_page_coordinator
+            is RandomActivity -> R.id.random_coordinator_layout
+            is ReadingListActivity -> R.id.fragment_reading_list_coordinator
+            is SuggestionsActivity -> R.id.suggestedEditsCardsCoordinator
+            else -> android.R.id.content
         }
+        return ActivityCompat.requireViewById(activity, viewId)
     }
 }

@@ -242,12 +242,12 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
                     }
                 }
             }
-            layOutGalleryDescription()
+            layOutGalleryDescription(currentItem)
             setResult(if (requestCode == ACTIVITY_REQUEST_DESCRIPTION_EDIT) ACTIVITY_RESULT_IMAGE_CAPTION_ADDED else ACTIVITY_REQUEST_ADD_IMAGE_TAGS)
         }
     }
 
-    fun onEditClick(v: View) {
+    private fun onEditClick(v: View) {
         val item = currentItem
         if (item?.imageTitle == null || item.mediaInfo?.metadata == null) {
             return
@@ -267,16 +267,16 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
 
     private fun startCaptionEdit(item: GalleryItemFragment) {
         val title = PageTitle(item.imageTitle!!.prefixedText,
-            WikiSite(Service.COMMONS_URL, sourceWiki.languageCode()))
-        val currentCaption = item.mediaInfo!!.captions[sourceWiki.languageCode()]
+            WikiSite(Service.COMMONS_URL, sourceWiki.languageCode))
+        val currentCaption = item.mediaInfo!!.captions[sourceWiki.languageCode]
         title.description = currentCaption
-        val summary = PageSummaryForEdit(title.prefixedText, sourceWiki.languageCode(), title,
+        val summary = PageSummaryForEdit(title.prefixedText, sourceWiki.languageCode, title,
             title.displayText, RichTextUtil.stripHtml(item.mediaInfo!!.metadata!!.imageDescription()), item.mediaInfo!!.thumbUrl)
         startActivityForResult(DescriptionEditActivity.newIntent(this, title, null, summary, null,
             DescriptionEditActivity.Action.ADD_CAPTION, InvokeSource.GALLERY_ACTIVITY), ACTIVITY_REQUEST_DESCRIPTION_EDIT)
     }
 
-    fun onTranslateClick() {
+    private fun onTranslateClick() {
         val item = currentItem
         if (item?.imageTitle == null || item.mediaInfo?.metadata == null || imageEditType == null) {
             return
@@ -294,22 +294,22 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
     }
 
     private fun startCaptionTranslation(item: GalleryItemFragment) {
-        val sourceTitle = PageTitle(item.imageTitle!!.prefixedText, WikiSite(Service.COMMONS_URL, sourceWiki.languageCode()))
+        val sourceTitle = PageTitle(item.imageTitle!!.prefixedText, WikiSite(Service.COMMONS_URL, sourceWiki.languageCode))
         val targetTitle = PageTitle(item.imageTitle!!.prefixedText, WikiSite(Service.COMMONS_URL,
             targetLanguageCode ?: app.language().appLanguageCodes[1]))
-        val currentCaption = item.mediaInfo!!.captions[sourceWiki.languageCode()].orEmpty().ifEmpty {
+        val currentCaption = item.mediaInfo!!.captions[sourceWiki.languageCode].orEmpty().ifEmpty {
             RichTextUtil.stripHtml(item.mediaInfo!!.metadata!!.imageDescription())
         }
-        val sourceSummary = PageSummaryForEdit(sourceTitle.prefixedText, sourceTitle.wikiSite.languageCode(),
+        val sourceSummary = PageSummaryForEdit(sourceTitle.prefixedText, sourceTitle.wikiSite.languageCode,
                             sourceTitle, sourceTitle.displayText, currentCaption, item.mediaInfo!!.thumbUrl)
-        val targetSummary = PageSummaryForEdit(targetTitle.prefixedText, targetTitle.wikiSite.languageCode(),
+        val targetSummary = PageSummaryForEdit(targetTitle.prefixedText, targetTitle.wikiSite.languageCode,
             targetTitle, targetTitle.displayText, null, item.mediaInfo!!.thumbUrl)
         startActivityForResult(DescriptionEditActivity.newIntent(this, targetTitle, null, sourceSummary,
             targetSummary, if (sourceSummary.lang == targetSummary.lang) DescriptionEditActivity.Action.ADD_CAPTION
             else DescriptionEditActivity.Action.TRANSLATE_CAPTION, InvokeSource.GALLERY_ACTIVITY), ACTIVITY_REQUEST_DESCRIPTION_EDIT)
     }
 
-    fun onLicenseClick() {
+    private fun onLicenseClick() {
         if (binding.licenseIcon.contentDescription == null) {
             return
         }
@@ -317,7 +317,7 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
             binding.licenseIcon.contentDescription)
     }
 
-    fun onLicenseLongClick(): Boolean {
+    private fun onLicenseLongClick(): Boolean {
         val licenseUrl = binding.licenseIcon.tag as String
         if (licenseUrl.isNotEmpty()) {
             UriUtil.handleExternalLink(this@GalleryActivity,
@@ -336,13 +336,15 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
         private var currentPosition = -1
         override fun onPageSelected(position: Int) {
             // the pager has settled on a new position
-            layOutGalleryDescription()
-            currentItem?.imageTitle?.let {
-                if (currentPosition != -1) {
-                    if (position < currentPosition) {
-                        funnel.logGallerySwipeLeft(pageTitle, it.displayText)
-                    } else if (position > currentPosition) {
-                        funnel.logGallerySwipeRight(pageTitle, it.displayText)
+            currentItem?.let { item ->
+                layOutGalleryDescription(item)
+                item.imageTitle?.let {
+                    if (currentPosition != -1) {
+                        if (position < currentPosition) {
+                            funnel.logGallerySwipeLeft(pageTitle, it.displayText)
+                        } else if (position > currentPosition) {
+                            funnel.logGallerySwipeRight(pageTitle, it.displayText)
+                        }
                     }
                 }
             }
@@ -418,7 +420,7 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
         setControlsShowing(!controlsShowing)
     }
 
-    fun showLinkPreview(title: PageTitle) {
+    private fun showLinkPreview(title: PageTitle) {
         bottomSheetPresenter.show(supportFragmentManager,
             LinkPreviewDialog.newInstance(HistoryEntry(title, HistoryEntry.SOURCE_GALLERY), null))
     }
@@ -451,7 +453,7 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
         }
     }
 
-    fun finishWithPageResult(resultTitle: PageTitle, historyEntry: HistoryEntry = HistoryEntry(resultTitle, HistoryEntry.SOURCE_GALLERY)) {
+    private fun finishWithPageResult(resultTitle: PageTitle, historyEntry: HistoryEntry = HistoryEntry(resultTitle, HistoryEntry.SOURCE_GALLERY)) {
         val intent = PageActivity.newIntentForCurrentTab(this@GalleryActivity, historyEntry, resultTitle, false)
         setResult(ACTIVITY_RESULT_PAGE_SELECTED, intent)
         finish()
@@ -534,9 +536,9 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
 
     private val currentItem get() = galleryAdapter.getFragmentAt(binding.pager.currentItem) as GalleryItemFragment?
 
-    fun layOutGalleryDescription() {
+    fun layOutGalleryDescription(callingFragment: GalleryItemFragment?) {
         val item = currentItem
-        if (item?.imageTitle == null || item.mediaInfo?.metadata == null) {
+        if (item?.imageTitle == null || item.mediaInfo?.metadata == null || item != callingFragment) {
             binding.infoContainer.visibility = View.GONE
             return
         }
@@ -544,9 +546,9 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
         disposeImageCaptionDisposable()
         imageCaptionDisposable =
             Observable.zip<Map<String, String>, MwQueryResponse, Map<String, List<String>>, Pair<Boolean, Int>>(
-                MediaHelper.getImageCaptions(item.imageTitle!!.prefixedText!!),
-                ServiceFactory.get(WikiSite(Service.COMMONS_URL)).getProtectionInfo(item.imageTitle!!.prefixedText!!),
-                ImageTagsProvider.getImageTagsObservable(currentItem!!.mediaPage!!.pageId(), sourceWiki.languageCode()),
+                MediaHelper.getImageCaptions(item.imageTitle!!.prefixedText),
+                ServiceFactory.get(WikiSite(Service.COMMONS_URL)).getProtectionInfo(item.imageTitle!!.prefixedText),
+                ImageTagsProvider.getImageTagsObservable(currentItem!!.mediaPage!!.pageId, sourceWiki.languageCode),
                 { captions, protectionInfoRsp, imageTags ->
                     item.mediaInfo!!.captions = captions
                     Pair(protectionInfoRsp.query?.isEditProtected, imageTags.size)
@@ -555,7 +557,10 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ pair ->
                     updateGalleryDescription(pair.first, pair.second)
-                }, { it?.stackTrace })
+                }, {
+                    L.e(it)
+                    updateGalleryDescription(false, 0)
+                })
     }
 
     fun updateGalleryDescription(isProtected: Boolean, tagsCount: Int) {
@@ -588,9 +593,9 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
 
     private fun decideImageEditType(item: GalleryItemFragment, tagsCount: Int) {
         imageEditType = null
-        if (!item.mediaInfo!!.captions.containsKey(sourceWiki.languageCode())) {
+        if (!item.mediaInfo!!.captions.containsKey(sourceWiki.languageCode)) {
             imageEditType = ImageEditType.ADD_CAPTION
-            targetLanguageCode = sourceWiki.languageCode()
+            targetLanguageCode = sourceWiki.languageCode
             binding.ctaButtonText.text = getString(R.string.gallery_add_image_caption_button)
             return
         }
@@ -619,11 +624,11 @@ class GalleryActivity : BaseActivity(), LinkPreviewDialog.Callback, GalleryItemF
     private fun displayApplicableDescription(item: GalleryItemFragment) {
         // If we have a structured caption in our current language, then display that instead
         // of the unstructured description, and make it editable.
-        val descriptionStr = item.mediaInfo?.captions!!.getOrElse(sourceWiki.languageCode()) {
+        val descriptionStr = item.mediaInfo?.captions!!.getOrElse(sourceWiki.languageCode) {
             StringUtil.fromHtml(item.mediaInfo!!.metadata!!.imageDescription())
         }
 
-        if (descriptionStr != null && descriptionStr.isNotEmpty()) {
+        if (descriptionStr.isNotEmpty()) {
             binding.descriptionContainer.visibility = View.VISIBLE
             binding.descriptionText.text = StringUtil.strip(descriptionStr)
         } else {

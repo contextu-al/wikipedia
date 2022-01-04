@@ -23,7 +23,7 @@ data class ReadingListPage(
     @PrimaryKey(autoGenerate = true) var id: Long = 0,
     var mtime: Long = 0,
     var atime: Long = 0,
-    var offline: Boolean = Prefs.isDownloadingReadingListArticlesEnabled(),
+    var offline: Boolean = Prefs.isDownloadingReadingListArticlesEnabled,
     var status: Long = STATUS_QUEUE_FOR_SAVE,
     var sizeBytes: Long = 0,
     var lang: String = "en",
@@ -33,7 +33,7 @@ data class ReadingListPage(
 
     constructor(title: PageTitle) :
             this(title.wikiSite, title.namespace(), title.displayText, title.prefixedText,
-                title.description, title.thumbUrl, lang = title.wikiSite.languageCode()) {
+                title.description, title.thumbUrl, lang = title.wikiSite.languageCode) {
         val now = System.currentTimeMillis()
         mtime = now
         atime = now

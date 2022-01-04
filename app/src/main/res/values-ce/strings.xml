@@ -11,7 +11,7 @@
   <string name="nav_item_more">Кхин</string>
   <string name="error_network_error" fuzzy="true">ЗӀе цакарий :(</string>
   <string name="page_error_retry">ЙухагӀорта</string>
-  <string name="page_error_back_to_main">Юханехьа</string>
+  <string name="page_error_back_to_main">Йуханехьа</string>
   <string name="menu_clear_all_history">ДӀацӀане истори?</string>
   <string name="dialog_title_clear_history" fuzzy="true">ДӀацӀане истори?</string>
   <string name="menu_page_other_languages" fuzzy="true">Кхин меттанаш</string>
@@ -88,6 +88,7 @@
   <string name="view_featured_image_card_download">Чуйаккха</string>
   <string name="menu_feed_card_dismiss">ХӀара карточка къайлайаккха</string>
   <string name="menu_feed_card_dismissed">Карточка къайлаяьккхина.</string>
+  <string name="menu_feed_overflow_label">Дукха таронаш</string>
   <string name="feed_featured_image_share_subject">Викиларман дика суьрташ</string>
   <string name="feed">Талла</string>
   <string name="view_static_card_icon_content_description">Карточкан хьаьрк</string>

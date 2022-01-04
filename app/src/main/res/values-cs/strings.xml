@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Authors:
+* Adam N.
 * Aktron
 * Bsitzmann
+* Clon
 * Cvanca
 * Dbrant
 * Dvorapa
 * Evica
+* Fraxinus.cs
 * Frettie
 * Georg101
 * Ilimanaq29
@@ -60,6 +63,8 @@
   <string name="app_settings">Nastavení aplikace</string>
   <string name="search_tab_tooltip">Chcete-li přímo začít vyhledávat, klepněte znovu na tuto ikonu.</string>
   <string name="history_list_title">Historie</string>
+  <string name="wikimedia_commons">Wikimedia Commons</string>
+  <string name="wikidata">Wikidata</string>
   <string name="dialog_title_clear_history">Vymazat historii prohlížení</string>
   <string name="dialog_message_clear_history">Tímto smažete celou svoji historii prohlížení a zavřete všechny nyní otevřené záložky. Jste si jisti?</string>
   <string name="dialog_message_clear_history_yes">Ano</string>
@@ -170,7 +175,7 @@
   <string name="create_account_passwords_mismatch_error">Hesla se neshodují</string>
   <string name="create_account_email_error">Neplatná e-mailová adresa</string>
   <string name="create_account_username_error">V uživatelském jménu jsou nepovolené znaky</string>
-  <string name="create_account_password_error">Heslo není platné</string>
+  <string name="create_account_password_error">Heslo musí mít alespoň 8 znaků</string>
   <string name="create_account_generic_error">Nepodařilo se vytvořit uživatelský účet</string>
   <string name="create_account_next">Další</string>
   <string name="email_recommendation_dialog_title">Chcete vytvořit účet bez e-mailové adresy?</string>
@@ -184,6 +189,7 @@
   <string name="create_account_ip_block_help_url">https://cs.wikipedia.org/wiki/Wikipedie:Blokování</string>
   <string name="create_account_ip_block_details">Detaily</string>
   <string name="preferences_general_heading">Obecné</string>
+  <string name="preferences_account_heading">Účet</string>
   <string name="wikipedia_app_faq">FAQ aplikace Wikipedie</string>
   <string name="send_feedback">Poslat zpětnou vazbu</string>
   <string name="create_account_account_created_toast">Účet založen!</string>
@@ -212,6 +218,7 @@
   <string name="page_protected_can_not_edit_title">Tato stránka je zamčena</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">Přidat do sledovaných stránek</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_text">Sledujte, co se děje s články, které vás zajímají. Klepnutím na rozbalovací nabídku a výběrem možnosti &lt;b&gt;Přidat do sledovaných stránek&lt;/b&gt; uvidíte změny článku.</string>
+  <string name="page_notification_tooltip">Vaše oznámení se nyní nacházejí zde.</string>
   <string name="settings_item_preferences">Nastavení</string>
   <string name="settings_activity_title">Nastavení</string>
   <string name="about_description">O aplikaci Wikipedie</string>
@@ -382,6 +389,12 @@
   <string name="page_footer_license_text">Obsah je dostupný pod $1, pokud není uvedeno jinak</string>
   <string name="empty_tab_title">Nová záložka</string>
   <string name="menu_save_all_tabs">Uložit všechny záložky</string>
+  <string name="error_blocked_title">Vaše uživatelské jméno nebo IP adresa byly zablokované.</string>
+  <string name="error_blocked_by">Zablokování provedl(a) &lt;a href=\"%2$s\"&gt;%1$s&lt;/a&gt;</string>
+  <string name="error_blocked_reason">Uvedené zdůvodnění je: %s</string>
+  <string name="error_blocked_start">Začátek blokování: %s</string>
+  <string name="error_blocked_expiry">Konec blokování: %s</string>
+  <string name="error_blocked_id">ID blokování: %s</string>
   <string name="crash_report_activity_title">Chyba aplikace</string>
   <string name="crash_report_relaunch_or_quit">Omlouváme se, v aplikaci Wikipedie došlo k chybě a byla ukončena.\n\nChcete aplikaci otevřít znovu nebo ji ukončit?</string>
   <string name="crash_report_relaunch">Otevřít znovu</string>
@@ -586,6 +599,8 @@
   <string name="notifications_view_archived_button_text">Zobrazit přečtená upozornění</string>
   <string name="notification_preferences_title">Nastavení upozornění</string>
   <string name="notifications_mark_unread">Označit jako nepřečtené</string>
+  <string name="notifications_direct_reply_action">Odpověď</string>
+  <string name="notifications_direct_reply_success">Odpověď zveřejněna.</string>
   <string name="watchlist_title">Sledované stránky</string>
   <string name="preference_title_notification_poll">Kontrola nových upozornění</string>
   <string name="preference_summary_notification_poll">Povolit aplikaci používaní dat ke kontrole nových upozornění na pozadí.</string>
@@ -603,7 +618,16 @@
   <string name="preference_title_notification_mention">Zmínka</string>
   <string name="preference_summary_notification_mention">Někdo vás zmínil v diskusi</string>
   <string name="preference_title_notification_user_talk">Diskusní stránka</string>
-  <string name="preference_summary_notification_user_talk">Zprávy na vaší diskusi</string>
+  <string name="preference_summary_notification_user_talk" fuzzy="true">Zprávy na vaší diskusi</string>
+  <string name="notifications_filter_label">Filtrovat upozornění</string>
+  <string name="notifications_filter_icon_content_description">Filtrovat upozornění</string>
+  <string name="notifications_select_all_filters">Zrušit všechny filtry</string>
+  <string name="notifications_tab_filter_all">Vše</string>
+  <string name="notifications_tab_filter_mentions">Zmínky</string>
+  <string name="notifications_menu_mark_as_read">Označit jako přečtené</string>
+  <string name="notifications_menu_mark_as_unread">Označit jako nepřečtené</string>
+  <string name="notifications_swipe_action_read">Přečtená</string>
+  <string name="notifications_swipe_action_unread">Nepřečtená</string>
   <string name="view_because_you_read_card_title">Protože jste četli</string>
   <string name="view_random_card_title">Náhodný článek</string>
   <string name="view_random_article_card_title">Náhodný článek</string>
@@ -754,6 +778,7 @@
   <string name="suggested_edits_tasks_onboarding_get_started">Začít</string>
   <string name="suggested_edits_image_preview_dialog_caption_in_language_title">Titulek obrázku (v jazyce %s)</string>
   <string name="suggested_edits_image_preview_dialog_image">Soubor</string>
+  <string name="suggested_edits_image_preview_dialog_file_commons">Soubor z Wikimedia Commons</string>
   <string name="suggested_edits_image_preview_dialog_artist">Umělec</string>
   <string name="suggested_edits_image_preview_dialog_tags">Značky</string>
   <string name="suggested_edits_image_preview_dialog_date">Datum</string>
@@ -956,6 +981,7 @@
   <string name="talk_title">Diskuse</string>
   <string name="talk_user_title">Diskuse: %s</string>
   <string name="talk_new_topic">Nové téma</string>
+  <string name="talk_new_topic_submitted">Téma zveřejněno.</string>
   <string name="talk_page_empty">Tato diskusní stránka je prázdná.</string>
   <string name="talk_add_reply">Odpovědět</string>
   <string name="talk_no_subject">(Bez předmětu)</string>
@@ -964,13 +990,17 @@
   <string name="talk_message_hint">Napište zprávu</string>
   <string name="talk_message_empty">Zpráva nemůže být prázdná.</string>
   <string name="talk_subject_empty">Předmět nemůže být prázdný.</string>
+  <string name="talk_response_submitted">Odpověď zveřejněna.</string>
+  <string name="talk_snackbar_undo">Zpět</string>
+  <string name="talk_last_modified">&lt;b&gt;Naposledy upravil(a) %1$s&lt;/b&gt; %2$s</string>
+  <string name="talk_share_discussion_subject">Wikipedie - diskuse na diskusní stránce k tématu „%s“</string>
+  <string name="talk_share_talk_page">Wikipedie - diskuse na diskusní stránce</string>
   <string name="menu_option_share_edit">Sdílet editaci</string>
   <string name="menu_option_user_profile">Profil uživatele %s</string>
   <string name="menu_option_user_contributions">Příspěvky uživatele/uživatelky %s</string>
   <string name="watchlist_details_watching_label">Sledujete</string>
   <string name="watchlist_details_watch_label">Sledovat</string>
   <string name="thank_label">Poděkovat</string>
-  <string name="go_to_user_page">Přejít na uživatelskou stránku</string>
   <string name="thank_dialog_title_text">Veřejně poslat poděkování</string>
   <string name="thank_dialog_text">Poděkování jsou jednoduchým způsobem, jak wikipedistovi můžete poděkovat za práci na Wikipedii. Poděkování nelze vzít zpět a jsou veřejně viditelná.</string>
   <string name="thank_dialog_positive_button_text">Odeslat poděkování</string>

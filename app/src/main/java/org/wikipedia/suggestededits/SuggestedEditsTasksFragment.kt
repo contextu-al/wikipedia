@@ -73,7 +73,7 @@ class SuggestedEditsTasksFragment : Fragment() {
         balloon.relayShowAlignBottom(FeedbackUtil.getTooltip(requireContext(), binding.editStreakStatsView.tooltipText, autoDismiss = true, showDismissButton = true), binding.editStreakStatsView.getDescriptionView())
                 .relayShowAlignBottom(FeedbackUtil.getTooltip(requireContext(), binding.pageViewStatsView.tooltipText, autoDismiss = true, showDismissButton = true), binding.pageViewStatsView.getDescriptionView())
                 .relayShowAlignBottom(FeedbackUtil.getTooltip(requireContext(), binding.editQualityStatsView.tooltipText, autoDismiss = true, showDismissButton = true), binding.editQualityStatsView.getDescriptionView())
-        Prefs.shouldShowOneTimeSequentialUserStatsTooltip(false)
+        Prefs.showOneTimeSequentialUserStatsTooltip = false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -140,7 +140,7 @@ class SuggestedEditsTasksFragment : Fragment() {
         if (requestCode == Constants.ACTIVITY_REQUEST_ADD_A_LANGUAGE) {
             binding.tasksRecyclerView.adapter!!.notifyDataSetChanged()
         } else if (requestCode == Constants.ACTIVITY_REQUEST_IMAGE_TAGS_ONBOARDING && resultCode == Activity.RESULT_OK) {
-            Prefs.setShowImageTagsOnboarding(false)
+            Prefs.showImageTagsOnboarding = false
             startActivity(SuggestionsActivity.newIntent(requireActivity(), ADD_IMAGE_TAGS, Constants.InvokeSource.SUGGESTED_EDITS))
         } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             clearContents()
@@ -177,33 +177,31 @@ class SuggestedEditsTasksFragment : Fragment() {
                 UserContributionsStats.getEditCountsObservable(), { homeSiteResponse, commonsResponse, wikidataResponse, _ ->
                     var blockInfo: MwServiceError.BlockInfo? = null
                     when {
-                        wikidataResponse.query?.userInfo()!!.isBlocked -> blockInfo = wikidataResponse.query?.userInfo()!!
-                        commonsResponse.query?.userInfo()!!.isBlocked -> blockInfo = commonsResponse.query?.userInfo()!!
-                        homeSiteResponse.query?.userInfo()!!.isBlocked -> blockInfo = homeSiteResponse.query?.userInfo()!!
+                        wikidataResponse.query?.userInfo!!.isBlocked -> blockInfo = wikidataResponse.query?.userInfo!!
+                        commonsResponse.query?.userInfo!!.isBlocked -> blockInfo = commonsResponse.query?.userInfo!!
+                        homeSiteResponse.query?.userInfo!!.isBlocked -> blockInfo = homeSiteResponse.query?.userInfo!!
                     }
                     if (blockInfo != null) {
                         blockMessage = ThrowableUtil.getBlockMessageHtml(blockInfo)
                     }
 
-                    totalContributions += wikidataResponse.query?.userInfo()!!.editCount
-                    totalContributions += commonsResponse.query?.userInfo()!!.editCount
-                    totalContributions += homeSiteResponse.query?.userInfo()!!.editCount
+                    totalContributions += wikidataResponse.query?.userInfo!!.editCount
+                    totalContributions += commonsResponse.query?.userInfo!!.editCount
+                    totalContributions += homeSiteResponse.query?.userInfo!!.editCount
 
-                    latestEditDate = wikidataResponse.query?.userInfo()!!.latestContrib
+                    latestEditDate = wikidataResponse.query?.userInfo!!.latestContribution
 
-                    if (commonsResponse.query?.userInfo()!!.latestContrib.after(latestEditDate)) {
-                        latestEditDate = commonsResponse.query?.userInfo()!!.latestContrib
+                    if (commonsResponse.query?.userInfo!!.latestContribution.after(latestEditDate)) {
+                        latestEditDate = commonsResponse.query?.userInfo!!.latestContribution
                     }
 
-                    if (homeSiteResponse.query?.userInfo()!!.latestContrib.after(latestEditDate)) {
-                        latestEditDate = homeSiteResponse.query?.userInfo()!!.latestContrib
+                    if (homeSiteResponse.query?.userInfo!!.latestContribution.after(latestEditDate)) {
+                        latestEditDate = homeSiteResponse.query?.userInfo!!.latestContribution
                     }
 
-                    val contributions = ArrayList<UserContribution>()
-                    contributions.addAll(wikidataResponse.query!!.userContributions())
-                    contributions.addAll(commonsResponse.query!!.userContributions())
-                    contributions.addAll(homeSiteResponse.query!!.userContributions())
-                    contributions.sortWith { o2, o1 -> (o1.date().compareTo(o2.date())) }
+                    val contributions = (wikidataResponse.query!!.userContributions +
+                            commonsResponse.query!!.userContributions +
+                            homeSiteResponse.query!!.userContributions).sortedByDescending { it.date() }
                     latestEditStreak = getEditStreak(contributions)
                     revertSeverity = UserContributionsStats.getRevertSeverity()
                     wikidataResponse
@@ -286,7 +284,7 @@ class SuggestedEditsTasksFragment : Fragment() {
             binding.userNameView.text = AccountUtil.userName
             binding.contributionsStatsView.setTitle(totalContributions.toString())
             binding.contributionsStatsView.setDescription(resources.getQuantityString(R.plurals.suggested_edits_contribution, totalContributions))
-            if (Prefs.shouldShowOneTimeSequentialUserStatsTooltip()) {
+            if (Prefs.showOneTimeSequentialUserStatsTooltip) {
                 showOneTimeSequentialUserStatsTooltips()
             }
         }
@@ -429,7 +427,7 @@ class SuggestedEditsTasksFragment : Fragment() {
             } else if (task == addImageCaptionsTask) {
                 startActivity(SuggestionsActivity.newIntent(requireActivity(), if (secondary) TRANSLATE_CAPTION else ADD_CAPTION, Constants.InvokeSource.SUGGESTED_EDITS))
             } else if (task == addImageTagsTask) {
-                if (Prefs.shouldShowImageTagsOnboarding()) {
+                if (Prefs.showImageTagsOnboarding) {
                     startActivityForResult(SuggestedEditsImageTagsOnboardingActivity.newIntent(requireContext()), Constants.ACTIVITY_REQUEST_IMAGE_TAGS_ONBOARDING)
                 } else {
                     startActivity(SuggestionsActivity.newIntent(requireActivity(), ADD_IMAGE_TAGS, Constants.InvokeSource.SUGGESTED_EDITS))

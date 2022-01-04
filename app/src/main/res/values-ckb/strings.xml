@@ -4,6 +4,8 @@
 * Asoxor
 * Cwtiyar
 * Diyariq
+* GoRaN
+* Halbast
 * Kurd
 * Kushared
 * Pirehelokan
@@ -153,7 +155,7 @@
   <string name="create_account_passwords_mismatch_error">تێپەڕوشەکان ھەماھەنگ نین</string>
   <string name="create_account_email_error">ناونیشانی ئیمەیڵی نەگونجاو</string>
   <string name="create_account_username_error">نووسەی ناڕەوا لە ناوی بەکارھێنەر</string>
-  <string name="create_account_password_error">تێپەڕوشەکە ھەڵەیە</string>
+  <string name="create_account_password_error" fuzzy="true">تێپەڕوشەکە ھەڵەیە</string>
   <string name="create_account_generic_error">ناتوانرێت هەژمار دروست بکرێت</string>
   <string name="create_account_next">دواتر</string>
   <string name="email_recommendation_dialog_title">دروستکردنی ھەژمار بەبێ ناونیشانی ئیمەیل</string>
@@ -167,6 +169,7 @@
   <string name="create_account_ip_block_help_url">https://en.wikipedia.org/wiki/یارمەتی:من بەربەستکراوم</string>
   <string name="create_account_ip_block_details">وردەکارییەکان</string>
   <string name="preferences_general_heading">گشتی</string>
+  <string name="preferences_account_heading">هەژمار</string>
   <string name="wikipedia_app_faq">پرسیارە دووپاتکراوەکانی نەرمەواڵەی مۆبایلی ویکیپیدیا</string>
   <string name="send_feedback">ناردنی فیدباکی نەرمەواڵە</string>
   <string name="create_account_account_created_toast">ھەژمار دروست کرا!</string>
@@ -523,7 +526,7 @@
   <string name="preference_summary_notification_login_fail">چالاکییەکانی چوونە ژوورەوەت</string>
   <string name="preference_title_notification_mention">بانگکردن</string>
   <string name="preference_title_notification_user_talk">پەڕەی وتووێژ</string>
-  <string name="preference_summary_notification_user_talk">نامەی پەڕەکانی وتووێژ</string>
+  <string name="preference_summary_notification_user_talk" fuzzy="true">نامەی پەڕەکانی وتووێژ</string>
   <string name="view_because_you_read_card_title">لەبەرەوەی خوێندتەوە</string>
   <string name="view_random_card_title">وتارێک بە ھەڵکەوت</string>
   <string name="view_top_read_card_title">زۆرترین خوێندراوە</string>
@@ -684,7 +687,7 @@
   <string name="suggested_edits_task_new">نوێ</string>
   <string name="suggested_edits_cc0_notice">بە بڵاوکردنەوە، تۆ ڕازی دەبیت بە &lt;a href=\"%1$s\"&gt;بەندەکانی  بەکارھێنان&lt;/a&gt;، و بە بڵاوکردنەوەی بەشدارییەکانت لەژێر مۆڵەتی &lt;a href=\"%2$s\"&gt;CC0 license&lt;/a&gt;.</string>
   <string name="suggested_edits_contribution_language_label">زمان</string>
-  <string name="suggested_edits_contribution_date_time_label">بەروار/کات</string>
+  <string name="suggested_edits_contribution_date_time_label">ڕێکەوت/کات</string>
   <string name="suggested_edits_contribution_image_label">وێنە</string>
   <string name="suggested_edits_contribution_article_label">وتار</string>
   <string name="suggested_edits_contribution_views">%s بینراوە</string>
@@ -792,7 +795,6 @@
   <string name="watchlist_details_watching_label">چاودێریکردن</string>
   <string name="watchlist_details_watch_label">چاودێری بکە</string>
   <string name="thank_label">سپاس</string>
-  <string name="go_to_user_page">بڕۆ بۆ پەڕەی بەکارھێنەر</string>
   <string name="thank_dialog_title_text">بەئاشکرا\'سوپاس\'بنێرە</string>
   <string name="thank_dialog_positive_button_text">سپاس بکە</string>
   <string name="thank_dialog_negative_button_text">ھەڵوەشاندنەوە</string>

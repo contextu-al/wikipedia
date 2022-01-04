@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.core.view.children
+import androidx.core.widget.ImageViewCompat
 import com.google.android.material.chip.Chip
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -23,6 +24,7 @@ import org.wikipedia.WikipediaApp
 import org.wikipedia.activity.FragmentUtil
 import org.wikipedia.analytics.EditFunnel
 import org.wikipedia.analytics.SuggestedEditsFunnel
+import org.wikipedia.analytics.eventplatform.EditAttemptStepEvent
 import org.wikipedia.csrf.CsrfTokenClient
 import org.wikipedia.databinding.FragmentSuggestedEditsImageTagsItemBinding
 import org.wikipedia.dataclient.Service
@@ -83,7 +85,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
                 intArrayOf(if (WikipediaApp.getInstance().currentTheme.isDark) Color.WHITE else ResourceUtil.getThemedColor(requireContext(), R.attr.colorAccent)))
         binding.publishProgressBar.progressTintList = colorStateList
         binding.publishProgressBarComplete.progressTintList = colorStateList
-        binding.publishProgressCheck.imageTintList = colorStateList
+        ImageViewCompat.setImageTintList(binding.publishProgressCheck, colorStateList)
         binding.publishProgressText.setTextColor(colorStateList)
 
         binding.tagsLicenseText.text = StringUtil.fromHtml(getString(R.string.suggested_edits_cc0_notice,
@@ -91,8 +93,8 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
         binding.tagsLicenseText.movementMethod = LinkMovementMethod.getInstance()
 
         binding.imageView.setOnClickListener {
-            if (Prefs.shouldShowImageZoomTooltip()) {
-                Prefs.setShouldShowImageZoomTooltip(false)
+            if (Prefs.showImageZoomTooltip) {
+                Prefs.showImageZoomTooltip = false
                 FeedbackUtil.showToastOverView(binding.imageView, getString(R.string.suggested_edits_image_zoom_tooltip), Toast.LENGTH_LONG)
             }
         }
@@ -132,7 +134,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
                     this.page = page
                     updateContents()
                     updateTagChips()
-                }, { this.setErrorState(it) })!!)
+                }, { setErrorState(it) }))
     }
 
     private fun setErrorState(t: Throwable) {
@@ -151,7 +153,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
             return
         }
 
-        funnel = EditFunnel(WikipediaApp.getInstance(), PageTitle(page!!.title(), WikiSite(Service.COMMONS_URL)))
+        funnel = EditFunnel(WikipediaApp.getInstance(), PageTitle(page!!.title, WikiSite(Service.COMMONS_URL)))
 
         binding.tagsLicenseText.visibility = GONE
         binding.tagsHintText.visibility = VISIBLE
@@ -159,7 +161,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
 
         ViewUtil.loadImage(binding.imageView, ImageUrlUtil.getUrlForPreferredSize(page!!.imageInfo()!!.thumbUrl, Constants.PREFERRED_CARD_THUMBNAIL_SIZE))
 
-        disposables.add(MediaHelper.getImageCaptions(page!!.title())
+        disposables.add(MediaHelper.getImageCaptions(page!!.title)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { captions ->
@@ -167,9 +169,10 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
                         binding.imageCaption.text = captions[callback().getLangCode()]
                         binding.imageCaption.visibility = VISIBLE
                     } else {
-                        if (page!!.imageInfo() != null && page!!.imageInfo()!!.metadata != null) {
+                        if (page?.imageInfo()?.metadata != null) {
                             binding.imageCaption.text = StringUtil.fromHtml(page!!.imageInfo()!!.metadata!!.imageDescription()).toString().trim()
                             binding.imageCaption.visibility = VISIBLE
+                            binding.imageView.contentDescription = binding.imageCaption.text
                         } else {
                             binding.imageCaption.visibility = GONE
                         }
@@ -323,6 +326,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
         publishSuccess = false
 
         funnel?.logSaveAttempt()
+        EditAttemptStepEvent.logSaveAttempt(callback().getLangCode())
 
         binding.publishProgressText.setText(R.string.suggested_edits_image_tags_publishing)
         binding.publishProgressCheck.visibility = GONE
@@ -336,7 +340,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ token ->
-                    val mId = "M" + page!!.pageId()
+                    val mId = "M" + page!!.pageId
                     var claimStr = "{\"claims\":["
                     var commentStr = "/* add-depicts: "
                     var first = true
@@ -369,7 +373,8 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
                             }
                             .subscribe({
                                 if (it.entity != null) {
-                                    funnel?.logSaved(it.entity!!.lastRevId, invokeSource.name)
+                                    funnel?.logSaved(it.entity.lastRevId, invokeSource.value)
+                                    EditAttemptStepEvent.logSaveSuccess(callback().getLangCode())
                                 }
                                 publishSuccess = true
                                 onSuccess()
@@ -383,7 +388,7 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
     }
 
     private fun onSuccess() {
-        SuggestedEditsFunnel.get()!!.success(ADD_IMAGE_TAGS)
+        SuggestedEditsFunnel.get().success(ADD_IMAGE_TAGS)
 
         val duration = 500L
         binding.publishProgressBar.alpha = 1f
@@ -420,8 +425,9 @@ class SuggestedEditsImageTagsFragment : SuggestedEditsItemFragment(), CompoundBu
 
     private fun onError(caught: Throwable) {
         // TODO: expand this a bit.
-        SuggestedEditsFunnel.get()!!.failure(ADD_IMAGE_TAGS)
+        SuggestedEditsFunnel.get().failure(ADD_IMAGE_TAGS)
         funnel?.logError(caught.localizedMessage)
+        EditAttemptStepEvent.logSaveFailure(callback().getLangCode())
         binding.publishOverlayContainer.visibility = GONE
         FeedbackUtil.showError(requireActivity(), caught)
     }

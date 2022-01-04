@@ -124,7 +124,7 @@ class FeedFragment : Fragment(), BackPressedHandler {
     private fun showRemoveChineseVariantPrompt() {
         if (app.language().appLanguageCodes.contains(AppLanguageLookUpTable.TRADITIONAL_CHINESE_LANGUAGE_CODE) &&
             app.language().appLanguageCodes.contains(AppLanguageLookUpTable.SIMPLIFIED_CHINESE_LANGUAGE_CODE) &&
-            Prefs.shouldShowRemoveChineseVariantPrompt()) {
+            Prefs.shouldShowRemoveChineseVariantPrompt) {
             AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.dialog_of_remove_chinese_variants_from_app_lang_title)
                 .setMessage(R.string.dialog_of_remove_chinese_variants_from_app_lang_text)
@@ -132,7 +132,7 @@ class FeedFragment : Fragment(), BackPressedHandler {
                 .setNegativeButton(R.string.dialog_of_remove_chinese_variants_from_app_lang_no, null)
                 .show()
         }
-        Prefs.shouldShowRemoveChineseVariantPrompt(false)
+        Prefs.shouldShowRemoveChineseVariantPrompt = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -295,7 +295,7 @@ class FeedFragment : Fragment(), BackPressedHandler {
         override fun onNewsItemSelected(card: NewsCard, view: NewsItemView) {
             callback?.let {
                 it.onFeedNewsItemSelected(card, view)
-                funnel.cardClicked(card.type(), card.wikiSite().languageCode())
+                funnel.cardClicked(card.type(), card.wikiSite().languageCode)
             }
         }
 
@@ -397,7 +397,7 @@ class FeedFragment : Fragment(), BackPressedHandler {
     }
 
     private fun getCardLanguageCode(card: Card?): String? {
-        return if (card is WikiSiteCard) card.wikiSite().languageCode() else null
+        return if (card is WikiSiteCard) card.wikiSite().languageCode else null
     }
 
     companion object {

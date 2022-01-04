@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.wikipedia.views.WikiCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/overflow_card_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
             android:id="@+id/overflow_share"
             style="@style/OverflowMenuItem"
             android:drawablePadding="16dp"
-            android:text="@string/menu_page_share"
+            android:text="@string/menu_article_share"
             app:drawableStartCompat="@drawable/ic_share"
             app:drawableTint="?attr/material_theme_secondary_color" />
 

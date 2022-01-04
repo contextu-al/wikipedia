@@ -48,9 +48,9 @@ class LeadImagesHandler(private val parentFragment: PageFragment,
     private val activity get() = parentFragment.requireActivity()
     private val disposables = CompositeDisposable()
 
-    private val isLeadImageEnabled get() = Prefs.isImageDownloadEnabled() && !DimenUtil.isLandscape(activity) && displayHeightDp >= MIN_SCREEN_HEIGHT_DP && !isMainPage && !leadImageUrl.isNullOrEmpty()
-    private val leadImageWidth get() = page?.run { pageProperties.leadImageWidth } ?: pageHeaderView.getImageView().width
-    private val leadImageHeight get() = page?.run { pageProperties.leadImageHeight } ?: pageHeaderView.getImageView().height
+    private val isLeadImageEnabled get() = Prefs.isImageDownloadEnabled && !DimenUtil.isLandscape(activity) && displayHeightDp >= MIN_SCREEN_HEIGHT_DP && !isMainPage && !leadImageUrl.isNullOrEmpty()
+    private val leadImageWidth get() = page?.run { pageProperties.leadImageWidth } ?: pageHeaderView.imageView.width
+    private val leadImageHeight get() = page?.run { pageProperties.leadImageHeight } ?: pageHeaderView.imageView.height
 
     // Conditionally add the PageTitle's URL scheme and authority if these are missing from the
     // PageProperties' URL.
@@ -79,7 +79,7 @@ class LeadImagesHandler(private val parentFragment: PageFragment,
 
     val topMargin get() = DimenUtil.roundedPxToDp((if (isLeadImageEnabled) DimenUtil.leadImageHeightForDevice(parentFragment.requireContext()) else parentFragment.toolbarMargin.toFloat()).toFloat())
     val callToActionEditLang get() =
-        if (callToActionIsTranslation) callToActionTargetSummary?.pageTitle?.wikiSite?.languageCode() else callToActionSourceSummary?.pageTitle?.wikiSite?.languageCode()
+        if (callToActionIsTranslation) callToActionTargetSummary?.pageTitle?.wikiSite?.languageCode else callToActionSourceSummary?.pageTitle?.wikiSite?.languageCode
 
     init {
         pageHeaderView.setWebView(webView)
@@ -108,13 +108,13 @@ class LeadImagesHandler(private val parentFragment: PageFragment,
                         ServiceFactory.get(WikiSite(Service.COMMONS_URL)).getImageInfo(imageTitle, WikipediaApp.getInstance().appOrSystemLanguageCode), { first, second -> Pair(first, second) })
                 }
                 .flatMap { pair ->
-                    captionSourcePageTitle = PageTitle(imageTitle, WikiSite(Service.COMMONS_URL, it.wikiSite.languageCode()))
-                    captionSourcePageTitle!!.description = pair.first[it.wikiSite.languageCode()]
+                    captionSourcePageTitle = PageTitle(imageTitle, WikiSite(Service.COMMONS_URL, it.wikiSite.languageCode))
+                    captionSourcePageTitle!!.description = pair.first[it.wikiSite.languageCode]
                     imagePage = pair.second.query?.firstPage()
                     imageEditType = null // Need to clear value from precious call
-                    if (!pair.first.containsKey(it.wikiSite.languageCode())) {
+                    if (!pair.first.containsKey(it.wikiSite.languageCode)) {
                         imageEditType = ImageEditType.ADD_CAPTION
-                        return@flatMap ImageTagsProvider.getImageTagsObservable(pair.second.query?.firstPage()!!.pageId(), it.wikiSite.languageCode())
+                        return@flatMap ImageTagsProvider.getImageTagsObservable(pair.second.query?.firstPage()!!.pageId, it.wikiSite.languageCode)
                     }
                     if (WikipediaApp.getInstance().language().appLanguageCodes.size >= Constants.MIN_LANGUAGES_TO_UNLOCK_TRANSLATION) {
                         for (lang in WikipediaApp.getInstance().language().appLanguageCodes) {
@@ -125,16 +125,17 @@ class LeadImagesHandler(private val parentFragment: PageFragment,
                             }
                         }
                     }
-                    ImageTagsProvider.getImageTagsObservable(pair.second.query?.firstPage()!!.pageId(), it.wikiSite.languageCode())
+                    ImageTagsProvider.getImageTagsObservable(pair.second.query?.firstPage()!!.pageId, it.wikiSite.languageCode)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { imageTagsResult ->
-                    if (imageEditType != ImageEditType.ADD_CAPTION && imageTagsResult != null && imageTagsResult.isEmpty()) {
+                    if (imageEditType != ImageEditType.ADD_CAPTION && imageTagsResult.isEmpty()) {
                         imageEditType = ImageEditType.ADD_TAGS
                     }
                     finalizeCallToAction()
                 }
             )
+            pageHeaderView.imageView.contentDescription = parentFragment.getString(R.string.image_content_description, it.displayText)
         }
     }
 
@@ -147,17 +148,17 @@ class LeadImagesHandler(private val parentFragment: PageFragment,
             ImageEditType.ADD_CAPTION_TRANSLATION -> {
                 callToActionIsTranslation = true
                 captionSourcePageTitle?.run {
-                    callToActionSourceSummary = PageSummaryForEdit(prefixedText, wikiSite.languageCode(), this, displayText, description, leadImageUrl)
+                    callToActionSourceSummary = PageSummaryForEdit(prefixedText, wikiSite.languageCode, this, displayText, description, leadImageUrl)
                 }
                 captionTargetPageTitle?.run {
-                    callToActionTargetSummary = PageSummaryForEdit(prefixedText, wikiSite.languageCode(), this, displayText, null, leadImageUrl)
-                    pageHeaderView.setUpCallToAction(parentFragment.getString(R.string.suggested_edits_article_cta_image_caption_in_language, WikipediaApp.getInstance().language().getAppLanguageLocalizedName(wikiSite.languageCode())))
+                    callToActionTargetSummary = PageSummaryForEdit(prefixedText, wikiSite.languageCode, this, displayText, null, leadImageUrl)
+                    pageHeaderView.setUpCallToAction(parentFragment.getString(R.string.suggested_edits_article_cta_image_caption_in_language, WikipediaApp.getInstance().language().getAppLanguageLocalizedName(wikiSite.languageCode)))
                 }
             }
             else -> {
                 captionSourcePageTitle?.run {
                     title?.let {
-                        callToActionSourceSummary = PageSummaryForEdit(prefixedText, it.wikiSite.languageCode(), this, displayText, StringUtil.fromHtml(imagePage?.imageInfo()?.metadata?.imageDescription().orEmpty()).toString(), imagePage?.imageInfo()?.thumbUrl)
+                        callToActionSourceSummary = PageSummaryForEdit(prefixedText, it.wikiSite.languageCode, this, displayText, StringUtil.fromHtml(imagePage?.imageInfo()?.metadata?.imageDescription().orEmpty()).toString(), imagePage?.imageInfo()?.thumbUrl)
                         pageHeaderView.setUpCallToAction(parentFragment.getString(R.string.suggested_edits_article_cta_image_caption))
                     }
                 }
@@ -218,11 +219,11 @@ class LeadImagesHandler(private val parentFragment: PageFragment,
                 title?.let {
                     val filename = "File:$imageName"
                     val wiki = language?.run { WikiSite.forLanguageCode(this) } ?: it.wikiSite
-                    val hitInfo = JavaScriptActionHandler.ImageHitInfo(pageHeaderView.getImageView().left.toFloat(),
-                        pageHeaderView.getImageView().top.toFloat(), leadImageWidth.toFloat(), leadImageHeight.toFloat(),
+                    val hitInfo = JavaScriptActionHandler.ImageHitInfo(pageHeaderView.imageView.left.toFloat(),
+                        pageHeaderView.imageView.top.toFloat(), leadImageWidth.toFloat(), leadImageHeight.toFloat(),
                         leadImageUrl!!, true)
                     GalleryActivity.setTransitionInfo(hitInfo)
-                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pageHeaderView.getImageView(), activity.getString(R.string.transition_page_gallery))
+                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pageHeaderView.imageView, activity.getString(R.string.transition_page_gallery))
                     activity.startActivityForResult(GalleryActivity.newIntent(activity,
                         parentFragment.title, filename, wiki, parentFragment.revision, GalleryFunnel.SOURCE_LEAD_IMAGE),
                         Constants.ACTIVITY_REQUEST_GALLERY, options.toBundle())

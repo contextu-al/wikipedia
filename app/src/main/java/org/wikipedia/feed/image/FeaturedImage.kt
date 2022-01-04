@@ -1,18 +1,19 @@
 package org.wikipedia.feed.image
 
+import kotlinx.serialization.Serializable
 import org.wikipedia.gallery.GalleryItem
 import org.wikipedia.gallery.ImageInfo
-import org.wikipedia.json.PostProcessingTypeAdapter.PostProcessable
 import org.wikipedia.util.StringUtil
 
-class FeaturedImage : GalleryItem(), PostProcessable {
+@Serializable
+class FeaturedImage : GalleryItem() {
 
     val title = ""
 
     val image = ImageInfo()
 
-    override fun postProcess() {
+    init {
         titles = Titles(title, StringUtil.addUnderscores(title), title)
-        original.setSource(image.source)
+        original.source = image.source
     }
 }

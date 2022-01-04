@@ -25,7 +25,10 @@ object Constants {
     const val ACTIVITY_REQUEST_SUGGESTED_EDITS_ONBOARDING = 63
     const val ACTIVITY_REQUEST_VOICE_SEARCH = 45
     const val ACTIVITY_REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 44
+    const val ACTIVITY_REQUEST_GO_TO_TOPIC_ACTIVITY = 68
+
     const val API_QUERY_MAX_TITLES = 50
+
     const val INTENT_APP_SHORTCUT_CONTINUE_READING = "appShortcutContinueReading"
     const val INTENT_APP_SHORTCUT_RANDOMIZER = "appShortcutRandomizer"
     const val INTENT_APP_SHORTCUT_SEARCH = "appShortcutSearch"
@@ -42,6 +45,7 @@ object Constants {
     const val INTENT_EXTRA_REVERT_QNUMBER = "revertQNumber"
     const val INTENT_FEATURED_ARTICLE_FROM_WIDGET = "featuredArticleFromWidget"
     const val INTENT_RETURN_TO_MAIN = "returnToMain"
+
     const val MAX_READING_LIST_ARTICLE_LIMIT = 5000
     const val MAX_READING_LISTS_LIMIT = 100
     const val MAX_TABS = 100
@@ -52,7 +56,10 @@ object Constants {
     const val RECENT_SEARCHES_FRAGMENT_LOADER_ID = 101
     const val SUGGESTION_REQUEST_ITEMS = 5
 
-    enum class InvokeSource(name: String) {
+    const val WIKI_CODE_COMMONS = "commons"
+    const val WIKI_CODE_WIKIDATA = "wikidata"
+
+    enum class InvokeSource(val value: String) {
         ANNOUNCEMENT("announcement"),
         APP_SHORTCUTS("appShortcuts"),
         BOOKMARK_BUTTON("bookmark"),

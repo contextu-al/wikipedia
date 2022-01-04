@@ -63,6 +63,10 @@
   <string name="app_settings">앱 설정</string>
   <string name="search_tab_tooltip">검색 항목 입력을 바로 시작하려면 아이콘을 다시 탭하십시오.</string>
   <string name="history_list_title">역사</string>
+  <string name="image_content_description">이미지: %s</string>
+  <string name="page_content_description">문서: %s</string>
+  <string name="wikimedia_commons">위키미디어 공용</string>
+  <string name="wikidata">위키데이터</string>
   <string name="dialog_title_clear_history">방문 기록 지우기</string>
   <string name="dialog_message_clear_history">모든 방문 기록을 지우고 현재 열려 있는 모든 탭을 닫습니다. 계속하시겠습니까?</string>
   <string name="dialog_message_clear_history_yes">예</string>
@@ -84,6 +88,7 @@
   <string name="feed_card_add_to_list">읽기 목록에 추가</string>
   <string name="feed_card_add_to_default_list">저장</string>
   <string name="menu_page_share">링크 공유</string>
+  <string name="menu_article_share">문서 공유</string>
   <string name="menu_page_open_a_new_tab">새 탭 열기</string>
   <string name="menu_page_new_tab">새 탭</string>
   <string name="menu_page_reading_lists">읽기 목록</string>
@@ -173,7 +178,7 @@
   <string name="create_account_passwords_mismatch_error">비밀번호가 일치하지 않습니다</string>
   <string name="create_account_email_error">이메일 주소가 잘못되었습니다</string>
   <string name="create_account_username_error">사용자 이름에 유효하지 않은 문자가 있습니다</string>
-  <string name="create_account_password_error">비밀번호가 유효하지 않습니다</string>
+  <string name="create_account_password_error">비밀번호의 최소 길이는 8자입니다</string>
   <string name="create_account_generic_error">계정을 만들 수 없습니다</string>
   <string name="create_account_next">다음</string>
   <string name="email_recommendation_dialog_title">이메일 주소 없이 계정을 만드시겠습니까?</string>
@@ -187,6 +192,7 @@
   <string name="create_account_ip_block_help_url">https://en.wikipedia.org/wiki/Help:I_have_been_blocked</string>
   <string name="create_account_ip_block_details">자세한 사항</string>
   <string name="preferences_general_heading">일반</string>
+  <string name="preferences_account_heading">계정</string>
   <string name="wikipedia_app_faq">위키백과 앱 FAQ</string>
   <string name="send_feedback">앱 피드백 보내기</string>
   <string name="create_account_account_created_toast">계정을 만들었습니다!</string>
@@ -215,6 +221,7 @@
   <string name="page_protected_can_not_edit_title">이 문서는 보호되어 있습니다</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">주시문서 목록에 추가</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_text">관심 가는 문서에 일어나는 변화를 추적해보세요. 메뉴를 &lt;b&gt;주시문서 목록에 추가&lt;/b&gt; 문서의 변경 사항을 확인할 수 있습니다.</string>
+  <string name="page_notification_tooltip">알림이 여기에 있습니다.</string>
   <string name="settings_item_preferences">설정</string>
   <string name="settings_activity_title">설정</string>
   <string name="about_description">위키백과 앱 정보</string>
@@ -258,6 +265,10 @@
   <string name="edit_summary_tag_other_hint">문서를 개선하는 다른 방법</string>
   <string name="edit_conflict_title">편집 충돌</string>
   <string name="edit_conflict_message">이 문서는 이미 다른 사용자에 의해 수정되었으며 편집과 충돌합니다. 편집을 복사하고 뒤로 돌아가서 문서를 새로 고친 다음 다시 편집을 시도하십시오.</string>
+  <string name="edit_notices">편집 알림</string>
+  <string name="edit_notices_please_read">편집하기 전에 읽어 주십시오</string>
+  <string name="edit_notices_show_auto">자동으로 편집 알림 표시</string>
+  <string name="edit_notices_tooltip">이 문서의 편집 알림을 보려면 이 버튼을 탭하십시오.</string>
   <string name="find_next">다음 찾기</string>
   <string name="find_previous">이전 찾기</string>
   <string name="find_first_occurence">이것이 처음 항목입니다</string>
@@ -307,6 +318,7 @@
   <string name="gallery_save_success">파일을 저장했습니다.</string>
   <string name="gallery_error_video_failed">동영상을 재생할 수 없습니다.</string>
   <string name="gallery_save_image_write_permission_rationale">장치에서 저장소의 쓰기 권한은 그림 저장에 필요합니다.</string>
+  <string name="gallery_edit_button_content_description">이미지 캡션 편집</string>
   <string name="gallery_add_image_caption_button">이미지 캡션 추가</string>
   <string name="gallery_add_image_caption_in_language_button">이미지 설명 추가 (%s)</string>
   <string name="err_cannot_save_file">파일을 저장할 수 없음</string>
@@ -368,6 +380,7 @@
   <string name="error_message_generic">오류가 발생했습니다</string>
   <string name="view_link_preview_error_button_dismiss">숨기기</string>
   <string name="error_page_does_not_exist">이 문서가 존재하지 않습니다</string>
+  <string name="error_user_page_does_not_exist">위키백과에 이 이름의 &lt;a href=\"%1$s\"&gt;사용자 문서&lt;/a&gt;가 없습니다. 일반적으로 이 문서는 &lt;b&gt;%2$s&lt;/b&gt;님이 만들고 편집해야 합니다. 의심이 들면 \"%3$s\" 문서가 존재하는지 확인해 주십시오.</string>
   <string name="view_wiki_error_message_offline">인터넷에 연결할 수 없습니다</string>
   <string name="view_wiki_error_message_timeout">위키백과에 연결할 수 없습니다. 네트워크 연결을 확인하고 나중에 다시 시도하십시오</string>
   <string name="reference_title">각주 %s</string>
@@ -540,12 +553,15 @@
   <string name="reading_list_remove_from_offline_cancel_button_text">취소</string>
   <string name="reading_list_download_using_mobile_data_cancel_button_text">취소</string>
   <string name="reading_list_split_dialog_ok_button_text">확인</string>
+  <string name="reading_list_activity_title">읽기 목록: %s</string>
   <string name="user_option_sync_label">환경 설정</string>
   <string name="notification_reverted_title">되돌려진 편집</string>
+  <string name="notification_channel_title">문서를 다운로드하는 중</string>
   <string name="notification_channel_description">다운로드 진척도</string>
   <string name="notification_syncing_pause_button">일시 정지</string>
   <string name="notification_syncing_resume_button">재개</string>
   <string name="notification_syncing_cancel_button">취소</string>
+  <string name="notification_syncing_reading_list_channel_title">읽기 목록 동기화</string>
   <string name="notification_syncing_reading_list_channel_description">읽기 목록 동기화 진행</string>
   <string name="notification_many_unread">읽지 않은 알림 %d건이 있습니다</string>
   <plurals name="notification_channel_name">
@@ -585,6 +601,19 @@
   <string name="notifications_view_archived_button_text">보관된 알림 보기</string>
   <string name="notification_preferences_title">알림 환경 설정</string>
   <string name="notifications_mark_unread">읽지 않은 것으로 표시</string>
+  <string name="notifications_mark_all_as_read">모두 읽은 것으로 표시</string>
+  <string name="notifications_direct_reply_action">답변</string>
+  <string name="notifications_direct_reply_progress">답변을 %s에 게시하는 중…</string>
+  <string name="notifications_direct_reply_success">답변을 게시했습니다.</string>
+  <string name="notifications_direct_reply_error">답변을 자동으로 게시하지 못했습니다.</string>
+  <string name="notifications_mark_all_as_read_message">%d개를 읽은 것으로 표시함</string>
+  <string name="notifications_mark_all_as_unread_message">%d개를 읽지 않은 것으로 표시함</string>
+  <plurals name="notifications_mark_as_read_plural">
+    <item quantity="other">알림 %d개가 읽음으로 표시됨</item>
+  </plurals>
+  <plurals name="notifications_mark_as_unread_plural">
+    <item quantity="other">알림 %d개가 읽지 않음으로 표시됨</item>
+  </plurals>
   <string name="watchlist_title">주시문서 목록</string>
   <string name="preference_title_notification_poll">알림 폴링</string>
   <string name="preference_summary_notification_poll">앱이 백그라운드에서 새 알림을 확인할 수 있게 합니다.</string>
@@ -602,7 +631,46 @@
   <string name="preference_title_notification_mention">언급</string>
   <string name="preference_summary_notification_mention">누군가가 문서에 당신을 언급했습니다</string>
   <string name="preference_title_notification_user_talk">토론 문서</string>
-  <string name="preference_summary_notification_user_talk">토크 페이지의 메시지</string>
+  <string name="preference_summary_notification_user_talk">토론 문서의 메시지와 답변</string>
+  <string name="preference_title_notification_email_user">이메일 받음</string>
+  <string name="preference_summary_notification_email_user">누군가가 위키를 통해 이메일을 보냈습니다</string>
+  <string name="preference_title_notification_user_rights">사용자 권한 변경</string>
+  <string name="preference_summary_notification_user_rights">사용자 권한이 변경될 때 알림을 받습니다</string>
+  <string name="preference_title_notification_article_linked">내가 만든 문서의 링크</string>
+  <string name="preference_summary_notification_article_linked">내가 만든 문서로 향하는 새로운 링크가 만들어질 때 알림을 받습니다</string>
+  <string name="preference_category_push_notifications">푸시 알림</string>
+  <string name="preference_title_customize_push_notifications">푸시 알림 사용자 지정</string>
+  <string name="preference_category_display_settings">표시 설정</string>
+  <string name="preference_title_hide_read_notifications">읽은 알림 숨기기</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">위키백과</string>
+  <string name="notifications_channel_group_wikipedia_notifications_description">위키백과의 알림</string>
+  <string name="notifications_channel_group_other_title">기타</string>
+  <string name="notifications_channel_group_other_description">앱의 기타 알림</string>
+  <string name="notifications_filter_label">필터 알림</string>
+  <string name="notifications_filter_icon_content_description">필터 알림</string>
+  <string name="notifications_filter_update_app_languages">앱 언어 업데이트</string>
+  <string name="notifications_empty_search_message">더 많은 알림을 보려면 %s을 제거해 보십시오.</string>
+  <plurals name="notifications_number_of_filters">
+    <item quantity="other">%d개 필터</item>
+  </plurals>
+  <string name="notifications_select_all_filters">모든 필터 선택</string>
+  <string name="notifications_tab_filter_all">모두</string>
+  <string name="notifications_tab_filter_mentions">언급</string>
+  <string name="notifications_tab_filter_unread">(%s)</string>
+  <string name="notifications_search_bar_hint">알림 검색 또는 필터</string>
+  <string name="notifications_search_bar_filter_hint">알림 필터</string>
+  <string name="notifications_menu_mark_as_read">읽은 것으로 표시</string>
+  <string name="notifications_menu_mark_as_unread">읽지 않은 것으로 표시</string>
+  <string name="notifications_swipe_action_read">읽음</string>
+  <string name="notifications_swipe_action_unread">읽지 않음</string>
+  <string name="notifications_menu_check_all">모든 항목 체크</string>
+  <string name="notifications_menu_uncheck_all">모든 항목의 체크를 해제</string>
+  <string name="notifications_wiki_filter_header">위키 필터</string>
+  <string name="notifications_type_filter_header">유형 필터</string>
+  <string name="notifications_all_wikis_text">모든 \"위키\"</string>
+  <string name="notifications_all_types_text">모든 \"종류\"</string>
+  <string name="notifications_menu_user_talk_page">%s님의 토론 문서</string>
+  <string name="notifications_offline_disable_message">이 기능은 오프라인 상태에서 사용할 수 없습니다.</string>
   <string name="view_because_you_read_card_title">읽었던 글 관련 추천</string>
   <string name="view_random_card_title">임의의 문서 보기</string>
   <string name="view_random_article_card_title">임의 문서</string>
@@ -660,6 +728,7 @@
   <string name="feed_accessibility_card_text">피드의 끝에 도달했습니다.</string>
   <string name="feed_accessibility_card_load_more_button">더 불러오기</string>
   <string name="top_read_activity_title">%s의 가장 많이 읽은 글</string>
+  <string name="tabs_activity_title">탭</string>
   <string name="description_edit_text_hint">문서 설명</string>
   <string name="description_edit_article_description_label">문서</string>
   <string name="description_edit_translate_article_description_label_per_language">문서 설명 (%s)</string>
@@ -867,6 +936,7 @@
   <string name="file_page_add_image_caption_button">이미지 캡션 추가</string>
   <string name="file_page_add_image_tags_button">이미지 태그 추가</string>
   <string name="file_page_suggestion_reason">제안 이유</string>
+  <string name="file_page_edit_button_content_description">%s 편집</string>
   <string name="description_edit_revert_subtitle">위키백과를 편집해 주셔서 감사합니다!</string>
   <string name="description_edit_revert_intro">저희는 당신이 최선의 노력을 다해주신 것을 알고 있습니다만, 검토자들 중 한 명이 걱정하는 부분이 있습니다. 당신의 편집이 되돌려진 잠재적 이유는 다음과 같습니다:</string>
   <string name="description_edit_revert_reason1">당신의 기여는 &lt;a href=\"%1$s\"&gt;지침들&lt;/a&gt; 가운데 하나를 준수하지 않았습니다.</string>
@@ -960,7 +1030,7 @@
   <string name="talk_title">토론</string>
   <string name="talk_user_title">토론: %s</string>
   <string name="talk_new_topic">새 주제</string>
-  <string name="talk_new_topic_submitted" fuzzy="true">주제가 제출되었습니다.</string>
+  <string name="talk_new_topic_submitted">주제가 게시되었습니다.</string>
   <string name="talk_page_empty">이 토론 문서는 비어있습니다.</string>
   <string name="talk_add_reply">답변</string>
   <string name="talk_no_subject">(주제 없음)</string>
@@ -969,16 +1039,24 @@
   <string name="talk_message_hint">메시지 쓰기</string>
   <string name="talk_message_empty">메시지는 빈 채로 둘 수 없습니다.</string>
   <string name="talk_subject_empty">주제는 빈 채로 둘 수 없습니다.</string>
-  <string name="talk_response_submitted" fuzzy="true">응답이 제출되었습니다.</string>
+  <string name="talk_response_submitted">응답이 게시되었습니다.</string>
   <string name="talk_snackbar_undo">실행 취소</string>
   <string name="talk_last_modified">%2$s님이 &lt;b&gt;%1$s에 마지막으로 편집함&lt;/b&gt;</string>
+  <string name="talk_snackbar_survey_text">토론 문서를 이용해 주셔서 고맙습니다. 설문조사에 참여하여 앱 개선을 지원해 주시겠습니까?</string>
+  <string name="talk_snackbar_survey_action_text">시작하기</string>
+  <string name="talk_share_discussion_subject">위키백과 - 토론 문서 주제 \"%s\"의 토론</string>
+  <string name="talk_share_talk_page">위키백과 - 토론 문서의 토론</string>
+  <string name="menu_option_share_talk_discussion">토론 공유하기</string>
+  <string name="menu_option_share_talk_page">토론 문서 공유</string>
   <string name="menu_option_share_edit">편집 공유</string>
   <string name="menu_option_user_profile">%s님의 정보</string>
   <string name="menu_option_user_contributions">%s님의 기여</string>
   <string name="watchlist_details_watching_label">주시 중</string>
   <string name="watchlist_details_watch_label">주시</string>
+  <string name="watchlist_details_next_edit">다음 편집</string>
+  <string name="watchlist_details_prev_edit">이전 편집</string>
   <string name="thank_label">감사 표현</string>
-  <string name="go_to_user_page">사용자 문서로 이동하기</string>
+  <string name="view_user_page">사용자 문서 보기</string>
   <string name="thank_dialog_title_text">공개적으로 감사 표하기</string>
   <string name="thank_dialog_text">\'감사 표현\'은 위키백과에서 편집자의 기여에 감사를 표하는 쉬운 방법입니다. \'감사 표현\'은 취소할 수 없으며 공개되지 않습니다.</string>
   <string name="thank_dialog_positive_button_text">감사 표현하기</string>

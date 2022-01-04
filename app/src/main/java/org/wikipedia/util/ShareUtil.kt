@@ -28,7 +28,7 @@ object ShareUtil {
     private const val FILE_PROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID + ".fileprovider"
     private const val FILE_PREFIX = "file://"
 
-    private fun shareText(context: Context, subject: String, text: String) {
+    fun shareText(context: Context, subject: String, text: String) {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         shareIntent.putExtra(Intent.EXTRA_TEXT, text)
@@ -54,7 +54,7 @@ object ShareUtil {
 
     fun shareText(context: Context, title: PageTitle, newId: Long, oldId: Long) {
         shareText(context, StringUtil.fromHtml(title.displayText).toString(),
-                title.getWebApiUrl("diff=$newId&oldid=$oldId&variant=${title.wikiSite.languageCode()}"))
+                title.getWebApiUrl("diff=$newId&oldid=$oldId&variant=${title.wikiSite.languageCode}"))
     }
 
     @JvmStatic
@@ -168,8 +168,9 @@ object ShareUtil {
                 excludedComponents.add(componentName)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Intent.createChooser(intent, chooserTitle)
-                    .putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, excludedComponents.toTypedArray())
+            return if (excludedComponents.size >= infoList.size) null
+            else Intent.createChooser(intent, chooserTitle)
+                .putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, excludedComponents.toTypedArray())
         }
         if (infoList.isEmpty()) {
             return null

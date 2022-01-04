@@ -2,8 +2,10 @@
 <!-- Authors:
 * Aftabuzzaman
 * Al Riaz Uddin Ripon
+* Ankan
 * Bellayet
 * Bodhisattwa
+* Dbrant
 * Elias Ahmmad
 * Greatder
 * Masumrezarock100
@@ -59,6 +61,10 @@
   <string name="app_settings">অ্যাপ সেটিং</string>
   <string name="search_tab_tooltip">সরাসরি অনুসন্ধানের শব্দ টাইপ করা শুরু করতে আইকনটিতে আবার টিপ দিন।</string>
   <string name="history_list_title">ইতিহাস</string>
+  <string name="image_content_description">চিত্র: %s</string>
+  <string name="page_content_description">পাতা: %s</string>
+  <string name="wikimedia_commons">উইকিমিডিয়া কমন্স</string>
+  <string name="wikidata">উইকিউপাত্ত</string>
   <string name="dialog_title_clear_history">ব্রাউজ করার ইতিহাস অপসারণ করবেন</string>
   <string name="dialog_message_clear_history">এটি আপনার ব্রাউজ করা সব ইতিহাস মুছে দিবে, এবং বর্তমানে খোলা সব ট্যাব বন্ধ করবে। আপনি কি নিশ্চিত?</string>
   <string name="dialog_message_clear_history_yes">হ্যাঁ</string>
@@ -169,7 +175,7 @@
   <string name="create_account_passwords_mismatch_error">পাসওয়ার্ড মিলেনি</string>
   <string name="create_account_email_error">ভুল ইমেইল ঠিকানা</string>
   <string name="create_account_username_error">ব্যবহারকারী নামে অবৈধ অক্ষর রয়েছে</string>
-  <string name="create_account_password_error">পাসওয়ার্ড ভুল</string>
+  <string name="create_account_password_error">পাসওয়ার্ডটি কমপক্ষে ৮ অক্ষরের হতে হবে</string>
   <string name="create_account_generic_error">অ্যাকাউন্ট তৈরী করা যাচ্ছে না</string>
   <string name="create_account_next">পরবর্তী</string>
   <string name="email_recommendation_dialog_title">কোন ইমেল ঠিকানা ছাড়াই অ্যাকাউন্ট তৈরি করবেন?</string>
@@ -183,6 +189,7 @@
   <string name="create_account_ip_block_help_url">https://en.wikipedia.org/wiki/Help:I_have_been_blocked</string>
   <string name="create_account_ip_block_details">বিস্তারিত</string>
   <string name="preferences_general_heading">সাধারণ</string>
+  <string name="preferences_account_heading">অ্যাকাউন্ট</string>
   <string name="wikipedia_app_faq">উইকিপিডিয়া অ্যাপ প্রাজিপ্র</string>
   <string name="send_feedback">অ্যাপ সম্পর্কে প্রতিক্রিয়া জানান</string>
   <string name="create_account_account_created_toast">অ্যাকাউন্ট তৈরি করা হয়েছে!</string>
@@ -210,6 +217,7 @@
   <string name="page_protected_can_not_edit_anon">দুঃখিত, এই পৃষ্ঠাটি এই মুহুর্তে বেনামে সম্পাদনা করা যাবে না।</string>
   <string name="page_protected_can_not_edit_title">এই পাতাটি সুরক্ষিত</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">নজরতালিকায় যোগ করুন</string>
+  <string name="page_notification_tooltip">আপনার বিজ্ঞপ্তিগুলি এখন এখানে পাওয়া যাবে।</string>
   <string name="settings_item_preferences">সেটিংস</string>
   <string name="settings_activity_title">সেটিংস</string>
   <string name="about_description">উইকিপিডিয়া অ্যাপ সম্পর্কে</string>
@@ -254,6 +262,10 @@
   <string name="edit_summary_tag_other">অন্যান্য</string>
   <string name="edit_summary_tag_other_hint">অন্যান্য যে পদ্ধতিতে আপনি পাতাটির মান উন্নয়ন করেছেন</string>
   <string name="edit_conflict_title">সম্পাদনা দ্বন্দ্ব</string>
+  <string name="edit_notices">সম্পাদনা বিজ্ঞপ্তি</string>
+  <string name="edit_notices_please_read">সম্পাদনা করার আগে অনুগ্রহ করে পড়ুন</string>
+  <string name="edit_notices_show_auto">স্বয়ংক্রিয়ভাবে সম্পাদনা বিজ্ঞপ্তি দেখান</string>
+  <string name="edit_notices_tooltip">এই বাটনে ক্লিক করে এই নিবন্ধের সম্পাদনা বিজ্ঞপ্তি দেখুন।</string>
   <string name="find_next">পরবর্তী খুঁজুন</string>
   <string name="find_previous">পূর্বেরটি খুঁজুন</string>
   <string name="find_first_occurence">এটি প্রথম ঘটনা</string>
@@ -302,6 +314,7 @@
   <string name="gallery_save_success">ফাইল সংরক্ষিত হয়েছে।</string>
   <string name="gallery_error_video_failed">ভিডিওটি চালু হচ্ছেনা।</string>
   <string name="gallery_save_image_write_permission_rationale">ছবি সংরক্ষণের জন্য আপনার ডিভাইসের সংগ্রহস্থলে লেখার অনুমতি প্রয়োজন।</string>
+  <string name="gallery_edit_button_content_description">ছবির ক্যাপশন সম্পাদনা করুন</string>
   <string name="gallery_add_image_caption_button">ছবির ক্যাপশন যোগ করুন</string>
   <string name="gallery_add_image_caption_in_language_button">ছবির ক্যাপশন যোগ করুন (%s)</string>
   <string name="err_cannot_save_file">ফাইলটি সংরক্ষণ করা যাচ্ছে না</string>
@@ -348,10 +361,15 @@
   <string name="location_permissions_enable_prompt">আপনি কাছাকাছি স্থান দেখার জন্য অবস্থানের অনুমতি সক্রিয় করুন।</string>
   <string name="location_permissions_enable_action">চালু করুন</string>
   <string name="error_webview_updating">Android System WebView এই মুহুর্তে হালনাগাদ করা হচ্ছে। কয়েক মুহূর্ত পর আবার চেষ্টা করুন।</string>
+  <plurals name="multi_items_selected">
+    <item quantity="one">%dটি নির্বাচিত</item>
+    <item quantity="other">%dটি নির্বাচিত</item>
+  </plurals>
   <string name="multi_select_items_selected">%dটি নির্বাচিত</string>
   <string name="error_message_generic">একটি ত্রুটি দেখা দিয়েছে</string>
   <string name="view_link_preview_error_button_dismiss">খারিজ</string>
   <string name="error_page_does_not_exist">এই পাতার অস্তিত্ব নেই</string>
+  <string name="error_user_page_does_not_exist">উইকিপিডিয়ায় হুবহু এই নামে কোনও &lt;a href=\"%1$s\"&gt;ব্যবহারকারী পাতা&lt;/a&gt; নেই। সাধারণত, এই পাতাটি &lt;b&gt;%2$s&lt;/b&gt; কর্তৃক তৈরি ও সম্পাদনা করা উচিত। যদি নিশ্চিত না হোন, তবে যাচাই করুন যে \"%3$s\"-এর অস্তিত্ব রয়েছে।</string>
   <string name="view_wiki_error_message_offline">ইন্টারনেটে সংযোগ করা যাবে না</string>
   <string name="reference_title">তথ্যসূত্র %s</string>
   <string name="reference_list_title">তথ্যসূত্র</string>
@@ -498,12 +516,23 @@
   <string name="notifications_view_archived_button_text">সংরক্ষণাগারভুক্ত বিজ্ঞপ্তিগুলি দেখুন</string>
   <string name="notification_preferences_title">বিজ্ঞপ্তির পছন্দসমূহ</string>
   <string name="notifications_mark_unread">অপঠিত হিসেবে চিহ্নিত করুন</string>
+  <string name="notifications_direct_reply_action">উত্তর দিন</string>
   <string name="watchlist_title">নজরতালিকা</string>
+  <string name="preference_title_notification_system">সিস্টেম</string>
+  <string name="preference_summary_notification_system">সিস্টেম থেকে বার্তা</string>
   <string name="preference_title_notification_milestone">মাইলফলক</string>
   <string name="preference_title_notification_thanks">ধন্যবাদ</string>
   <string name="preference_title_notification_revert">প্রত্যাবর্তন</string>
   <string name="preference_title_notification_login_fail">প্রবেশ</string>
+  <string name="preference_title_notification_mention">উল্লেখ</string>
   <string name="preference_title_notification_user_talk">আলাপ পাতা</string>
+  <string name="preference_category_display_settings">প্রদর্শন সেটিং</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">উইকিপিডিয়া</string>
+  <string name="notifications_channel_group_wikipedia_notifications_description">উইকিপিডিয়া থেকে বিজ্ঞপ্তি</string>
+  <string name="notifications_filter_label">বিজ্ঞপ্তি ছাঁকুন</string>
+  <string name="notifications_tab_filter_all">সকল</string>
+  <string name="notifications_menu_user_talk_page">%s-এর আলাপ পাতা</string>
+  <string name="notifications_offline_disable_message">অফলাইনে এই ফাংশনটি কার্যকর নয়।</string>
   <string name="view_because_you_read_card_title">কারণ আপনি পড়েছেন</string>
   <string name="view_random_card_title">অজানা পাতা</string>
   <string name="view_random_article_card_title">অজানা নিবন্ধ</string>
@@ -554,7 +583,9 @@
   <string name="feed_configure_onboarding_text">&lt;strong&gt;আপনার অন্বেষণ ফিড স্বনির্ধারণ করুন&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;আপনি এখন আপনার ফিডে কি প্রদর্শন করাতে চান তা চয়ন করতে পারেন, এবং আপনার পছন্দসই বিষয়বস্তুর ধরনকে অগ্রাধিকার দিতে পারবেন।</string>
   <string name="feed_lang_selection_dialog_ok_button_text">ঠিক আছে</string>
   <string name="feed_lang_selection_dialog_cancel_button_text">বাতিল</string>
+  <string name="feed_accessibility_card_load_more_button">আরও লোড করুন</string>
   <string name="top_read_activity_title">%s-এ শীর্ষ পঠিত</string>
+  <string name="tabs_activity_title">ট্যাব</string>
   <string name="description_edit_text_hint">নিবন্ধের বিবরণ</string>
   <string name="description_edit_article_description_label">নিবন্ধ</string>
   <string name="description_edit_translate_article_description_label_per_language">নিবন্ধের বিবরণ (%s)</string>
@@ -635,6 +666,7 @@
     <item quantity="one">%1$sটি অক্ষর</item>
     <item quantity="other">%1$sটি অক্ষর</item>
   </plurals>
+  <string name="file_page_edit_button_content_description">%s সম্পাদনা করুন</string>
   <string name="description_edit_revert_subtitle">উইকিপিডিয়ায় সম্পাদনা করার জন্য ধন্যবাদ!</string>
   <string name="description_edit_revert_reason1">আপনার অবদান &lt;a href=\"%1$s\"&gt;নীতিমালা&lt;/a&gt; অনুসরণ করেনি।</string>
   <string name="description_edit_revert_reason2">আপনার অবদান পরীক্ষামূলক বা ধ্বংসপ্রবণতামূলক বলে মনে হচ্ছে।</string>

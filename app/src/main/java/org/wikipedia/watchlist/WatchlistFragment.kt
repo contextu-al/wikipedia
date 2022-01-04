@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,19 +24,24 @@ import org.wikipedia.dataclient.mwapi.MwQueryResponse
 import org.wikipedia.dataclient.mwapi.MwQueryResult
 import org.wikipedia.diff.ArticleEditDetailsActivity
 import org.wikipedia.language.AppLanguageLookUpTable
+import org.wikipedia.notifications.NotificationActivity
 import org.wikipedia.page.Namespace
 import org.wikipedia.page.PageTitle
 import org.wikipedia.settings.Prefs
 import org.wikipedia.staticdata.UserTalkAliasData
 import org.wikipedia.talk.TalkTopicsActivity
 import org.wikipedia.util.DateUtil
+import org.wikipedia.util.FeedbackUtil
 import org.wikipedia.util.ResourceUtil
 import org.wikipedia.util.log.L
+import org.wikipedia.views.NotificationButtonView
 import java.util.*
 import kotlin.collections.ArrayList
 
 class WatchlistFragment : Fragment(), WatchlistHeaderView.Callback, WatchlistItemView.Callback, WatchlistLanguagePopupView.Callback {
     private var _binding: FragmentWatchlistBinding? = null
+
+    private lateinit var notificationButtonView: NotificationButtonView
     private val binding get() = _binding!!
     private val disposables = CompositeDisposable()
     private val totalItems = ArrayList<MwQueryResult.WatchlistItem>()
@@ -61,6 +67,7 @@ class WatchlistFragment : Fragment(), WatchlistHeaderView.Callback, WatchlistIte
 
         binding.watchlistRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        notificationButtonView = NotificationButtonView(requireActivity())
         updateDisplayLanguages()
         fetchWatchlist(false)
 
@@ -85,21 +92,50 @@ class WatchlistFragment : Fragment(), WatchlistHeaderView.Callback, WatchlistIte
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menu.findItem(R.id.menu_change_language).isVisible = WikipediaApp.getInstance().language().appLanguageCodes.size > 1
+
+        val notificationMenuItem = menu.findItem(R.id.menu_notifications)
+        if (AccountUtil.isLoggedIn) {
+            notificationMenuItem.isVisible = true
+            notificationButtonView.setUnreadCount(Prefs.notificationUnreadCount)
+            notificationButtonView.setOnClickListener {
+                if (AccountUtil.isLoggedIn) {
+                    startActivity(NotificationActivity.newIntent(requireActivity()))
+                }
+            }
+            notificationButtonView.contentDescription = getString(R.string.notifications_activity_title)
+            notificationMenuItem.actionView = notificationButtonView
+            notificationMenuItem.expandActionView()
+            FeedbackUtil.setButtonLongPressToast(notificationButtonView)
+        } else {
+            notificationMenuItem.isVisible = false
+        }
+        updateNotificationDot(false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_change_language -> {
                 val overflowView = WatchlistLanguagePopupView(requireContext())
-                overflowView.show(requireActivity().window.decorView.findViewById(R.id.menu_change_language), this)
+                overflowView.show(ActivityCompat.requireViewById(requireActivity(), R.id.menu_change_language), this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    fun updateNotificationDot(animate: Boolean) {
+        if (AccountUtil.isLoggedIn && Prefs.notificationUnreadCount > 0) {
+            notificationButtonView.setUnreadCount(Prefs.notificationUnreadCount)
+            if (animate) {
+                notificationButtonView.runAnimation()
+            }
+        } else {
+            notificationButtonView.setUnreadCount(0)
+        }
+    }
+
     private fun updateDisplayLanguages() {
-        displayLanguages = WikipediaApp.getInstance().language().appLanguageCodes.filterNot { Prefs.getWatchlistDisabledLanguages().contains(it) }
+        displayLanguages = WikipediaApp.getInstance().language().appLanguageCodes.filterNot { Prefs.watchlistDisabledLanguages.contains(it) }
     }
 
     private fun fetchWatchlist(refreshing: Boolean) {
@@ -299,16 +335,16 @@ class WatchlistFragment : Fragment(), WatchlistHeaderView.Callback, WatchlistIte
     }
 
     override fun onItemClick(item: MwQueryResult.WatchlistItem) {
-        if (item.logType.isNotEmpty()) {
+        if (item.logtype.isNotEmpty()) {
             return
         }
         startActivity(ArticleEditDetailsActivity.newIntent(requireContext(), item.title,
-                item.revid, item.wiki.languageCode()))
+                item.revid, item.wiki!!.languageCode))
     }
 
     override fun onUserClick(item: MwQueryResult.WatchlistItem) {
         startActivity(TalkTopicsActivity.newIntent(requireContext(),
-                PageTitle(UserTalkAliasData.valueFor(AppLanguageLookUpTable.FALLBACK_LANGUAGE_CODE) + ":" + item.user, item.wiki),
+                PageTitle(UserTalkAliasData.valueFor(AppLanguageLookUpTable.FALLBACK_LANGUAGE_CODE) + ":" + item.user, item.wiki!!),
                 Constants.InvokeSource.WATCHLIST_ACTIVITY))
     }
 

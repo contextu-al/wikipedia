@@ -43,6 +43,13 @@
     -->
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/full_backup_rules"
@@ -70,7 +77,8 @@
         <activity
             android:name=".main.MainActivity"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.Splash">
+            android:theme="@style/AppTheme.Splash"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -83,20 +91,25 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Page"
             android:launchMode="singleTask"
-            android:parentActivityName=".main.MainActivity">
+            android:parentActivityName=".main.MainActivity"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
-            <intent-filter>
+            <intent-filter
+                tools:targetApi="m"
+                android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- the following lines are merged
                      https://developer.android.com/training/app-links/deep-linking.html
                      so http and https apply to all prefixes-->
-                <data android:host="*.wikipedia.org" android:pathPrefix="/wiki/" android:scheme="http" />
-                <data android:host="*.wikipedia.org" android:pathPattern="/zh.*" android:scheme="https" />
-                <data android:host="*.wikipedia.org" android:pathPattern="/sr.*" android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="*.wikipedia.org" android:pathPrefix="/wiki/" />
+                <data android:host="*.wikipedia.org" android:pathPattern="/zh.*" />
+                <data android:host="*.wikipedia.org" android:pathPattern="/sr.*" />
             </intent-filter>
         </activity>
         <activity
@@ -165,7 +178,8 @@
         <activity
             android:name=".settings.LicenseActivity"
             android:theme="@style/AppTheme.ActionBar"
-            tools:ignore="GoogleAppIndexingUrlError">
+            tools:ignore="GoogleAppIndexingUrlError"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -174,7 +188,8 @@
         </activity>
 
         <activity
-            android:name=".feed.news.NewsActivity" />
+            android:name=".feed.news.NewsActivity"
+            android:label="@string/view_card_news_title"/>
 
         <activity
             android:name=".descriptions.DescriptionEditActivity"
@@ -183,7 +198,8 @@
 
         <activity
             android:name=".search.SearchActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <intent-filter android:label="@string/intent_share_search_label">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -232,15 +248,18 @@
             android:name=".notifications.NotificationActivity"
             android:label="@string/notifications_activity_title"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize"
-            android:theme="@style/AppTheme.ActionBar" />
+            android:theme="@style/AppTheme.Notification" />
 
         <activity
             android:name=".page.tabs.TabActivity"
+            android:label="@string/tabs_activity_title"
             android:theme="@style/AppTheme" />
 
         <activity android:name=".suggestededits.SuggestedEditsImageTagsOnboardingActivity" />
 
-        <activity android:name=".watchlist.WatchlistActivity"
+        <activity
+            android:name=".watchlist.WatchlistActivity"
+            android:label="@string/watchlist_title"
             android:theme="@style/AppTheme.ActionBar"/>
 
         <activity
@@ -275,6 +294,12 @@
             android:label=""
             android:theme="@style/AppTheme.ActionBar"  />
 
+        <activity
+            android:name=".notifications.NotificationFilterActivity"
+            android:label="@string/notifications_filter_label"
+            android:theme="@style/AppTheme.ActionBar"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -288,7 +313,8 @@
         <receiver
             android:icon="@mipmap/launcher"
             android:label="@string/widget_name_search"
-            android:name="org.wikipedia.widgets.WidgetProviderSearch" >
+            android:name="org.wikipedia.widgets.WidgetProviderSearch"
+            android:exported="true">
             <intent-filter >
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -301,7 +327,8 @@
         <receiver
             android:icon="@mipmap/launcher"
             android:label="@string/widget_name_featured_page"
-            android:name="org.wikipedia.widgets.WidgetProviderFeaturedPage" >
+            android:name="org.wikipedia.widgets.WidgetProviderFeaturedPage"
+            android:exported="true">
             <intent-filter >
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -311,7 +338,8 @@
                 android:resource="@xml/widget_featured_page" />
         </receiver>
 
-        <receiver android:name=".notifications.NotificationPollBroadcastReceiver">
+        <receiver android:name=".notifications.NotificationPollBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name=".notifications.NotificationPollBroadcastReceiver.ACTION_POLL" />
@@ -350,6 +378,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service
+            android:name=".notifications.PollNotificationService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 </manifest>

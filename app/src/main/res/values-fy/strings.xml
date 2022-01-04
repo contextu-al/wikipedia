@@ -144,7 +144,7 @@
   <string name="create_account_passwords_mismatch_error">De wachtwurden ferskille</string>
   <string name="create_account_email_error">Unjildich e-mailadres</string>
   <string name="create_account_username_error">Unjildige tekens yn \'e meidochnamme</string>
-  <string name="create_account_password_error">It wachtwurd is ûnjildich</string>
+  <string name="create_account_password_error" fuzzy="true">It wachtwurd is ûnjildich</string>
   <string name="create_account_generic_error">Koe it akkount net oanmeitsje</string>
   <string name="create_account_next">Fierder</string>
   <string name="email_recommendation_dialog_title">Akkount oanmeitsje sûnder e-mailadres?</string>
@@ -565,7 +565,7 @@
   <string name="preference_title_notification_mention">Neamd wurde</string>
   <string name="preference_summary_notification_mention">Immen neamt jo op in side</string>
   <string name="preference_title_notification_user_talk">Oerlisside</string>
-  <string name="preference_summary_notification_user_talk">Boadskippen op oerlissiden</string>
+  <string name="preference_summary_notification_user_talk" fuzzy="true">Boadskippen op oerlissiden</string>
   <string name="view_because_you_read_card_title">Om\'t jo dit lêzen hawwe</string>
   <string name="view_random_card_title">Samar wat</string>
   <string name="view_random_article_card_title">Samar in artikel</string>
@@ -943,7 +943,6 @@
   <string name="watchlist_details_watching_label">Folge</string>
   <string name="watchlist_details_watch_label">Folgje</string>
   <string name="thank_label">Betankje</string>
-  <string name="go_to_user_page">Nei meidoggerside gean</string>
   <string name="thank_dialog_title_text">Publyklik in betankje stjoere</string>
   <string name="thank_dialog_text">Betankjes bringe op noflike wize jo wurdearring oer foar it wurk fan ien op \'e Wikipedy. Betankjes kinne net ynlutsen wurde en elkenien kin se sjen.</string>
   <string name="thank_dialog_positive_button_text">Betankje stjoere</string>

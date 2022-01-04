@@ -198,17 +198,17 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
                 val contributions = mutableListOf<Contribution>()
-                val cont = response.continuation["uccontinue"]
+                val cont = response.continuation?.ucContinuation
                 if (cont.isNullOrEmpty()) {
                     continuations.remove(WikipediaApp.getInstance().wikiSite)
                 } else {
                     continuations[WikipediaApp.getInstance().wikiSite] = cont
                 }
-                response.query?.userContributions()?.forEach {
+                response.query?.userContributions?.forEach {
                     contributions.add(Contribution("", it.revid, it.title, it.title, it.title, EDIT_TYPE_GENERIC, null, it.date(),
                         WikipediaApp.getInstance().wikiSite, 0, it.sizediff, it.top, 0))
                 }
-                Observable.just(Pair(contributions, response.query?.userInfo()!!.editCount))
+                Observable.just(Pair(contributions, response.query?.userInfo!!.editCount))
             }
     }
 
@@ -219,13 +219,13 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
             .flatMap { response ->
                 val wikidataContributions = mutableListOf<Contribution>()
                 val qLangMap = hashMapOf<String, HashSet<String>>()
-                val cont = response.continuation["uccontinue"]
+                val cont = response.continuation?.ucContinuation
                 if (cont.isNullOrEmpty()) {
                     continuations.remove(WikiSite(Service.WIKIDATA_URL))
                 } else {
                     continuations[WikiSite(Service.WIKIDATA_URL)] = cont
                 }
-                response.query?.userContributions()?.forEach { contribution ->
+                response.query?.userContributions?.forEach { contribution ->
                     var contributionLanguage = WikipediaApp.getInstance().appOrSystemLanguageCode
                     var contributionDescription = contribution.comment
                     var editType: Int = EDIT_TYPE_GENERIC
@@ -263,14 +263,14 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                         for (entityKey in entities.entities.keys) {
                             val entity = entities.entities[entityKey]!!
                             for (contribution in wikidataContributions) {
-                                val dbName = WikiSite.forLanguageCode(contribution.wikiSite.languageCode()).dbName()
+                                val dbName = WikiSite.forLanguageCode(contribution.wikiSite.languageCode).dbName()
                                 if (contribution.qNumber == entityKey && entity.sitelinks.containsKey(dbName)) {
                                     contribution.apiTitle = entity.sitelinks[dbName]!!.title
                                     contribution.displayTitle = entity.sitelinks[dbName]!!.title
                                 }
                             }
                         }
-                        Observable.just(Pair(wikidataContributions, response.query?.userInfo()!!.editCount))
+                        Observable.just(Pair(wikidataContributions, response.query?.userInfo!!.editCount))
                     }
             }
     }
@@ -281,13 +281,13 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                 .subscribeOn(Schedulers.io())
                 .flatMap { response ->
                     val contributions = mutableListOf<Contribution>()
-                    val cont = response.continuation["uccontinue"]
+                    val cont = response.continuation?.ucContinuation
                     if (cont.isNullOrEmpty()) {
                         continuations.remove(WikiSite(Service.COMMONS_URL))
                     } else {
                         continuations[WikiSite(Service.COMMONS_URL)] = cont
                     }
-                    response.query?.userContributions()?.forEach { contribution ->
+                    response.query?.userContributions?.forEach { contribution ->
                         var contributionLanguage = WikipediaApp.getInstance().appOrSystemLanguageCode
                         var editType: Int = EDIT_TYPE_GENERIC
                         var contributionDescription = contribution.comment
@@ -331,7 +331,7 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                         contributions.add(Contribution(qNumber, contribution.revid, contribution.title, contribution.title, contributionDescription, editType, null, contribution.date(),
                             WikiSite.forLanguageCode(contributionLanguage), 0, contribution.sizediff, contribution.top, tagCount))
                     }
-                    Observable.just(Pair(contributions, response.query?.userInfo()!!.editCount))
+                    Observable.just(Pair(contributions, response.query?.userInfo!!.editCount))
                 }
     }
 
@@ -352,7 +352,7 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                 sortedContributions.addAll(allContributions)
             }
         }
-        sortedContributions.sortWith { o2, o1 -> (o1.date.compareTo(o2.date)) }
+        sortedContributions.sortByDescending { it.date }
 
         if (!sortedContributions.isNullOrEmpty()) {
             var currentDate = sortedContributions[0].date
@@ -481,18 +481,18 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                         }))
             } else if (contribution.editType == EDIT_TYPE_IMAGE_CAPTION || contribution.editType == EDIT_TYPE_IMAGE_TAG) {
                 disposables.add(Observable.zip(ServiceFactory.get(WikiSite(Service.COMMONS_URL)).getImageInfo(contribution.apiTitle,
-                    contribution.wikiSite.languageCode()).subscribeOn(Schedulers.io()),
+                    contribution.wikiSite.languageCode).subscribeOn(Schedulers.io()),
                     if (contribution.qNumber.isEmpty()) Observable.just(contribution.qNumber) else (
                             ServiceFactory.get(WikiSite(Service.WIKIDATA_URL))
-                                .getWikidataLabels(contribution.qNumber, contribution.wikiSite.languageCode())
+                                .getWikidataLabels(contribution.qNumber, contribution.wikiSite.languageCode)
                                 .subscribeOn(Schedulers.io())
                                 .flatMap { response ->
                                     var label = contribution.qNumber
                                     val entities = response.entities
                                     val qNumber = entities[contribution.qNumber]
                                     qNumber?.let {
-                                        if (it.labels.containsKey(contribution.wikiSite.languageCode())) {
-                                            label = it.labels[contribution.wikiSite.languageCode()]!!.value
+                                        if (it.labels.containsKey(contribution.wikiSite.languageCode)) {
+                                            label = it.labels[contribution.wikiSite.languageCode]!!.value
                                         } else if (it.labels.containsKey(AppLanguageLookUpTable.FALLBACK_LANGUAGE_CODE)) {
                                             label = it.labels[AppLanguageLookUpTable.FALLBACK_LANGUAGE_CODE]!!.value
                                         }
@@ -530,7 +530,7 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ response ->
                         if (response is MwQueryResponse) {
-                            contribution.pageViews = response.query?.pages()?.sumOf { it.pageViewsMap.values.filterNotNull().sum() } ?: 0
+                            contribution.pageViews = response.query?.pages?.sumOf { it.pageViewsMap.values.filterNotNull().sum() } ?: 0
                             view.setPageViewCountText(contribution.pageViews)
                         }
                     }) { t -> L.e(t) })
@@ -607,7 +607,7 @@ class ContributionsFragment : Fragment(), ContributionsHeaderView.Callback {
                 else -> {
                     UserContributionFunnel.get().logViewMisc()
                     UserContributionEvent.logViewMisc()
-                    context.startActivity(ArticleEditDetailsActivity.newIntent(context, contribution.apiTitle, contribution.revId, contribution.wikiSite.languageCode()))
+                    context.startActivity(ArticleEditDetailsActivity.newIntent(context, contribution.apiTitle, contribution.revId, contribution.wikiSite.languageCode))
                 }
             }
         }

@@ -5,11 +5,9 @@ import android.accounts.AccountAuthenticatorResponse
 import android.accounts.AccountManager
 import android.os.Build
 import androidx.core.os.bundleOf
-import com.google.gson.reflect.TypeToken
 import org.wikipedia.R
 import org.wikipedia.WikipediaApp
-import org.wikipedia.json.GsonMarshaller
-import org.wikipedia.json.GsonUnmarshaller
+import org.wikipedia.json.JsonUtil
 import org.wikipedia.login.LoginResult
 import org.wikipedia.util.log.L.d
 import org.wikipedia.util.log.L.logRemoteErrorIfProd
@@ -27,8 +25,8 @@ object AccountUtil {
             d("account creation failure")
             return
         }
-        setPassword(result.password!!)
-        putUserIdForLanguage(result.site.languageCode(), result.userId)
+        setPassword(result.password)
+        putUserIdForLanguage(result.site.languageCode, result.userId)
         groups = result.groups
     }
 
@@ -70,13 +68,13 @@ object AccountUtil {
         get() {
             val account = account() ?: return emptySet()
             val setStr = accountManager().getUserData(account, WikipediaApp.getInstance().getString(R.string.preference_key_login_groups))
-            return if (setStr.isNullOrEmpty()) emptySet() else GsonUnmarshaller.unmarshal(object : TypeToken<Set<String>>() {}, setStr)
+            return if (setStr.isNullOrEmpty()) emptySet() else (JsonUtil.decodeFromString(setStr) ?: emptySet())
         }
         set(groups) {
             val account = account() ?: return
             accountManager().setUserData(account,
                     WikipediaApp.getInstance().getString(R.string.preference_key_login_groups),
-                    GsonMarshaller.marshal(groups))
+                    JsonUtil.encodeToString(groups))
         }
 
     @JvmStatic
@@ -103,15 +101,12 @@ object AccountUtil {
 
     @JvmStatic
     fun account(): Account? {
-        try {
-            val accounts = accountManager().getAccountsByType(accountType())
-            if (accounts.isNotEmpty()) {
-                return accounts[0]
-            }
+        return try {
+            accountManager().getAccountsByType(accountType()).firstOrNull()
         } catch (e: SecurityException) {
             logRemoteErrorIfProd(e)
+            null
         }
-        return null
     }
 
     @JvmStatic
@@ -140,13 +135,13 @@ object AccountUtil {
         get() {
             val account = account() ?: return emptyMap()
             val mapStr = accountManager().getUserData(account, WikipediaApp.getInstance().getString(R.string.preference_key_login_user_id_map))
-            return if (mapStr.isNullOrEmpty()) emptyMap() else GsonUnmarshaller.unmarshal(object : TypeToken<Map<String, Int>>() {}, mapStr)
+            return if (mapStr.isNullOrEmpty()) emptyMap() else (JsonUtil.decodeFromString(mapStr) ?: emptyMap())
         }
         private set(ids) {
             val account = account() ?: return
             accountManager().setUserData(account,
                     WikipediaApp.getInstance().getString(R.string.preference_key_login_user_id_map),
-                    GsonMarshaller.marshal(ids))
+                    JsonUtil.encodeToString(ids))
         }
 
     private fun accountManager(): AccountManager {

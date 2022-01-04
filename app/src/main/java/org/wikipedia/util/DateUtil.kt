@@ -26,6 +26,11 @@ object DateUtil {
         return getCachedDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT, true).parse(date)!!
     }
 
+    @Synchronized
+    fun iso8601ShortDateParse(date: String): Date {
+        return getCachedDateFormat("yyyy-MM-dd'Z'", Locale.ROOT, true).parse(date)!!
+    }
+
     @JvmStatic
     @Synchronized
     fun iso8601LocalDateFormat(date: Date): String {
@@ -156,18 +161,20 @@ object DateUtil {
     }
 
     @JvmStatic
-    fun getYearDifferenceString(year: Int): String {
+    fun getYearDifferenceString(year: Int, languageCode: String): String {
         val diffInYears = Calendar.getInstance()[Calendar.YEAR] - year
+        val targetResource = L10nUtil.getResourcesForWikiLang(languageCode) ?: WikipediaApp.getInstance().resources
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val firstMatchLocaleInstance = RelativeDateTimeFormatter.getInstance(targetResource.configuration.locales.getFirstMatch(arrayOf(languageCode)))
             when (diffInYears) {
-                0 -> RelativeDateTimeFormatter.getInstance().format(RelativeDateTimeFormatter.Direction.THIS, RelativeDateTimeFormatter.AbsoluteUnit.YEAR)
-                1 -> RelativeDateTimeFormatter.getInstance().format(RelativeDateTimeFormatter.Direction.LAST, RelativeDateTimeFormatter.AbsoluteUnit.YEAR)
-                -1 -> RelativeDateTimeFormatter.getInstance().format(RelativeDateTimeFormatter.Direction.NEXT, RelativeDateTimeFormatter.AbsoluteUnit.YEAR)
-                else -> RelativeDateTimeFormatter.getInstance().format(diffInYears.toDouble(), RelativeDateTimeFormatter.Direction.LAST, RelativeDateTimeFormatter.RelativeUnit.YEARS)
+                0 -> firstMatchLocaleInstance.format(RelativeDateTimeFormatter.Direction.THIS, RelativeDateTimeFormatter.AbsoluteUnit.YEAR)
+                1 -> firstMatchLocaleInstance.format(RelativeDateTimeFormatter.Direction.LAST, RelativeDateTimeFormatter.AbsoluteUnit.YEAR)
+                -1 -> firstMatchLocaleInstance.format(RelativeDateTimeFormatter.Direction.NEXT, RelativeDateTimeFormatter.AbsoluteUnit.YEAR)
+                else -> firstMatchLocaleInstance.format(diffInYears.toDouble(), RelativeDateTimeFormatter.Direction.LAST, RelativeDateTimeFormatter.RelativeUnit.YEARS)
             }
         } else {
-            val context = WikipediaApp.getInstance().applicationContext
-            if (diffInYears == 0) context.getString(R.string.this_year) else context.resources.getQuantityString(R.plurals.diff_years, diffInYears, diffInYears)
+            return if (diffInYears == 0) L10nUtil.getStringForArticleLanguage(languageCode, R.string.this_year)
+            else targetResource.getQuantityString(R.plurals.diff_years, diffInYears, diffInYears)
         }
     }
 }

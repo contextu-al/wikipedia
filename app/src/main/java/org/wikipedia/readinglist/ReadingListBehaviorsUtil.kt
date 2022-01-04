@@ -52,13 +52,13 @@ object ReadingListBehaviorsUtil {
             allReadingLists.filter { list -> list.pages.any { it.displayTitle == readingListPage.displayTitle } }
 
     fun savePagesForOffline(activity: Activity, selectedPages: List<ReadingListPage>, callback: Callback) {
-        if (Prefs.isDownloadOnlyOverWiFiEnabled() && !DeviceUtil.isOnWiFi) {
+        if (Prefs.isDownloadOnlyOverWiFiEnabled && !DeviceUtil.isOnWiFi) {
             showMobileDataWarningDialog(activity) { _, _ ->
                 savePagesForOffline(activity, selectedPages, true)
                 callback.onCompleted()
             }
         } else {
-            savePagesForOffline(activity, selectedPages, !Prefs.isDownloadingReadingListArticlesEnabled())
+            savePagesForOffline(activity, selectedPages, !Prefs.isDownloadingReadingListArticlesEnabled)
             callback.onCompleted()
         }
     }
@@ -228,13 +228,13 @@ object ReadingListBehaviorsUtil {
 
     fun toggleOffline(activity: Activity, page: ReadingListPage, callback: Callback) {
         resetPageProgress(page)
-        if (Prefs.isDownloadOnlyOverWiFiEnabled() && !DeviceUtil.isOnWiFi) {
+        if (Prefs.isDownloadOnlyOverWiFiEnabled && !DeviceUtil.isOnWiFi && !page.offline) {
             showMobileDataWarningDialog(activity) { _, _ ->
                 toggleOffline(activity, page, true)
                 callback.onCompleted()
             }
         } else {
-            toggleOffline(activity, page, !Prefs.isDownloadingReadingListArticlesEnabled())
+            toggleOffline(activity, page, !Prefs.isDownloadingReadingListArticlesEnabled)
             callback.onCompleted()
         }
     }
@@ -245,14 +245,12 @@ object ReadingListBehaviorsUtil {
 
     fun addToDefaultList(activity: Activity, title: PageTitle, invokeSource: InvokeSource, addToDefaultListCallback: AddToDefaultListCallback, callback: Callback?) {
         val defaultList = AppDatabase.getAppDatabase().readingListDao().defaultList
-        scope.launch(exceptionHandler) {
-            val addedTitles = withContext(dispatcher) { AppDatabase.getAppDatabase().readingListPageDao().addPagesToListIfNotExist(defaultList, listOf(title)) }
-            if (addedTitles.isNotEmpty()) {
-                ReadingListsFunnel().logAddToList(defaultList, 1, invokeSource)
-                FeedbackUtil.makeSnackbar(activity, activity.getString(R.string.reading_list_article_added_to_default_list, title.displayText), FeedbackUtil.LENGTH_DEFAULT)
-                        .setAction(R.string.reading_list_add_to_list_button) { addToDefaultListCallback.onMoveClicked(defaultList.id) }.show()
-                callback?.onCompleted()
-            }
+        val addedTitles = AppDatabase.getAppDatabase().readingListPageDao().addPagesToListIfNotExist(defaultList, listOf(title))
+        if (addedTitles.isNotEmpty()) {
+            ReadingListsFunnel().logAddToList(defaultList, 1, invokeSource)
+            FeedbackUtil.makeSnackbar(activity, activity.getString(R.string.reading_list_article_added_to_default_list, title.displayText), FeedbackUtil.LENGTH_DEFAULT)
+                .setAction(R.string.reading_list_add_to_list_button) { addToDefaultListCallback.onMoveClicked(defaultList.id) }.show()
+            callback?.onCompleted()
         }
     }
 

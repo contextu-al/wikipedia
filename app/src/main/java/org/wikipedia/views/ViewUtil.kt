@@ -47,7 +47,7 @@ object ViewUtil {
                   listener: RequestListener<Drawable?>? = null) {
         val placeholder = getPlaceholderDrawable(view.context)
         var builder = Glide.with(view)
-                .load(if ((Prefs.isImageDownloadEnabled() || force) && !TextUtils.isEmpty(url)) Uri.parse(url) else null)
+                .load(if ((Prefs.isImageDownloadEnabled || force) && !TextUtils.isEmpty(url)) Uri.parse(url) else null)
                 .placeholder(placeholder)
                 .downsample(DownsampleStrategy.CENTER_INSIDE)
                 .error(placeholder)
@@ -81,7 +81,7 @@ object ViewUtil {
         if (langCode.length > langCodeStandardLength) {
             langButton.textSize = langButtonTextSizeSmaller.toFloat()
             if (langCode.length > langButtonTextMaxLength) {
-                langButton.text = langCode.substring(0, langButtonTextMaxLength).toUpperCase(Locale.ENGLISH)
+                langButton.text = langCode.substring(0, langButtonTextMaxLength).uppercase(Locale.ENGLISH)
             }
             return
         }

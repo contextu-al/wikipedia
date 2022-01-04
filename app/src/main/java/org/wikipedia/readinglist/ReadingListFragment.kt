@@ -663,13 +663,9 @@ class ReadingListFragment : Fragment(), ReadingListItemActionsDialog.Callback {
             return false
         }
 
-        override fun onThumbClick(item: ReadingListPage?) {
-            onClick(item)
-        }
-
         override fun onActionClick(item: ReadingListPage?, view: View) {
             item?.let {
-                if (Prefs.isDownloadOnlyOverWiFiEnabled() && !DeviceUtil.isOnWiFi && it.status == ReadingListPage.STATUS_QUEUE_FOR_SAVE) {
+                if (Prefs.isDownloadOnlyOverWiFiEnabled && !DeviceUtil.isOnWiFi && it.status == ReadingListPage.STATUS_QUEUE_FOR_SAVE) {
                     it.offline = false
                 }
                 if (it.saving) {
@@ -796,12 +792,7 @@ class ReadingListFragment : Fragment(), ReadingListItemActionsDialog.Callback {
     }
 
     private fun getPagePositionInList(page: ReadingListPage): Int {
-        displayedLists.forEach {
-            if (it is ReadingListPage && it.id == page.id) {
-                return displayedLists.indexOf(it)
-            }
-        }
-        return -1
+        return displayedLists.indexOfFirst { it is ReadingListPage && it.id == page.id }
     }
 
     companion object {

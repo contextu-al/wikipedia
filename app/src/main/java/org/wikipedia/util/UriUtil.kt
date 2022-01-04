@@ -1,7 +1,9 @@
 package org.wikipedia.util
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.TransactionTooLargeException
 import androidx.annotation.StringRes
@@ -52,8 +54,12 @@ object UriUtil {
     fun visitInExternalBrowser(context: Context, uri: Uri) {
         try {
             val chooserIntent = ShareUtil.getIntentChooser(context, Intent(Intent.ACTION_VIEW, uri))
-            chooserIntent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(chooserIntent)
+            if (chooserIntent != null) {
+                chooserIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(chooserIntent)
+            } else {
+                visitInExternalBrowserExplicit(context, uri)
+            }
         } catch (e: TransactionTooLargeException) {
             L.logRemoteErrorIfProd(RuntimeException("Transaction too large for external link intent."))
         } catch (e: Exception) {
@@ -61,6 +67,18 @@ object UriUtil {
             // We will just show a toast now. FIXME: Make this more visible?
             ShareUtil.showUnresolvableIntentMessage(context)
         }
+    }
+
+    private fun visitInExternalBrowserExplicit(context: Context, uri: Uri) {
+        context.packageManager.queryIntentActivities(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.example.com")), PackageManager.MATCH_DEFAULT_ONLY)
+            .first().let {
+                val componentName = ComponentName(it.activityInfo.packageName, it.activityInfo.name)
+                val newIntent = Intent(Intent.ACTION_VIEW)
+                newIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                newIntent.data = uri
+                newIntent.component = componentName
+                context.startActivity(newIntent)
+            }
     }
 
     @JvmStatic
@@ -71,7 +89,7 @@ object UriUtil {
         // or like /api/rest_v1/page/graph/png/API/0/019dd76b5f4887040716e65de53802c5033cb40c.png
         return if (ret.startsWith("./") || ret.startsWith("/w/") ||
                 ret.startsWith("/wiki/") || ret.startsWith("/api/"))
-            wiki.uri().buildUpon().appendEncodedPath(ret.replaceFirst("/".toRegex(), ""))
+            wiki.uri.buildUpon().appendEncodedPath(ret.replaceFirst("/".toRegex(), ""))
                     .build().toString()
         else ret
     }
@@ -89,6 +107,14 @@ object UriUtil {
                 uri.path!!.matches(("^$WIKI_REGEX.*").toRegex())) &&
                 (uri.fragment == null || (uri.fragment!!.isNotEmpty() &&
                         !uri.fragment!!.startsWith("cite"))))
+    }
+
+    @JvmStatic
+    fun isAppSupportedLink(uri: Uri): Boolean {
+        val supportedAuthority = uri.authority?.run { WikiSite.supportedAuthority(this) } == true
+        return (uri.path?.run { matches(("^$WIKI_REGEX.*").toRegex()) } == true ||
+                !uri.fragment.isNullOrEmpty() ||
+                !uri.getQueryParameter("title").isNullOrEmpty() && !uri.getQueryParameter("diff").isNullOrEmpty()) && supportedAuthority
     }
 
     @JvmStatic
@@ -143,5 +169,11 @@ object UriUtil {
     @VisibleForTesting
     fun removeFragment(link: String): String {
         return link.replaceFirst("#.*$".toRegex(), "")
+    }
+
+    @JvmStatic
+    fun parseTalkTopicFromFragment(fragment: String): String {
+        val index = fragment.indexOf("Z-")
+        return if (index >= 0) fragment.substring(index + 2) else fragment
     }
 }

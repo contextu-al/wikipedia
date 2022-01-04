@@ -53,6 +53,10 @@
   <string name="app_settings">Налаштування</string>
   <string name="search_tab_tooltip">Торкніться іконки знову щоб почати вводити пошуковий запит напряму.</string>
   <string name="history_list_title">Історія</string>
+  <string name="image_content_description">Зображення: %s</string>
+  <string name="page_content_description">Сторінка: %s</string>
+  <string name="wikimedia_commons">Вікісховище</string>
+  <string name="wikidata">Вікідані</string>
   <string name="dialog_title_clear_history">Очистити історію перегляду</string>
   <string name="dialog_message_clear_history">Буде видалена вся історія відвідування сторінок і закриті всі відкриті вкладки. Ви впевнені?</string>
   <string name="dialog_message_clear_history_yes">Так</string>
@@ -74,6 +78,7 @@
   <string name="feed_card_add_to_list">Додати до читального списку</string>
   <string name="feed_card_add_to_default_list">Зберегти</string>
   <string name="menu_page_share">Поділитися посиланням</string>
+  <string name="menu_article_share">Поділитися статтею</string>
   <string name="menu_page_open_a_new_tab">Відкрити нову вкладинку</string>
   <string name="menu_page_new_tab">Нова вкладка</string>
   <string name="menu_page_reading_lists">Читальні списки</string>
@@ -88,7 +93,7 @@
   <string name="last_updated_text">Останнє оновлення %s</string>
   <string name="talk_page_link_text">Сторінка обговорення</string>
   <string name="edit_history_link_text">Див. історію редагувань</string>
-  <string name="map_view_link_text">Переглянути на карті</string>
+  <string name="map_view_link_text">Переглянути на мапі</string>
   <string name="other_languages_indication_text">Читати іншою мовою</string>
   <string name="language_count_link_text">Доступно %d іншими мовами</string>
   <string name="content_license_cc_by_sa">CC BY-SA 3.0</string>
@@ -148,7 +153,7 @@
   <string name="history_empty_message">Відстежувати те, що ви вже читали тут.</string>
   <string name="history_offline_articles_toast">Деякі статті в історії можуть бути недоступними в режимі офлайн.</string>
   <string name="search_empty_message">Шукайте і читайте вільну енциклопедію вашою мовою</string>
-  <string name="search_empty_message_multilingual_upgrade">Шукати у Вікіпедії на других мовах</string>
+  <string name="search_empty_message_multilingual_upgrade">Шукати у Вікіпедії іншими мовами</string>
   <string name="delete_selected_items">Вилучити вибрані елементи</string>
   <string name="wp_stylized">&lt;big&gt;В&lt;/big&gt;ІКІПЕДІ&lt;big&gt;Я&lt;/big&gt;</string>
   <string name="create_account_username_hint">Ім\'я користувача</string>
@@ -163,7 +168,7 @@
   <string name="create_account_passwords_mismatch_error">Паролі не збігаються</string>
   <string name="create_account_email_error">Неправильна адреса електронної пошти</string>
   <string name="create_account_username_error">Недійсні символи в імені користувача.</string>
-  <string name="create_account_password_error">Невірний пароль</string>
+  <string name="create_account_password_error">Пароль мусить мати не менше 8 символів</string>
   <string name="create_account_generic_error">Неможливо створити обліковий запис</string>
   <string name="create_account_next">Далі</string>
   <string name="email_recommendation_dialog_title">Створити обліковий запис без електронної адреси?</string>
@@ -172,11 +177,12 @@
   <string name="email_recommendation_dialog_create_without_email_action">Продовжити без електронної пошти</string>
   <string name="email_recommendation_dialog_create_with_email_action">Додати електронну пошту</string>
   <string name="create_account_button">Створити обліковий запис</string>
-  <string name="create_account_name_unavailable">Ім\'я користувача \"%s\" недоступно. Будь-ласка вкажіть інше.</string>
+  <string name="create_account_name_unavailable">Ім’я користувача «%s» недоступно. Будь-ласка вкажіть інше.</string>
   <string name="create_account_ip_block_message">Вибачите, ваша IP-адреса наразі заблокована від створення нових облікових записів.</string>
   <string name="create_account_ip_block_help_url">https://uk.wikipedia.org/wiki/Вікіпедія:Правила_блокувань</string>
   <string name="create_account_ip_block_details">Деталі</string>
   <string name="preferences_general_heading">Загальні</string>
+  <string name="preferences_account_heading">Обліковий запис</string>
   <string name="wikipedia_app_faq">Часті питання по додатку</string>
   <string name="send_feedback">Надіслати відгук про програму</string>
   <string name="create_account_account_created_toast">Створено обліковий запис!</string>
@@ -205,6 +211,7 @@
   <string name="page_protected_can_not_edit_title">Цю сторінку захищено</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">Додати до списку спостереження</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_text">Слідкуйте за тим, що відбувається з цікавими вам статтями. Натисніть на значок меню і виберіть &lt;b&gt;Додати до списку спостереження&lt;/b&gt;, щоб бачити зміни до статті.</string>
+  <string name="page_notification_tooltip">Ваші сповіщення тепер тут.</string>
   <string name="settings_item_preferences">Налаштування</string>
   <string name="settings_activity_title">Налаштування</string>
   <string name="about_description">Про додаток Вікіпедії</string>
@@ -228,7 +235,7 @@
   <string name="about_app_license_heading">Ліцензія</string>
   <string name="about_app_license">Вихідний код доступний на &lt;a href=\"https://gerrit.wikimedia.org/r/#/admin/projects/apps/android/wikipedia\"&gt;Gerrit&lt;/a&gt; та &lt;a href=\"https://github.com/wikimedia/apps-android-wikipedia\"&gt;GitHub&lt;/a&gt; під ліцензією &lt;a href=\"https://www.apache.org/licenses/LICENSE-2.0\"&gt;Apache 2.0&lt;/a&gt;. Якщо не вказано інше, вміст доступний під ліцензією &lt;a href=\"https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License\"&gt;Creative Commons Attribution-ShareAlike&lt;/a&gt;.</string>
   <string name="about_wmf">Продукт &lt;a href=\"https://wikimediafoundation.org/\"&gt;Фонду Вікімедіа&lt;/a&gt;</string>
-  <string name="about_activity_title">Про программу</string>
+  <string name="about_activity_title">Про програму</string>
   <string name="edit_abandon_confirm">Сторінка була змінена. Ви впевнені, що хочете вийти без збереження змін?</string>
   <string name="edit_abandon_confirm_yes">Так</string>
   <string name="edit_abandon_confirm_no">Ні</string>
@@ -250,6 +257,10 @@
   <string name="edit_summary_tag_other_hint">Інші способи, якими ви поліпшили сторінку</string>
   <string name="edit_conflict_title">Конфлікт редагувань</string>
   <string name="edit_conflict_message">Сторінку вже змінив інший користувач, і це конфліктує з Вашим редагуванням. Будь ласка, скопіюйте свої зміни, поверніться назад та оновіть сторінку, після чого спробуйте відредагувати ще раз.</string>
+  <string name="edit_notices">Редагувати повідомлення</string>
+  <string name="edit_notices_please_read">Будь ласка, прочитайте перед редагуванням</string>
+  <string name="edit_notices_show_auto">Автоматично показувати повідомлення про редагування</string>
+  <string name="edit_notices_tooltip">Торкніться цієї кнопки, щоб переглянути повідомлення про редагування цієї статті.</string>
   <string name="find_next">Знайти наступне</string>
   <string name="find_previous">Знайти попереднє</string>
   <string name="find_first_occurence">Це і є перший збіг</string>
@@ -260,7 +271,7 @@
   <string name="abusefilter_text_warn">Автоматичний фільтр визначив це редагування як потенційно неконструктивне. У ньому може бути щось із цього:&lt;br /&gt;&lt;br /&gt;· Набрано повністю великими літерами&lt;br /&gt;· Очищення статті або спам&lt;br /&gt;· Невідповідні зовнішні посилання чи зображення&lt;br /&gt;· Повторювані символи</string>
   <string name="abusefilter_text_disallow">Автоматизований фільтр визначив це редагування як потенційно неконструктивне або потенційний вандалізм.&lt;br /&gt;&lt;br /&gt;Вікіпедія — це енциклопедія, і розміщений у ній може бути тільки нейтральний і значущий вміст.</string>
   <string name="page_similar_titles">Подібні сторінки</string>
-  <string name="search_did_you_mean">Ви мали на увазі \"%s\"?</string>
+  <string name="search_did_you_mean">Ви мали на увазі «%s»?</string>
   <string name="search_recent_header">Недавні пошукові запити:</string>
   <string name="search_results_count_zero">Немає результатів</string>
   <plurals name="search_results_count">
@@ -277,9 +288,9 @@
   <string name="table_infobox">Швидкі факти</string>
   <string name="table_other">Більше інформації</string>
   <string name="table_close">Закрити</string>
-  <string name="widget_name_featured_page">Вікіпедія - вибрані сторінки</string>
+  <string name="widget_name_featured_page">Вибрана сторінка Вікіпедії</string>
   <string name="widget_title_featured_page">Сьогоднішня вибрана сторінка:</string>
-  <string name="widget_name_search">Пошук в Вікіпедії</string>
+  <string name="widget_name_search">Пошук у Вікіпедії</string>
   <string name="wiktionary_no_definitions_found">Визначень не знайдено.</string>
   <string name="alpha_update_notification_title">Доступне оновлення альфа-версії</string>
   <string name="alpha_update_notification_text">Натисніть, щоб завантажити</string>
@@ -301,13 +312,14 @@
   <string name="gallery_save_success">Файл збережено.</string>
   <string name="gallery_error_video_failed">Не вдалось відтворити відео.</string>
   <string name="gallery_save_image_write_permission_rationale">Для збереження зображень потрібен дозвіл на запис у сховищі вашого пристрою.</string>
+  <string name="gallery_edit_button_content_description">Редагувати підпис зображення</string>
   <string name="gallery_add_image_caption_button">Додати підпис зображення</string>
   <string name="gallery_add_image_caption_in_language_button">Додати підпис зображення (%s)</string>
   <string name="err_cannot_save_file">Не вдається зберегти файл</string>
   <string name="expand_refs">Торкніться, щоб розкрити</string>
   <string name="cc_logo">Ліцензія Creative Commons</string>
   <string name="captcha_image">Зображення captcha</string>
-  <string name="gallery_fair_use_license">Добросовісне використання</string>
+  <string name="gallery_fair_use_license">Добропорядне використання</string>
   <string name="gallery_uploader_unknown">Є невідомим той, хто завантажив</string>
   <string name="gallery_not_available_offline_snackbar">Режим галереї є недоступним в офлайні.</string>
   <string name="gallery_not_available_offline_snackbar_dismiss">Відхилити</string>
@@ -364,8 +376,9 @@
   <string name="error_message_generic">Сталася помилка</string>
   <string name="view_link_preview_error_button_dismiss">Відхилити</string>
   <string name="error_page_does_not_exist">Ця сторінка не існує</string>
+  <string name="error_user_page_does_not_exist">У Вікіпедії немає &lt;a href=\"%1$s\"&gt;сторінки користувача&lt;/a&gt; з такою точною назвою. Загалом, цю сторінку має створити та відредагувати \'\'\'%2$s\'\'\'. Якщо ви сумніваєтеся, будь ласка, переконайтеся, що «%3$s» існує.</string>
   <string name="view_wiki_error_message_offline">Не вдається підключитися до інтернету.</string>
-  <string name="view_wiki_error_message_timeout">Немає зв\'язку із Вікіпедією. Будь ласка перевірте ваше мережеве підключення чи спробуйте пізніше</string>
+  <string name="view_wiki_error_message_timeout">Немає зв\'язку із Вікіпедією. Будь ласка, перевірте ваше мережеве підключення чи спробуйте пізніше</string>
   <string name="reference_title">Виноски %s</string>
   <string name="reference_list_title">Посилання</string>
   <string name="theme_chooser_dialog_image_dimming_switch_label">Затінювання зображень</string>
@@ -392,7 +405,7 @@
   <string name="article_menu_bar_search_button">Пошук</string>
   <string name="article_menu_bar_theme_button">Тема</string>
   <string name="article_menu_bar_contents_button">Вміст</string>
-  <string name="article_header_edit_hint">Редагувати...</string>
+  <string name="article_header_edit_hint">Редагувати…</string>
   <string name="article_header_edit_description">Редагувати опис статті</string>
   <string name="article_header_edit_lead_section">Редагувати вступ</string>
   <string name="color_theme_select">Тема</string>
@@ -406,7 +419,7 @@
   <string name="preference_summary_color_theme">Перейти до використання темного шаблону програми</string>
   <string name="text_size_increase">Збільшити розмір тексту</string>
   <string name="text_size_decrease">Зменшити розмір тексту</string>
-  <string name="text_size_percent_default">%s (стандартно)</string>
+  <string name="text_size_percent_default">%s (за замовчуванням)</string>
   <string name="text_style_title">Шрифт</string>
   <string name="nav_item_saved">Збережено</string>
   <string name="reading_list_save_to">Зберегти до списку для читання</string>
@@ -435,7 +448,7 @@
   <string name="format_reading_list_statistical_summary_singular">1 стаття, %1$.2f Mб</string>
   <string name="format_reading_list_statistical_summary_plural">%1$d статті, %2$.2f Mб</string>
   <string name="format_reading_list_statistical_detail_singular">%1$d з 1 статтей доступні автономно, %2$.2f Mб</string>
-  <string name="format_reading_list_statistical_detail_plural">%1$d із %2$d статтей доступні автономно, %3$.2f Mб</string>
+  <string name="format_reading_list_statistical_detail_plural">%1$d із %2$d статей доступні автономно, %3$.2f Mб</string>
   <string name="reading_list_sort">Сортувати</string>
   <string name="reading_list_sort_ellipsis">Сортувати за…</string>
   <string name="reading_list_sort_by_name">Сортувати за назвою</string>
@@ -548,12 +561,15 @@
   <string name="reading_list_remove_from_offline_cancel_button_text">Скасувати</string>
   <string name="reading_list_download_using_mobile_data_cancel_button_text">Скасувати</string>
   <string name="reading_list_split_dialog_ok_button_text">Гаразд</string>
+  <string name="reading_list_activity_title">Список читання: %s</string>
   <string name="user_option_sync_label">Налаштування</string>
   <string name="notification_reverted_title">Скасоване редагування</string>
+  <string name="notification_channel_title">Завантаження сторінок</string>
   <string name="notification_channel_description">Прогрес завантаження</string>
   <string name="notification_syncing_pause_button">Пауза</string>
   <string name="notification_syncing_resume_button">Продовжити</string>
   <string name="notification_syncing_cancel_button">Скасувати</string>
+  <string name="notification_syncing_reading_list_channel_title">Синхронізація списків читання</string>
   <string name="notification_syncing_reading_list_channel_description">Статус синхронізації списків читання</string>
   <string name="notification_many_unread">У вас є непрочитані сповіщення (%d)</string>
   <plurals name="notification_channel_name">
@@ -613,6 +629,25 @@
   <string name="notifications_view_archived_button_text">Перегляд архівованих сповіщень</string>
   <string name="notification_preferences_title">Налаштування сповіщень</string>
   <string name="notifications_mark_unread">Позначити як непрочитане</string>
+  <string name="notifications_mark_all_as_read">Позначити всі як прочитані</string>
+  <string name="notifications_direct_reply_action">Відповісти</string>
+  <string name="notifications_direct_reply_progress">Публікація відповіді до %s…</string>
+  <string name="notifications_direct_reply_success">Відповідь опубліковано.</string>
+  <string name="notifications_direct_reply_error">Не вдалося автоматично опублікувати відповідь.</string>
+  <string name="notifications_mark_all_as_read_message">%d позначено як прочитано</string>
+  <string name="notifications_mark_all_as_unread_message">%d позначено як непрочитано</string>
+  <plurals name="notifications_mark_as_read_plural">
+    <item quantity="one">1 позначено як прочитане</item>
+    <item quantity="few">%d позначено як прочитані</item>
+    <item quantity="many">%d позначено як прочитані</item>
+    <item quantity="other">%d позначено як прочитані</item>
+  </plurals>
+  <plurals name="notifications_mark_as_unread_plural">
+    <item quantity="one">1 позначено як непрочитане</item>
+    <item quantity="few">%d позначено як непрочитані</item>
+    <item quantity="many">%d позначено як непрочитані</item>
+    <item quantity="other">%d позначено як непрочитані</item>
+  </plurals>
   <string name="watchlist_title">Список спостереження</string>
   <string name="preference_title_notification_poll">Сповіщення про опитування</string>
   <string name="preference_summary_notification_poll">Дозволити додатку використовувати дані, щоб фоновим процесом перевіряти, чи є нові сповіщення.</string>
@@ -630,7 +665,49 @@
   <string name="preference_title_notification_mention">Вас згадано</string>
   <string name="preference_summary_notification_mention">Хтось згадав вас на сторінці</string>
   <string name="preference_title_notification_user_talk">На сторінках обговорень</string>
-  <string name="preference_summary_notification_user_talk">Повідомлення зі сторінок обговорень</string>
+  <string name="preference_summary_notification_user_talk">Повідомлення та відповіді зі сторінок обговорень</string>
+  <string name="preference_title_notification_email_user">Отримано електронного листа</string>
+  <string name="preference_summary_notification_email_user">Хтось надіслав вам електронного листа через вікі</string>
+  <string name="preference_title_notification_user_rights">Зміни прав користувачів</string>
+  <string name="preference_summary_notification_user_rights">Отримано при зміні прав користувача</string>
+  <string name="preference_title_notification_article_linked">Посилання на створені вами статті</string>
+  <string name="preference_summary_notification_article_linked">Отримується при створенні нового посилання на створену вами сторінку</string>
+  <string name="preference_category_push_notifications">Push-сповіщення</string>
+  <string name="preference_title_customize_push_notifications">Налаштуйте push-сповіщення</string>
+  <string name="preference_category_display_settings">Показати налаштування</string>
+  <string name="preference_title_hide_read_notifications">Приховати прочитані сповіщення</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">Вікіпедія</string>
+  <string name="notifications_channel_group_wikipedia_notifications_description">Сповіщення з Вікіпедії</string>
+  <string name="notifications_channel_group_other_title">Інше</string>
+  <string name="notifications_channel_group_other_description">Інші сповіщення від програми</string>
+  <string name="notifications_filter_label">Фільтр сповіщень</string>
+  <string name="notifications_filter_icon_content_description">Фільтр сповіщень</string>
+  <string name="notifications_filter_update_app_languages">Оновити мови програми</string>
+  <string name="notifications_empty_search_message">Спробуйте видалити %s, щоб побачити більше сповіщень</string>
+  <plurals name="notifications_number_of_filters">
+    <item quantity="one">%d фільтр</item>
+    <item quantity="few">%d фільтри</item>
+    <item quantity="many">%d фільтрів</item>
+    <item quantity="other">%d фільтрів</item>
+  </plurals>
+  <string name="notifications_select_all_filters">Вибрати усі фільтри</string>
+  <string name="notifications_tab_filter_all">Усі</string>
+  <string name="notifications_tab_filter_mentions">Згадки</string>
+  <string name="notifications_tab_filter_unread">(%s)</string>
+  <string name="notifications_search_bar_hint">Шукайте або фільтруйте сповіщення</string>
+  <string name="notifications_search_bar_filter_hint">Фільтр сповіщень</string>
+  <string name="notifications_menu_mark_as_read">Позначити як прочитане</string>
+  <string name="notifications_menu_mark_as_unread">Позначити як непрочитане</string>
+  <string name="notifications_swipe_action_read">Прочитане</string>
+  <string name="notifications_swipe_action_unread">Непрочитане</string>
+  <string name="notifications_menu_check_all">Перевірте всі елементи</string>
+  <string name="notifications_menu_uncheck_all">Зніміть прапорці з усіх елементів</string>
+  <string name="notifications_wiki_filter_header">Фільтр вікі</string>
+  <string name="notifications_type_filter_header">Тип фільтра</string>
+  <string name="notifications_all_wikis_text">Усі «вікі»</string>
+  <string name="notifications_all_types_text">Всі «тип»</string>
+  <string name="notifications_menu_user_talk_page">сторінка обговорення %s</string>
+  <string name="notifications_offline_disable_message">Функція недоступна в автономному режимі.</string>
   <string name="view_because_you_read_card_title">Оскільки Ви читали</string>
   <string name="view_random_card_title">Рандомайзер</string>
   <string name="view_random_article_card_title">Випадкова стаття</string>
@@ -690,6 +767,7 @@
   <string name="feed_accessibility_card_text">Ви досягли кінця стрічки.</string>
   <string name="feed_accessibility_card_load_more_button">Завантажити ще</string>
   <string name="top_read_activity_title">Найчитаніше за %s</string>
+  <string name="tabs_activity_title">Вкладки</string>
   <string name="description_edit_text_hint">Опис статті</string>
   <string name="description_edit_article_description_label">Стаття</string>
   <string name="description_edit_translate_article_description_label_per_language">Опис статті (%s)</string>
@@ -831,7 +909,7 @@
   <string name="suggested_edits_disabled_message">Пропоновані редагування було відключено. Перепрошуємо, %s, але забагато з ваших останніх редагувань було скасовано.</string>
   <string name="suggested_edits_ip_blocked_message">Схоже, що IP-адреса, якою ви користуєтесь (або діапазон IP-адрес), наразі заблокована для редагування у Вікіпедії.</string>
   <string name="suggested_edits_editing_tips_link_text">Редагування порад</string>
-  <string name="suggested_edits_help_page_link_text">Довідка з \"Пропонованих редагуваннь\"</string>
+  <string name="suggested_edits_help_page_link_text">Довідка з «Пропонованих редагувань»</string>
   <string name="suggested_edits_edit_streak_label_text">Страйк редагувань</string>
   <string name="suggested_edits_views_label_text">Перегляди</string>
   <string name="suggested_edits_quality_label_text">Якість редагувань</string>
@@ -925,6 +1003,7 @@
   <string name="file_page_add_image_caption_button">Додати підпис зображення</string>
   <string name="file_page_add_image_tags_button">Додайте теги зображень</string>
   <string name="file_page_suggestion_reason">Причина пропозиції</string>
+  <string name="file_page_edit_button_content_description">Редагувати %s</string>
   <string name="description_edit_revert_subtitle">Дякуємо за редагування Вікіпедії!</string>
   <string name="description_edit_revert_intro">Ми знаємо, що Ви старались як могли, але в одного з перевіряльників виникли сумніви. Ймовірні причини скасування Вашого редагування:</string>
   <string name="description_edit_revert_reason1">Ваше редагування не відповідало одній з &lt;a href=\"%1$s\"&gt;настанов&lt;/a&gt;.</string>
@@ -1023,7 +1102,7 @@
   <string name="talk_title">Обговорення</string>
   <string name="talk_user_title">Обговорення: %s</string>
   <string name="talk_new_topic">Нова тема</string>
-  <string name="talk_new_topic_submitted" fuzzy="true">Тема подана.</string>
+  <string name="talk_new_topic_submitted">Тему опубліковано.</string>
   <string name="talk_page_empty">Ця сторінка обговорення порожня.</string>
   <string name="talk_add_reply">Відповісти</string>
   <string name="talk_no_subject">(Немає теми)</string>
@@ -1032,16 +1111,24 @@
   <string name="talk_message_hint">Написати повідомлення</string>
   <string name="talk_message_empty">Повідомлення не може бути порожнім.</string>
   <string name="talk_subject_empty">Тема не може бути порожньою.</string>
-  <string name="talk_response_submitted" fuzzy="true">Відповідь надіслано.</string>
+  <string name="talk_response_submitted">Відповідь опубліковано.</string>
   <string name="talk_snackbar_undo">Скасувати</string>
   <string name="talk_last_modified">&lt;b&gt;Останнє редагування %1$s&lt;/b&gt; за %2$s</string>
+  <string name="talk_snackbar_survey_text">Дякуємо, що користуєтесь сторінками обговорень. Чи можете ви допомогти нам покращити додаток, взявши участь у опитуванні?</string>
+  <string name="talk_snackbar_survey_action_text">Розпочати</string>
+  <string name="talk_share_discussion_subject">Вікіпедія — обговорення на сторінці обговорення «%s»</string>
+  <string name="talk_share_talk_page">Вікіпедія — обговорення на сторінці обговорення</string>
+  <string name="menu_option_share_talk_discussion">Поділіться обговоренням</string>
+  <string name="menu_option_share_talk_page">Поділіться сторінкою обговорення</string>
   <string name="menu_option_share_edit">Поділитися редагуванням</string>
   <string name="menu_option_user_profile">Профіль %s</string>
   <string name="menu_option_user_contributions">Внесок %s</string>
   <string name="watchlist_details_watching_label">Спостерігаю</string>
   <string name="watchlist_details_watch_label">Спостерігати</string>
+  <string name="watchlist_details_next_edit">Наступне редагування</string>
+  <string name="watchlist_details_prev_edit">Попереднє редагування</string>
   <string name="thank_label">Подякувати</string>
-  <string name="go_to_user_page">Перейти на сторінку користувача</string>
+  <string name="view_user_page">Переглянути сторінку користувача</string>
   <string name="thank_dialog_title_text">Публічно відправити подяку</string>
   <string name="thank_dialog_text">«Подяка» — це легкий спосіб висловити вдячність за внесок редактора у Вікіпедії. Вона не може бути відкликана і є видимою публічно</string>
   <string name="thank_dialog_positive_button_text">Надіслати подяку</string>

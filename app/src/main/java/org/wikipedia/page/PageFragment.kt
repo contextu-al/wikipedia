@@ -26,9 +26,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textview.MaterialTextView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.serialization.json.float
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.wikipedia.*
 import org.wikipedia.Constants.InvokeSource
 import org.wikipedia.activity.FragmentUtil.getCallback
@@ -44,19 +47,20 @@ import org.wikipedia.dataclient.ServiceFactory
 import org.wikipedia.dataclient.WikiSite
 import org.wikipedia.dataclient.okhttp.HttpStatusException
 import org.wikipedia.dataclient.okhttp.OkHttpWebViewClient
-import org.wikipedia.dataclient.page.Protection
 import org.wikipedia.dataclient.watch.Watch
 import org.wikipedia.descriptions.DescriptionEditActivity
 import org.wikipedia.descriptions.DescriptionEditTutorialActivity
+import org.wikipedia.diff.ArticleEditDetailsActivity
 import org.wikipedia.edit.EditHandler
 import org.wikipedia.feed.announcement.Announcement
 import org.wikipedia.feed.announcement.AnnouncementClient
 import org.wikipedia.gallery.GalleryActivity
 import org.wikipedia.history.HistoryEntry
-import org.wikipedia.json.GsonUtil
+import org.wikipedia.json.JsonUtil
 import org.wikipedia.language.LangLinksActivity
 import org.wikipedia.login.LoginActivity
 import org.wikipedia.media.AvPlayer
+import org.wikipedia.notifications.PollNotificationService
 import org.wikipedia.page.PageCacher.loadIntoCache
 import org.wikipedia.page.action.PageActionTab
 import org.wikipedia.page.leadimages.LeadImagesHandler
@@ -179,7 +183,8 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         // Explicitly set background color of the WebView (independently of CSS, because
         // the background may be shown momentarily while the WebView loads content,
         // creating a seizure-inducing effect, or at the very least, a migraine with aura).
-        webView.setBackgroundColor(ResourceUtil.getThemedColor(requireActivity(), R.attr.paper_color))
+        val activity = requireActivity()
+        webView.setBackgroundColor(ResourceUtil.getThemedColor(activity, R.attr.paper_color))
         bridge = CommunicationBridge(this)
         setupMessageHandlers()
 
@@ -191,8 +196,8 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         }
 
         editHandler = EditHandler(this, bridge)
-        tocHandler = ToCHandler(this, requireActivity().window.decorView.findViewById(R.id.navigation_drawer),
-            requireActivity().window.decorView.findViewById(R.id.page_scroller_button), bridge)
+        tocHandler = ToCHandler(this, ActivityCompat.requireViewById(activity, R.id.navigation_drawer),
+            ActivityCompat.requireViewById(activity, R.id.page_scroller_button), bridge)
         leadImagesHandler = LeadImagesHandler(this, webView, binding.pageHeaderView)
         shareHandler = ShareHandler(this, bridge)
         pageFragmentLoadState = PageFragmentLoadState(model, this, webView, bridge, leadImagesHandler, currentTab)
@@ -201,7 +206,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
             LongPressHandler(webView, HistoryEntry.SOURCE_INTERNAL_LINK, PageContainerLongPressHandler(this))
         }
 
-        if (shouldLoadFromBackstack(requireActivity()) || savedInstanceState != null) {
+        if (shouldLoadFromBackstack(activity) || savedInstanceState != null) {
             reloadFromBackstack()
         }
     }
@@ -237,7 +242,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         disposables.clear()
         webView.clearAllListeners()
         (webView.parent as ViewGroup).removeView(webView)
-        Prefs.setSuggestedEditsHighestPriorityEnabled(false)
+        Prefs.isSuggestedEditsHighestPriorityEnabled = false
         _binding = null
         super.onDestroyView()
     }
@@ -250,7 +255,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         app.commitTabState()
         closePageScrollFunnel()
         val time = if (app.tabList.size >= 1 && !pageFragmentLoadState.backStackEmpty()) System.currentTimeMillis() else 0
-        Prefs.pageLastShown(time)
+        Prefs.pageLastShown = time
     }
 
     override fun onResume() {
@@ -386,12 +391,10 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                 return@evaluate
             }
             model.page?.let { page ->
-                GsonUtil.getDefaultGson().fromJson(value, Array<Section>::class.java)?.let {
-                    sections = it.toMutableList()
-                    sections?.let { sections ->
-                        sections.add(0, Section(0, 0, model.title?.displayText, model.title?.displayText, ""))
-                        page.sections = sections
-                    }
+                sections = JsonUtil.decodeFromString(value)
+                sections?.let { sections ->
+                    sections.add(0, Section(0, 0, model.title?.displayText.orEmpty(), model.title?.displayText.orEmpty(), ""))
+                    page.sections = sections
                 }
             }
 
@@ -405,10 +408,8 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                 return@evaluate
             }
             model.page?.let { page ->
-                GsonUtil.getDefaultGson().fromJson(value, Protection::class.java)?.let {
-                    page.pageProperties.setProtection(it)
-                    bridge.execute(JavaScriptActionHandler.setUpEditButtons(true, !page.pageProperties.canEdit()))
-                }
+                page.pageProperties.protection = JsonUtil.decodeFromString(value)
+                bridge.execute(JavaScriptActionHandler.setUpEditButtons(true, !page.pageProperties.canEdit))
             }
         }
     }
@@ -426,7 +427,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         model.title?.run {
             historyEntry.referrer = uri
         }
-        if (title.namespace() !== Namespace.MAIN || !Prefs.isLinkPreviewEnabled()) {
+        if (title.namespace() !== Namespace.MAIN || !Prefs.isLinkPreviewEnabled) {
             loadPage(title, historyEntry)
         } else {
             callback()?.onPageShowLinkPreview(historyEntry)
@@ -547,7 +548,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
     }
 
     private fun startTalkTopicActivity(pageTitle: PageTitle) {
-        startActivity(TalkTopicsActivity.newIntent(requireActivity(), pageTitle.pageTitleForTalkPage(), InvokeSource.PAGE_ACTIVITY))
+        startActivity(TalkTopicsActivity.newIntent(requireActivity(), pageTitle, InvokeSource.PAGE_ACTIVITY))
     }
 
     private fun startGalleryActivity(fileName: String) {
@@ -558,7 +559,9 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                     return@evaluate
                 }
                 var options: ActivityOptionsCompat? = null
-                GsonUtil.getDefaultGson().fromJson(s, JavaScriptActionHandler.ImageHitInfo::class.java)?.let {
+
+                val hitInfo: JavaScriptActionHandler.ImageHitInfo? = JsonUtil.decodeFromString(s)
+                hitInfo?.let {
                     val params = CoordinatorLayout.LayoutParams(
                         DimenUtil.roundedDpToPx(it.width),
                         DimenUtil.roundedDpToPx(it.height)
@@ -617,7 +620,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
 
     private fun maybeShowAnnouncement() {
         title?.let {
-            if (Prefs.hasVisitedArticlePage()) {
+            if (Prefs.hasVisitedArticlePage) {
                 disposables.add(ServiceFactory.getRest(it.wikiSite).announcements
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -626,8 +629,8 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                         val now = Date()
                         for (announcement in list.items) {
                             if (AnnouncementClient.shouldShow(announcement, country, now) &&
-                                announcement.placement() == Announcement.PLACEMENT_ARTICLE &&
-                                !Prefs.getAnnouncementShownDialogs().contains(announcement.id())) {
+                                announcement.placement == Announcement.PLACEMENT_ARTICLE &&
+                                !Prefs.announcementShownDialogs.contains(announcement.id)) {
                                 val dialog = AnnouncementDialog(requireActivity(), announcement)
                                 dialog.setCancelable(false)
                                 dialog.show()
@@ -686,6 +689,10 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                 startGalleryActivity(title.prefixedText)
             }
 
+            override fun onDiffLinkClicked(title: PageTitle, revisionId: Long) {
+                startActivity(ArticleEditDetailsActivity.newIntent(requireContext(), title.displayText, revisionId, title.wikiSite.languageCode))
+            }
+
             // ignore
             override var wikiSite: WikiSite
                 get() = model.title?.run { wikiSite } ?: WikiSite.forLanguageCode("en")
@@ -723,8 +730,8 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
             if (!isAdded) {
                 return@addListener
             }
-            GsonUtil.getDefaultGson().fromJson(messagePayload, PageReferences::class.java)?.let {
-                references = it
+            references = JsonUtil.decodeFromString(messagePayload.toString())
+            references?.let {
                 if (!it.referencesGroup.isNullOrEmpty()) {
                     showBottomSheet(ReferenceDialog())
                 }
@@ -732,17 +739,17 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         }
         bridge.addListener("back_link") { _, messagePayload ->
             messagePayload?.let { payload ->
-                val backLinks = payload.getAsJsonArray("backLinks")
-                if (backLinks != null && backLinks.size() > 0) {
-                    val backLinksList = backLinks.map { it.asJsonObject["id"].asString }
-                    showFindReferenceInPage(payload["referenceId"].asString.orEmpty(), backLinksList, payload["referenceText"].asString.orEmpty())
+                val backLinks = payload["backLinks"]?.jsonArray
+                if (backLinks != null && !backLinks.isEmpty()) {
+                    val backLinksList = backLinks.map { it.jsonObject["id"]?.jsonPrimitive?.content }
+                    showFindReferenceInPage(payload["referenceId"]?.jsonPrimitive?.content.orEmpty(), backLinksList, payload["referenceText"]?.jsonPrimitive?.content.orEmpty())
                 }
             }
         }
         bridge.addListener("scroll_to_anchor") { _, messagePayload ->
             messagePayload?.let { payload ->
-                payload.getAsJsonObject("rect")?.let {
-                    val diffY = if (it.has("y")) DimenUtil.roundedDpToPx(it["y"].asFloat) else DimenUtil.roundedDpToPx(it["top"].asFloat)
+                payload["rect"]?.jsonObject?.let {
+                    val diffY = if (it.containsKey("y")) DimenUtil.roundedDpToPx(it["y"]!!.jsonPrimitive.float) else DimenUtil.roundedDpToPx(it["top"]!!.jsonPrimitive.float)
                     val offsetFraction = 3
                     webView.scrollY = webView.scrollY + diffY - webView.height / offsetFraction
                 }
@@ -750,12 +757,12 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         }
         bridge.addListener("image") { _, messagePayload ->
             messagePayload?.let { payload ->
-                linkHandler.onUrlClick(UriUtil.decodeURL(payload["href"].asString), payload["title"]?.asString, "")
+                linkHandler.onUrlClick(UriUtil.decodeURL(payload["href"]?.jsonPrimitive?.content.orEmpty()), payload["title"]?.jsonPrimitive?.content, "")
             }
         }
         bridge.addListener("media") { _, messagePayload ->
             messagePayload?.let { payload ->
-                linkHandler.onUrlClick(UriUtil.decodeURL(payload["href"].asString), payload["title"]?.asString, "")
+                linkHandler.onUrlClick(UriUtil.decodeURL(payload["href"]?.jsonPrimitive?.content.orEmpty()), payload["title"]?.jsonPrimitive?.content, "")
             }
         }
         bridge.addListener("pronunciation") { _, messagePayload ->
@@ -766,9 +773,9 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                 if (avCallback == null) {
                     avCallback = AvCallback()
                 }
-                if (!avPlayer!!.isPlaying && payload.has("url")) {
+                if (!avPlayer!!.isPlaying && payload.containsKey("url")) {
                     updateProgressBar(true)
-                    avPlayer!!.play(UriUtil.resolveProtocolRelativeUrl(payload["url"].asString), avCallback!!)
+                    avPlayer!!.play(UriUtil.resolveProtocolRelativeUrl(payload["url"]?.jsonPrimitive?.content.orEmpty()), avCallback!!)
                 } else {
                     updateProgressBar(false)
                     avPlayer!!.stop()
@@ -777,7 +784,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         }
         bridge.addListener("footer_item") { _, messagePayload ->
             messagePayload?.let { payload ->
-                when (payload["itemType"].asString) {
+                when (payload["itemType"]?.jsonPrimitive?.content) {
                     "talkPage" -> model.title?.run { startTalkTopicActivity(this) }
                     "languages" -> startLangLinksActivity()
                     "lastEdited" -> {
@@ -904,6 +911,11 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
         // clear the title in case the previous page load had failed.
         clearActivityActionBarTitle()
 
+        if (AccountUtil.isLoggedIn) {
+            // explicitly check notifications for the current user
+            PollNotificationService.schedulePollNotificationJob(requireContext())
+        }
+
         // update the time spent reading of the current page, before loading the new one
         addTimeSpentReading(activeTimer.elapsedSec)
         activeTimer.reset()
@@ -950,15 +962,14 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
     fun updateBookmarkAndMenuOptionsFromDao() {
         title?.let {
             disposables.add(
-                Observable.fromCallable { AppDatabase.getAppDatabase().readingListPageDao().findPageInAnyList(it) }
+                Completable.fromAction { model.readingListPage = AppDatabase.getAppDatabase().readingListPageDao().findPageInAnyList(it) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doAfterTerminate {
                         pageActionTabsCallback.updateBookmark(model.readingListPage != null)
                         requireActivity().invalidateOptionsMenu()
                     }
-                    .subscribe({ page -> model.readingListPage = page }
-                    ) { model.readingListPage = null })
+                    .subscribe())
         }
     }
 
@@ -1036,7 +1047,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
             hidePageContent()
             bridge.onMetadataReady()
             if (binding.pageError.visibility != View.VISIBLE) {
-                binding.pageError.setError(caught)
+                binding.pageError.setError(caught, it)
             }
             binding.pageError.visibility = View.VISIBLE
             binding.pageError.contentTopOffset.layoutParams = getContentTopOffsetParams(requireContext())
@@ -1075,7 +1086,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
 
     fun verifyBeforeEditingDescription(text: String?) {
         page?.let {
-            if (!AccountUtil.isLoggedIn && Prefs.getTotalAnonDescriptionsEdited() >= resources.getInteger(R.integer.description_max_anon_edits)) {
+            if (!AccountUtil.isLoggedIn && Prefs.totalAnonDescriptionsEdited >= resources.getInteger(R.integer.description_max_anon_edits)) {
                 AlertDialog.Builder(requireActivity())
                     .setMessage(R.string.description_edit_anon_limit)
                     .setPositiveButton(R.string.page_editing_login) { _, _ ->
@@ -1090,12 +1101,12 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
     }
 
     fun startDescriptionEditActivity(text: String?) {
-        if (Prefs.isDescriptionEditTutorialEnabled()) {
+        if (Prefs.isDescriptionEditTutorialEnabled) {
             requireActivity().startActivityForResult(DescriptionEditTutorialActivity.newIntent(requireContext(), text),
                 Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT_TUTORIAL)
         } else {
             title?.run {
-                val sourceSummary = PageSummaryForEdit(prefixedText, wikiSite.languageCode(), this, displayText, description, thumbUrl)
+                val sourceSummary = PageSummaryForEdit(prefixedText, wikiSite.languageCode, this, displayText, description, thumbUrl)
                 requireActivity().startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), this, text, sourceSummary, null,
                         DescriptionEditActivity.Action.ADD_DESCRIPTION, InvokeSource.PAGE_ACTIVITY), Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT)
             }
@@ -1120,8 +1131,20 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
 
     fun addToReadingList(title: PageTitle, source: InvokeSource, addToDefault: Boolean) {
         if (addToDefault) {
-            ReadingListBehaviorsUtil.addToDefaultList(requireActivity(), title, source) { readingListId ->
-                moveToReadingList(readingListId, title, source, false) }
+            var finalPageTitle = title
+            // Make sure handle redirected title before saving into database
+            disposables.add(ServiceFactory.getRest(title.wikiSite).getSummary(null, title.prefixedText)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doAfterTerminate {
+                    ReadingListBehaviorsUtil.addToDefaultList(requireActivity(), finalPageTitle, source) { readingListId ->
+                        moveToReadingList(readingListId, finalPageTitle, source, false) }
+                }
+                .subscribe({
+                    finalPageTitle = it.getPageTitle(title.wikiSite)
+                }, {
+                    L.e(it)
+                }))
         } else {
             callback()?.onPageAddToReadingList(title, source)
         }
@@ -1142,7 +1165,7 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                 .flatMap { response ->
                     val watchToken = response.query?.watchToken()
                     if (watchToken.isNullOrEmpty()) {
-                        throw RuntimeException("Received empty watch token: " + GsonUtil.getDefaultGson().toJson(response))
+                        throw RuntimeException("Received empty watch token.")
                     }
                     ServiceFactory.get(it.wikiSite).postWatch(if (unwatch) 1 else null, null, it.prefixedText, expiry.expiry, watchToken)
                 }
@@ -1162,6 +1185,10 @@ class PageFragment : Fragment(), BackPressedHandler, CommunicationBridge.Communi
                     }
                 }) { caught -> L.d(caught) })
         }
+    }
+
+    fun showAnonNotification() {
+        (requireActivity() as PageActivity).onAnonNotification()
     }
 
     private inner class PageActionTabCallback : PageActionTab.Callback {

@@ -6,37 +6,46 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import org.wikipedia.dataclient.WikiSite
+import org.wikipedia.json.DateSerializer
 import org.wikipedia.page.PageTitle
+import org.wikipedia.parcel.DateParceler
 import java.util.*
 
+@Serializable
 @Parcelize
+@TypeParceler<Date, DateParceler>()
 @Entity
+// TODO: change these properties back to val when HistoryEntry is no longer serializable. (i.e. when we update Tabs to be in the database instead of Prefs)
 class HistoryEntry(
-    val authority: String = "",
-    val lang: String,
-    val apiTitle: String,
-    val displayTitle: String,
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val namespace: String,
-    var timestamp: Date = Date(),
+    var authority: String = "",
+    var lang: String = "",
+    var apiTitle: String = "",
+    var displayTitle: String = "",
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    var namespace: String = "",
+    @Serializable(with = DateSerializer::class) var timestamp: Date = Date(),
     var source: Int = SOURCE_INTERNAL_LINK,
     var timeSpentSec: Int = 0,
 ) : Parcelable {
     constructor(title: PageTitle, source: Int, timestamp: Date = Date(), timeSpentSec: Int = 0) : this(title.wikiSite.authority(),
-        title.wikiSite.languageCode(), title.text, title.displayText, namespace = title.namespace,
+        title.wikiSite.languageCode, title.text, title.displayText, namespace = title.namespace,
         timestamp = timestamp, source = source, timeSpentSec = timeSpentSec) {
         pageTitle = title
     }
 
     @IgnoredOnParcel
+    @Transient
     @Ignore
     private var pageTitle: PageTitle? = null
 
     val title: PageTitle get() {
         if (pageTitle == null) {
             pageTitle = PageTitle(namespace, apiTitle, WikiSite(authority, lang))
-            pageTitle!!.setDisplayText(displayTitle)
+            pageTitle!!.displayText = displayTitle
         }
         return pageTitle!!
     }
@@ -44,6 +53,7 @@ class HistoryEntry(
     // To be set when navigating back and forth between articles.
     @IgnoredOnParcel
     @Transient
+    @Ignore
     var referrer: String? = null
 
     companion object {

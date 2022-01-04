@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.core.os.postDelayed
 import androidx.core.view.isGone
@@ -23,6 +24,7 @@ import org.wikipedia.WikipediaApp
 import org.wikipedia.activity.BaseActivity
 import org.wikipedia.analytics.EditFunnel
 import org.wikipedia.analytics.LoginFunnel
+import org.wikipedia.analytics.eventplatform.EditAttemptStepEvent
 import org.wikipedia.auth.AccountUtil.isLoggedIn
 import org.wikipedia.captcha.CaptchaHandler
 import org.wikipedia.captcha.CaptchaResult
@@ -32,7 +34,6 @@ import org.wikipedia.databinding.ItemEditActionbarButtonBinding
 import org.wikipedia.dataclient.ServiceFactory
 import org.wikipedia.dataclient.mwapi.MwException
 import org.wikipedia.dataclient.mwapi.MwParseResponse
-import org.wikipedia.dataclient.mwapi.MwQueryResponse
 import org.wikipedia.dataclient.mwapi.MwServiceError
 import org.wikipedia.dataclient.okhttp.OkHttpConnectionFactory
 import org.wikipedia.edit.preview.EditPreviewFragment
@@ -40,17 +41,13 @@ import org.wikipedia.edit.richtext.SyntaxHighlighter
 import org.wikipedia.edit.summaries.EditSummaryFragment
 import org.wikipedia.history.HistoryEntry
 import org.wikipedia.login.LoginActivity
-import org.wikipedia.page.ExclusiveBottomSheetPresenter
-import org.wikipedia.page.LinkMovementMethodExt
-import org.wikipedia.page.PageProperties
-import org.wikipedia.page.PageTitle
+import org.wikipedia.notifications.AnonymousNotificationHelper
+import org.wikipedia.page.*
 import org.wikipedia.page.linkpreview.LinkPreviewDialog
 import org.wikipedia.settings.Prefs
 import org.wikipedia.util.*
 import org.wikipedia.util.log.L
-import org.wikipedia.views.ViewAnimations
-import org.wikipedia.views.ViewUtil
-import org.wikipedia.views.WikiTextKeyboardView
+import org.wikipedia.views.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -67,9 +64,9 @@ class EditSectionActivity : BaseActivity() {
 
     private var sectionID = 0
     private var sectionAnchor: String? = null
-    private var pageProps: PageProperties? = null
     private var textToHighlight: String? = null
     private var sectionWikitext: String? = null
+    private val editNotices = mutableListOf<String>()
 
     private var sectionTextModified = false
     private var sectionTextFirstLoad = true
@@ -102,7 +99,6 @@ class EditSectionActivity : BaseActivity() {
         pageTitle = intent.getParcelableExtra(EXTRA_TITLE)!!
         sectionID = intent.getIntExtra(EXTRA_SECTION_ID, 0)
         sectionAnchor = intent.getStringExtra(EXTRA_SECTION_ANCHOR)
-        pageProps = intent.getParcelableExtra(EXTRA_PAGE_PROPS)
         textToHighlight = intent.getStringExtra(EXTRA_HIGHLIGHT_TEXT)
         supportActionBar?.title = ""
         syntaxHighlighter = SyntaxHighlighter(this, binding.editSectionText)
@@ -117,10 +113,18 @@ class EditSectionActivity : BaseActivity() {
         // Only send the editing start log event if the activity is created for the first time
         if (savedInstanceState == null) {
             funnel.logStart()
+            EditAttemptStepEvent.logInit(pageTitle.wikiSite.languageCode)
         }
-        if (savedInstanceState != null && savedInstanceState.containsKey("hasTemporaryWikitextStored")) {
-            sectionWikitext = Prefs.getTemporaryWikitext()
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(EXTRA_KEY_TEMPORARY_WIKITEXT_STORED)) {
+                sectionWikitext = Prefs.temporaryWikitext
+            }
+            editingAllowed = savedInstanceState.getBoolean(EXTRA_KEY_EDITING_ALLOWED, false)
+            sectionTextModified = savedInstanceState.getBoolean(EXTRA_KEY_SECTION_TEXT_MODIFIED, false)
         }
+        L10nUtil.setConditionalTextDirection(binding.editSectionText, pageTitle.wikiSite.languageCode)
+        fetchSectionText()
+
         binding.viewEditSectionError.retryClickListener = View.OnClickListener {
             binding.viewEditSectionError.visibility = View.GONE
             captchaHandler.requestNewCaptcha()
@@ -129,11 +133,7 @@ class EditSectionActivity : BaseActivity() {
         binding.viewEditSectionError.backClickListener = View.OnClickListener {
             onBackPressed()
         }
-        L10nUtil.setConditionalTextDirection(binding.editSectionText, pageTitle.wikiSite.languageCode())
-        fetchSectionText()
-        if (savedInstanceState != null && savedInstanceState.containsKey("sectionTextModified")) {
-            sectionTextModified = savedInstanceState.getBoolean("sectionTextModified")
-        }
+
         textWatcher = binding.editSectionText.doAfterTextChanged {
             if (sectionTextFirstLoad) {
                 sectionTextFirstLoad = false
@@ -172,7 +172,7 @@ class EditSectionActivity : BaseActivity() {
     }
 
     private fun updateEditLicenseText() {
-        val editLicenseText = findViewById<TextView>(R.id.edit_section_license_text)
+        val editLicenseText = ActivityCompat.requireViewById<TextView>(this, R.id.edit_section_license_text)
         editLicenseText.text = StringUtil.fromHtml(getString(if (isLoggedIn) R.string.edit_save_action_license_logged_in else R.string.edit_save_action_license_anon,
                 getString(R.string.terms_of_use_url),
                 getString(R.string.cc_by_sa_3_url)))
@@ -240,6 +240,7 @@ class EditSectionActivity : BaseActivity() {
 
     @Suppress("SameParameterValue")
     private fun waitForUpdatedRevision(newRevision: Long) {
+        AnonymousNotificationHelper.onEditSubmitted()
         disposables.add(ServiceFactory.getRest(pageTitle.wikiSite)
             .getSummaryResponse(pageTitle.prefixedText, null, OkHttpConnectionFactory.CACHE_CONTROL_FORCE_NETWORK.toString(), null, null, null)
             .delay(2, TimeUnit.SECONDS)
@@ -263,6 +264,7 @@ class EditSectionActivity : BaseActivity() {
     private fun onEditSuccess(result: EditResult) {
         if (result is EditSuccessResult) {
             funnel.logSaved(result.revID)
+            EditAttemptStepEvent.logSaveSuccess(pageTitle.wikiSite.languageCode)
             // TODO: remove the artificial delay and use the new revision
             // ID returned to request the updated version of the page once
             // revision support for mobile-sections is added to RESTBase
@@ -290,6 +292,7 @@ class EditSectionActivity : BaseActivity() {
             funnel.logCaptchaShown()
         } else {
             funnel.logError(result.result)
+            EditAttemptStepEvent.logSaveFailure(pageTitle.wikiSite.languageCode)
             // Expand to do everything.
             onEditFailure(Throwable())
         }
@@ -359,12 +362,14 @@ class EditSectionActivity : BaseActivity() {
                 // we're showing the Preview window, which means that the next step is to save it!
                 editTokenThenSave
                 funnel.logSaveAttempt()
+                EditAttemptStepEvent.logSaveAttempt(pageTitle.wikiSite.languageCode)
             }
             else -> {
                 // we must be showing the editing window, so show the Preview.
                 DeviceUtil.hideSoftKeyboard(this)
                 editPreviewFragment.showPreview(pageTitle, binding.editSectionText.text.toString())
                 funnel.logPreview()
+                EditAttemptStepEvent.logSaveIntent(pageTitle.wikiSite.languageCode)
             }
         }
     }
@@ -376,17 +381,21 @@ class EditSectionActivity : BaseActivity() {
                 true
             }
             R.id.menu_edit_zoom_in -> {
-                Prefs.setEditingTextSizeExtra(Prefs.getEditingTextSizeExtra() + 1)
+                Prefs.editingTextSizeExtra = Prefs.editingTextSizeExtra + 1
                 updateTextSize()
                 true
             }
             R.id.menu_edit_zoom_out -> {
-                Prefs.setEditingTextSizeExtra(Prefs.getEditingTextSizeExtra() - 1)
+                Prefs.editingTextSizeExtra = Prefs.editingTextSizeExtra - 1
                 updateTextSize()
                 true
             }
             R.id.menu_find_in_editor -> {
                 showFindInEditor()
+                true
+            }
+            R.id.menu_edit_notices -> {
+                showEditNotices()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -396,6 +405,8 @@ class EditSectionActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_edit_section, menu)
         val item = menu.findItem(R.id.menu_save_section)
+
+        menu.findItem(R.id.menu_edit_notices).isVisible = editNotices.isNotEmpty() && !editPreviewFragment.isActive
         menu.findItem(R.id.menu_edit_zoom_in).isVisible = !editPreviewFragment.isActive
         menu.findItem(R.id.menu_edit_zoom_out).isVisible = !editPreviewFragment.isActive
         menu.findItem(R.id.menu_find_in_editor).isVisible = !editPreviewFragment.isActive
@@ -465,13 +476,14 @@ class EditSectionActivity : BaseActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("hasTemporaryWikitextStored", true)
-        outState.putBoolean("sectionTextModified", sectionTextModified)
-        Prefs.storeTemporaryWikitext(sectionWikitext)
+        outState.putBoolean(EXTRA_KEY_TEMPORARY_WIKITEXT_STORED, true)
+        outState.putBoolean(EXTRA_KEY_SECTION_TEXT_MODIFIED, sectionTextModified)
+        outState.putBoolean(EXTRA_KEY_EDITING_ALLOWED, editingAllowed)
+        Prefs.temporaryWikitext = sectionWikitext.orEmpty()
     }
 
     private fun updateTextSize() {
-        val extra = Prefs.getEditingTextSizeExtra()
+        val extra = Prefs.editingTextSizeExtra
         binding.editSectionText.textSize = WikipediaApp.getInstance().getFontSize(window) + extra.toFloat()
     }
 
@@ -489,17 +501,16 @@ class EditSectionActivity : BaseActivity() {
     }
 
     private fun fetchSectionText() {
-        editingAllowed = false
         if (sectionWikitext == null) {
             disposables.add(ServiceFactory.get(pageTitle.wikiSite).getWikiTextForSectionWithInfo(pageTitle.prefixedText, sectionID)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response: MwQueryResponse ->
+                    .subscribe({ response ->
                         val firstPage = response.query?.firstPage()!!
-                        val rev = firstPage.revisions()[0]
+                        val rev = firstPage.revisions[0]
 
-                        pageTitle = PageTitle(firstPage.title(), pageTitle.wikiSite)
-                        sectionWikitext = rev.content()
+                        pageTitle = PageTitle(firstPage.title, pageTitle.wikiSite)
+                        sectionWikitext = rev.content
                         currentRevision = rev.revId
 
                         val editError = response.query?.firstPage()!!.getErrorForAction("edit")
@@ -510,14 +521,52 @@ class EditSectionActivity : BaseActivity() {
                             FeedbackUtil.showError(this, MwException(error))
                         }
                         displaySectionText()
-                    }) { throwable: Throwable? ->
+                    }) { throwable ->
                         showProgressBar(false)
                         showError(throwable)
                         L.e(throwable)
                     })
+            disposables.add(ServiceFactory.get(pageTitle.wikiSite).getVisualEditorMetadata(pageTitle.prefixedText)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        editNotices.clear()
+                        // Populate edit notices, but filter out anonymous edit warnings, since
+                        // we show that type of warning ourselves when previewing.
+                        editNotices.addAll(it.visualeditor?.notices.orEmpty()
+                                .filterKeys { key -> key != "anoneditwarning" }.values)
+                        invalidateOptionsMenu()
+                        if (Prefs.autoShowEditNotices) {
+                            showEditNotices()
+                        } else {
+                            maybeShowEditNoticesTooltip()
+                        }
+                    }, {
+                        L.e(it)
+                    }))
         } else {
             displaySectionText()
         }
+    }
+
+    private fun maybeShowEditNoticesTooltip() {
+        if (!Prefs.autoShowEditNotices && !Prefs.isEditNoticesTooltipShown) {
+            Prefs.isEditNoticesTooltipShown = true
+            binding.root.postDelayed({
+                val anchorView = findViewById<View>(R.id.menu_edit_notices)
+                if (!isDestroyed && anchorView != null) {
+                    FeedbackUtil.showTooltip(this, anchorView, getString(R.string.edit_notices_tooltip), aboveOrBelow = false, autoDismiss = false)
+                }
+            }, 100)
+        }
+    }
+
+    private fun showEditNotices() {
+        if (editNotices.isEmpty()) {
+            return
+        }
+        EditNoticesDialog(pageTitle.wikiSite, editNotices, this)
+                .show()
     }
 
     private fun displaySectionText() {
@@ -589,10 +638,12 @@ class EditSectionActivity : BaseActivity() {
     }
 
     companion object {
+        private const val EXTRA_KEY_SECTION_TEXT_MODIFIED = "sectionTextModified"
+        private const val EXTRA_KEY_TEMPORARY_WIKITEXT_STORED = "hasTemporaryWikitextStored"
+        private const val EXTRA_KEY_EDITING_ALLOWED = "editingAllowed"
         const val EXTRA_TITLE = "org.wikipedia.edit_section.title"
         const val EXTRA_SECTION_ID = "org.wikipedia.edit_section.sectionid"
         const val EXTRA_SECTION_ANCHOR = "org.wikipedia.edit_section.anchor"
-        const val EXTRA_PAGE_PROPS = "org.wikipedia.edit_section.pageprops"
         const val EXTRA_HIGHLIGHT_TEXT = "org.wikipedia.edit_section.highlight"
     }
 }

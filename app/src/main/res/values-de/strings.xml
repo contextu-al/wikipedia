@@ -31,6 +31,7 @@
 * TMg
 * Tobi 406
 * Umherirrender
+* Umlaut
 * Vogone
 * Wolfdietmann
 * Xqt
@@ -67,6 +68,10 @@
   <string name="app_settings">App-Einstellungen</string>
   <string name="search_tab_tooltip">Berühre das Symbol noch einmal, um direkt mit der Eingabe zu beginnen.</string>
   <string name="history_list_title">Historie</string>
+  <string name="image_content_description">Bild: %s</string>
+  <string name="page_content_description">Seite: %s</string>
+  <string name="wikimedia_commons">Wikimedia Commons</string>
+  <string name="wikidata">Wikidata</string>
   <string name="dialog_title_clear_history">Browsing-Verlauf löschen</string>
   <string name="dialog_message_clear_history">Dies löscht deinen gesamten Browsing-Verlauf und schließt alle derzeit geöffneten Registerkarten. Bist du sicher?</string>
   <string name="dialog_message_clear_history_yes">Ja</string>
@@ -88,6 +93,7 @@
   <string name="feed_card_add_to_list">Zu Leseliste hinzufügen</string>
   <string name="feed_card_add_to_default_list">Speichern</string>
   <string name="menu_page_share">Link teilen</string>
+  <string name="menu_article_share">Artikel teilen</string>
   <string name="menu_page_open_a_new_tab">Eine neue Registerkarte öffnen</string>
   <string name="menu_page_new_tab">Neue Registerkarte</string>
   <string name="menu_page_reading_lists">Leselisten</string>
@@ -177,7 +183,7 @@
   <string name="create_account_passwords_mismatch_error">Die Passwörter stimmen nicht überein.</string>
   <string name="create_account_email_error">Ungültige E-Mail-Adresse</string>
   <string name="create_account_username_error">Ungültige Zeichen im Benutzernamen</string>
-  <string name="create_account_password_error">Das Passwort ist ungültig</string>
+  <string name="create_account_password_error">Das Passwort muss mindestens 8 Zeichen lang sein.</string>
   <string name="create_account_generic_error">Benutzerkonto konnte nicht erstellt werden</string>
   <string name="create_account_next">Nächste</string>
   <string name="email_recommendation_dialog_title">Benutzerkonto ohne E-Mail-Adresse erstellen?</string>
@@ -191,6 +197,7 @@
   <string name="create_account_ip_block_help_url">https://en.wikipedia.org/wiki/Help:I_have_been_blocked</string>
   <string name="create_account_ip_block_details">Einzelheiten</string>
   <string name="preferences_general_heading">Allgemein</string>
+  <string name="preferences_account_heading">Benutzerkonto</string>
   <string name="wikipedia_app_faq">FAQ zur Wikipedia-App</string>
   <string name="send_feedback">App-Rückmeldung senden</string>
   <string name="create_account_account_created_toast">Benutzerkonto erstellt!</string>
@@ -219,6 +226,7 @@
   <string name="page_protected_can_not_edit_title">Diese Seite ist geschützt</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">Zur Beobachtungsliste hinzufügen</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_text">Verfolge, was mit Artikeln geschieht, die dich interessieren. Tippe auf das Menü und wähle &lt;b&gt;Zur Beobachtungsliste hinzufügen&lt;/b&gt;, um Änderungen an einem Artikel zu sehen.</string>
+  <string name="page_notification_tooltip">Deinen Benachrichtigungen sind jetzt da.</string>
   <string name="settings_item_preferences">Einstellungen</string>
   <string name="settings_activity_title">Einstellungen</string>
   <string name="about_description">Über die Wikipedia-App</string>
@@ -264,6 +272,10 @@
   <string name="edit_summary_tag_other_hint">Andere Wege, wie du die Seite verbessert hast</string>
   <string name="edit_conflict_title">Bearbeitungskonflikt</string>
   <string name="edit_conflict_message">Die Seite wurde bereits von einem anderen Benutzer verändert und kollidiert mit deiner Bearbeitung. Bitte kopiere deine Bearbeitungen, gehe zurück, aktualisiere die Seite und versuche die Bearbeitung erneut.</string>
+  <string name="edit_notices">Bearbeitungsnotizen</string>
+  <string name="edit_notices_please_read">Bitte vor der Bearbeitung lesen</string>
+  <string name="edit_notices_show_auto">Automatische Anzeige von Bearbeitungshinweisen</string>
+  <string name="edit_notices_tooltip">Tippe auf diese Schaltfläche, um die Bearbeitungshinweise für diesen Artikel anzuzeigen.</string>
   <string name="find_next">Nächste finden</string>
   <string name="find_previous">Vorherige finden</string>
   <string name="find_first_occurence">Dies ist das erste Auftreten</string>
@@ -374,6 +386,7 @@
   <string name="error_message_generic">Es ist ein Fehler aufgetreten</string>
   <string name="view_link_preview_error_button_dismiss">Ausblenden</string>
   <string name="error_page_does_not_exist">Diese Seite ist nicht vorhanden</string>
+  <string name="error_user_page_does_not_exist">Wikipedia hat keine &lt;a href=\"%1$s\"&gt;Benutzerseite&lt;/a&gt; mit genau diesem Namen. Im Allgemeinen sollte diese Seite von &lt;b&gt;%2$s&lt;/b&gt; erstellt und bearbeitet werden. Im Zweifelsfall überprüfe bitte, ob „%3$s“ existiert.</string>
   <string name="view_wiki_error_message_offline">Es konnte keine Verbindung mit dem Internet hergestellt werden</string>
   <string name="view_wiki_error_message_timeout">Verbindung zu Wikipedia kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung oder versuchen Sie es später erneut.</string>
   <string name="reference_title">Einzelnachweis %s</string>
@@ -548,10 +561,12 @@
   <string name="reading_list_split_dialog_ok_button_text">Okay</string>
   <string name="user_option_sync_label">Einstellungen</string>
   <string name="notification_reverted_title">Zurückgesetzte Bearbeitung</string>
+  <string name="notification_channel_title">Artikel herunterladen</string>
   <string name="notification_channel_description">Downloadfortschritt</string>
   <string name="notification_syncing_pause_button">Pausieren</string>
   <string name="notification_syncing_resume_button">Fortfahren</string>
   <string name="notification_syncing_cancel_button">Abbrechen</string>
+  <string name="notification_syncing_reading_list_channel_title">Leselisten synchronisieren</string>
   <string name="notification_syncing_reading_list_channel_description">Fortschritt der Synchronisierung von Leselisten</string>
   <string name="notification_many_unread">Du hast %d ungelesene Benachrichtigungen</string>
   <plurals name="notification_channel_name">
@@ -597,6 +612,21 @@
   <string name="notifications_view_archived_button_text">Archivierte Benachrichtigungen ansehen</string>
   <string name="notification_preferences_title">Benachrichtigungseinstellungen</string>
   <string name="notifications_mark_unread">Als ungelesen markieren</string>
+  <string name="notifications_mark_all_as_read">Alle als gelesen markieren</string>
+  <string name="notifications_direct_reply_action">Antwort</string>
+  <string name="notifications_direct_reply_progress">Absenden der Antwort auf %s …</string>
+  <string name="notifications_direct_reply_success">Antwort abgeschickt.</string>
+  <string name="notifications_direct_reply_error">Die Antwort konnte nicht automatisch gesendet werden.</string>
+  <string name="notifications_mark_all_as_read_message">%d als gelesen markiert</string>
+  <string name="notifications_mark_all_as_unread_message">%d als ungelesen markiert</string>
+  <plurals name="notifications_mark_as_read_plural">
+    <item quantity="one">1 als gelesen markiert</item>
+    <item quantity="other">%d als gelesen markiert</item>
+  </plurals>
+  <plurals name="notifications_mark_as_unread_plural">
+    <item quantity="one">1 als ungelesen markiert</item>
+    <item quantity="other">%d als ungelesen markiert</item>
+  </plurals>
   <string name="watchlist_title">Beobachtungsliste</string>
   <string name="preference_title_notification_poll">Benachrichtigungen abfragen</string>
   <string name="preference_summary_notification_poll">Der App erlauben, für die Suche nach neuen Benachrichtigungen im Hintergrund Daten zu verwenden.</string>
@@ -614,7 +644,46 @@
   <string name="preference_title_notification_mention">Erwähnung</string>
   <string name="preference_summary_notification_mention">Jemand hat Sie in einer Seite erwähnt</string>
   <string name="preference_title_notification_user_talk">Diskussionsseite</string>
-  <string name="preference_summary_notification_user_talk">Meldungen von Diskussionsseiten</string>
+  <string name="preference_summary_notification_user_talk">Meldungen und Antworten von Diskussionsseiten</string>
+  <string name="preference_title_notification_email_user">E-Mail erhalten</string>
+  <string name="preference_summary_notification_email_user">Jemand hat dir eine E-Mail über das Wiki geschickt</string>
+  <string name="preference_title_notification_user_rights">Änderungen der Benutzerrechte</string>
+  <string name="preference_summary_notification_user_rights">Erhältst du, wenn sich deine Benutzerrechte ändern</string>
+  <string name="preference_title_notification_article_linked">Links zu den von dir erstellten Artikeln</string>
+  <string name="preference_summary_notification_article_linked">Wird empfangen, wenn ein neuer Link zu einer von dir erstellten Seite erstellt wird</string>
+  <string name="preference_category_push_notifications">Push-Benachrichtigungen</string>
+  <string name="preference_title_customize_push_notifications">Anpassen von Push-Benachrichtigungen</string>
+  <string name="preference_category_display_settings">Anzeigeeinstellungen</string>
+  <string name="preference_title_hide_read_notifications">Lesebestätigungen ausblenden</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">Wikipedia</string>
+  <string name="notifications_channel_group_wikipedia_notifications_description">Benachrichtigungen von Wikipedia</string>
+  <string name="notifications_channel_group_other_title">Andere</string>
+  <string name="notifications_channel_group_other_description">Andere Benachrichtigungen von der App</string>
+  <string name="notifications_filter_label">Benachrichtigungen filtern</string>
+  <string name="notifications_filter_icon_content_description">Benachrichtigungen filtern</string>
+  <string name="notifications_filter_update_app_languages">App-Sprachen aktualisieren</string>
+  <string name="notifications_empty_search_message">Versuche %s zu entfernen, um mehr Benachrichtigungen zu sehen</string>
+  <plurals name="notifications_number_of_filters">
+    <item quantity="one">%d Filter</item>
+    <item quantity="other">%d Filter</item>
+  </plurals>
+  <string name="notifications_select_all_filters">Alle Filter auswählen</string>
+  <string name="notifications_tab_filter_all">Alle</string>
+  <string name="notifications_tab_filter_mentions">Erwähnungen</string>
+  <string name="notifications_search_bar_hint">Benachrichtigungen suchen oder filtern</string>
+  <string name="notifications_search_bar_filter_hint">Benachrichtigungsfilter</string>
+  <string name="notifications_menu_mark_as_read">Als gelesen markieren</string>
+  <string name="notifications_menu_mark_as_unread">Als ungelesen markieren</string>
+  <string name="notifications_swipe_action_read">Gelesen</string>
+  <string name="notifications_swipe_action_unread">Ungelesen</string>
+  <string name="notifications_menu_check_all">Alle Einträge auswählen</string>
+  <string name="notifications_menu_uncheck_all">Alle Einträge abwählen</string>
+  <string name="notifications_wiki_filter_header">Wiki-Filter</string>
+  <string name="notifications_type_filter_header">Typ-Filter</string>
+  <string name="notifications_all_wikis_text">Alle Wikis</string>
+  <string name="notifications_all_types_text">Alle Typen</string>
+  <string name="notifications_menu_user_talk_page">%ss Diskussionsseite</string>
+  <string name="notifications_offline_disable_message">Die Funktion ist im Offline-Modus nicht verfügbar.</string>
   <string name="view_because_you_read_card_title">Weil du das gelesen hast</string>
   <string name="view_random_card_title">Zufallsgenerator</string>
   <string name="view_random_article_card_title">Zufälliger Artikel</string>
@@ -984,7 +1053,7 @@
   <string name="talk_user_title">Gespräch: %s</string>
   <string name="talk_new_topic">Neues Thema</string>
   <string name="talk_new_topic_submitted">Thema übermittelt.</string>
-  <string name="talk_page_empty">Diese Gesprächsseite ist leer.</string>
+  <string name="talk_page_empty">Diese Diskussionsseite ist leer.</string>
   <string name="talk_add_reply">Antworten</string>
   <string name="talk_no_subject">(Kein Betreff)</string>
   <string name="talk_reply_subject">Betreff</string>
@@ -995,13 +1064,21 @@
   <string name="talk_response_submitted">Antwort übermittelt.</string>
   <string name="talk_snackbar_undo">Rückgängig</string>
   <string name="talk_last_modified">&lt;b&gt;Zuletzt bearbeitet %1$s&lt;/b&gt; von %2$s</string>
+  <string name="talk_snackbar_survey_text">Vielen Dank für die Nutzung der Diskussionsseiten. Könntest du uns helfen, die App zu verbessern, indem du an einer Umfrage teilnimmst?</string>
+  <string name="talk_snackbar_survey_action_text">Anfangen</string>
+  <string name="talk_share_discussion_subject">Wikipedia - Diskussion zum Thema auf der Diskussionsseite „%s“</string>
+  <string name="talk_share_talk_page">Wikipedia - Diskussion zum Thema auf der Diskussionsseite</string>
+  <string name="menu_option_share_talk_discussion">Diskussion teilen</string>
+  <string name="menu_option_share_talk_page">Diskussionsseite teilen</string>
   <string name="menu_option_share_edit">Bearbeitung teilen</string>
   <string name="menu_option_user_profile">Profil von %s</string>
   <string name="menu_option_user_contributions">Beiträge von %s</string>
   <string name="watchlist_details_watching_label">Beobachtet</string>
   <string name="watchlist_details_watch_label">Beobachten</string>
+  <string name="watchlist_details_next_edit">Nächste Bearbeitung</string>
+  <string name="watchlist_details_prev_edit">Vorherige Bearbeitung</string>
   <string name="thank_label">Danken</string>
-  <string name="go_to_user_page">Zur Benutzerseite</string>
+  <string name="view_user_page">Benutzerseite ansehen</string>
   <string name="thank_dialog_title_text">Öffentlich das Danke senden</string>
   <string name="thank_dialog_text">Danken ist eine einfache Möglichkeit, einem Benutzer seine Wertschätzung für seine Arbeit in der Wikipedia zu zeigen. Danken  kann nicht rückgängig gemacht werden und ist öffentlich einsehbar</string>
   <string name="thank_dialog_positive_button_text">Danke senden</string>

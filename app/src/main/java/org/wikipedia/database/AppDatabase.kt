@@ -12,6 +12,8 @@ import org.wikipedia.edit.db.EditSummaryDao
 import org.wikipedia.history.HistoryEntry
 import org.wikipedia.history.db.HistoryEntryDao
 import org.wikipedia.history.db.HistoryEntryWithImageDao
+import org.wikipedia.notifications.db.Notification
+import org.wikipedia.notifications.db.NotificationDao
 import org.wikipedia.offline.db.OfflineObject
 import org.wikipedia.offline.db.OfflineObjectDao
 import org.wikipedia.pageimages.db.PageImage
@@ -25,10 +27,9 @@ import org.wikipedia.search.db.RecentSearchDao
 import org.wikipedia.staticdata.MainPageNameData
 import org.wikipedia.talk.db.TalkPageSeen
 import org.wikipedia.talk.db.TalkPageSeenDao
-import java.lang.Exception
 
 const val DATABASE_NAME = "wikipedia.db"
-const val DATABASE_VERSION = 23
+const val DATABASE_VERSION = 24
 
 @Database(
     entities = [
@@ -39,14 +40,16 @@ const val DATABASE_VERSION = 23
         EditSummary::class,
         OfflineObject::class,
         ReadingList::class,
-        ReadingListPage::class
+        ReadingListPage::class,
+        Notification::class
     ],
     version = DATABASE_VERSION
 )
 @TypeConverters(
     DateTypeConverter::class,
     WikiSiteTypeConverter::class,
-    NamespaceTypeConverter::class
+    NamespaceTypeConverter::class,
+    NotificationTypeConverters::class
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -59,6 +62,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun offlineObjectDao(): OfflineObjectDao
     abstract fun readingListDao(): ReadingListDao
     abstract fun readingListPageDao(): ReadingListPageDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         val MIGRATION_19_20 = object : Migration(19, 20) {
@@ -82,8 +86,12 @@ abstract class AppDatabase : RoomDatabase() {
 
                 // convert Recent Searches table
                 database.execSQL("CREATE TABLE IF NOT EXISTS `RecentSearch` (`text` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`text`))")
-                database.execSQL("INSERT OR REPLACE INTO RecentSearch (text, timestamp) SELECT text, timestamp FROM recentsearches")
-                database.execSQL("DROP TABLE recentsearches")
+                try {
+                    database.execSQL("INSERT OR REPLACE INTO RecentSearch (text, timestamp) SELECT text, timestamp FROM recentsearches")
+                } catch (e: Exception) {
+                    // ignore further errors
+                }
+                database.execSQL("DROP TABLE IF EXISTS recentsearches")
 
                 // convert Talk Pages Seen table
                 database.execSQL("CREATE TABLE IF NOT EXISTS `TalkPageSeen_temp` (`sha` TEXT NOT NULL, PRIMARY KEY(`sha`))")
@@ -101,8 +109,12 @@ abstract class AppDatabase : RoomDatabase() {
 
                 // convert Edit Summaries table
                 database.execSQL("CREATE TABLE IF NOT EXISTS `EditSummary` (`summary` TEXT NOT NULL, `lastUsed` INTEGER NOT NULL, PRIMARY KEY(`summary`))")
-                database.execSQL("INSERT OR REPLACE INTO EditSummary (summary, lastUsed) SELECT summary, lastUsed FROM editsummaries")
-                database.execSQL("DROP TABLE editsummaries")
+                try {
+                    database.execSQL("INSERT OR REPLACE INTO EditSummary (summary, lastUsed) SELECT summary, lastUsed FROM editsummaries")
+                } catch (e: Exception) {
+                    // ignore further errors
+                }
+                database.execSQL("DROP TABLE IF EXISTS editsummaries")
 
                 // convert Offline Objects table
                 database.execSQL("CREATE TABLE IF NOT EXISTS `OfflineObject_temp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `url` TEXT NOT NULL, `lang` TEXT NOT NULL, `path` TEXT NOT NULL, `status` INTEGER NOT NULL, `usedByStr` TEXT NOT NULL)")
@@ -118,6 +130,10 @@ abstract class AppDatabase : RoomDatabase() {
                 }
                 database.execSQL("ALTER TABLE OfflineObject_temp RENAME TO OfflineObject")
 
+                // Delete vestigial Reading List tables that might have been left over from very old DB versions.
+                database.execSQL("DROP TABLE IF EXISTS readinglist")
+                database.execSQL("DROP TABLE IF EXISTS readinglistpage")
+
                 // convert Reading List tables
                 database.execSQL("CREATE TABLE IF NOT EXISTS `ReadingList` (`listTitle` TEXT NOT NULL, `description` TEXT, `mtime` INTEGER NOT NULL, `atime` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sizeBytes` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL)")
                 database.execSQL("CREATE TABLE IF NOT EXISTS `ReadingListPage` (`wiki` TEXT NOT NULL, `namespace` INTEGER NOT NULL, `displayTitle` TEXT NOT NULL, `apiTitle` TEXT NOT NULL, `description` TEXT, `thumbUrl` TEXT, `listId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mtime` INTEGER NOT NULL, `atime` INTEGER NOT NULL, `offline` INTEGER NOT NULL, `status` INTEGER NOT NULL, `sizeBytes` INTEGER NOT NULL, `lang` TEXT NOT NULL, `revId` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL)")
@@ -132,13 +148,26 @@ abstract class AppDatabase : RoomDatabase() {
 
                 // convert History table
                 database.execSQL("CREATE TABLE IF NOT EXISTS `HistoryEntry` (`authority` TEXT NOT NULL, `lang` TEXT NOT NULL, `apiTitle` TEXT NOT NULL, `displayTitle` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namespace` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `source` INTEGER NOT NULL, `timeSpentSec` INTEGER NOT NULL)")
-                database.execSQL("INSERT INTO HistoryEntry (id, authority, lang, apiTitle, displayTitle, namespace, source, timestamp, timeSpentSec) SELECT _id, COALESCE(site,'$defaultAuthority'), COALESCE(lang,'$defaultLang'), COALESCE(title,'$defaultTitle'), COALESCE(displayTitle,''), COALESCE(namespace,''), COALESCE(source,2), COALESCE(timestamp,0), COALESCE(timeSpent,0) FROM history")
-                database.execSQL("DROP TABLE history")
+                try {
+                    database.execSQL("INSERT INTO HistoryEntry (id, authority, lang, apiTitle, displayTitle, namespace, source, timestamp, timeSpentSec) SELECT _id, COALESCE(site,'$defaultAuthority'), COALESCE(lang,'$defaultLang'), COALESCE(title,'$defaultTitle'), COALESCE(displayTitle,''), COALESCE(namespace,''), COALESCE(source,2), COALESCE(timestamp,0), COALESCE(timeSpent,0) FROM history")
+                } catch (e: Exception) {
+                    // ignore further errors
+                }
+                database.execSQL("DROP TABLE IF EXISTS history")
 
                 // convert Page Images table
                 database.execSQL("CREATE TABLE IF NOT EXISTS `PageImage` (`lang` TEXT NOT NULL, `namespace` TEXT NOT NULL, `apiTitle` TEXT NOT NULL, `imageName` TEXT, PRIMARY KEY(`lang`, `namespace`, `apiTitle`))")
-                database.execSQL("INSERT OR REPLACE INTO PageImage (lang, namespace, apiTitle, imageName) SELECT COALESCE(lang,'$defaultLang'), COALESCE(namespace,''), COALESCE(title,'$defaultTitle'), imageName FROM pageimages")
+                try {
+                    database.execSQL("INSERT OR REPLACE INTO PageImage (lang, namespace, apiTitle, imageName) SELECT COALESCE(lang,'$defaultLang'), COALESCE(namespace,''), COALESCE(title,'$defaultTitle'), imageName FROM pageimages")
+                } catch (e: Exception) {
+                    // ignore further errors
+                }
                 database.execSQL("DROP TABLE pageimages")
+            }
+        }
+        private val MIGRATION_23_24 = object : Migration(23, 24) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS `Notification` (`id` INTEGER NOT NULL, `wiki` TEXT NOT NULL, `read` TEXT, `category` TEXT NOT NULL, `type` TEXT NOT NULL, `revid` INTEGER NOT NULL, `title` TEXT, `agent` TEXT, `timestamp` TEXT, `contents` TEXT, PRIMARY KEY(`id`, `wiki`))")
             }
         }
 
@@ -153,7 +182,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         DATABASE_NAME
                     )
-                        .addMigrations(MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23)
+                        .addMigrations(MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24)
                         .allowMainThreadQueries() // TODO: remove after migration
                         .fallbackToDestructiveMigration()
                         .build()

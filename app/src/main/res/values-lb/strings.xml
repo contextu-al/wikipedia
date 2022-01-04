@@ -35,6 +35,9 @@
   <string name="notification_archive_undo">Réckgängeg maachen</string>
   <string name="app_settings">Astellunge vun der App</string>
   <string name="history_list_title">Versiounen</string>
+  <string name="page_content_description">Säit: %s</string>
+  <string name="wikimedia_commons">Wikimedia-Commons</string>
+  <string name="wikidata">Wikidata</string>
   <string name="dialog_title_clear_history">Historique vum  Browse läschen</string>
   <string name="dialog_message_clear_history">Dëst läscht Äre kompletten Historique a mécht all Tabs déi elo op sinn zou. Sidd Dir sécher?</string>
   <string name="dialog_message_clear_history_yes">Jo</string>
@@ -137,7 +140,7 @@
   <string name="create_account_passwords_mismatch_error">D\'Passwierder sinn net déi selwescht</string>
   <string name="create_account_email_error">Net-valabel E-Mail-Adress</string>
   <string name="create_account_username_error">Net valabel Zeechen am Benotzernumm</string>
-  <string name="create_account_password_error">D\'Passwuert ass net valabel</string>
+  <string name="create_account_password_error">D\'Passwuert muss mindestens 8 Zeechen hunn</string>
   <string name="create_account_generic_error">Benotzerkont konnt net opgemaach ginn</string>
   <string name="create_account_next">Weider</string>
   <string name="email_recommendation_dialog_title">Benotzerkont ouni E-Mail-Adress uleeën?</string>
@@ -171,6 +174,7 @@
   <string name="page_protected_can_not_edit_anon">Leider kann dës Säit zu dësem Zäitpunkt net anonym geännert ginn.</string>
   <string name="page_protected_can_not_edit_title">Dës Säit ass gespaart</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">Op d\'Iwwerwaachungslëscht derbäisetzen</string>
+  <string name="page_notification_tooltip">Är Notifikatioune sinn elo hei.</string>
   <string name="settings_item_preferences">Astellungen</string>
   <string name="settings_activity_title">Astellungen</string>
   <string name="about_description">Iwwer d\'Wikipedia App</string>
@@ -210,6 +214,7 @@
   <string name="edit_summary_tag_other">Anerer</string>
   <string name="edit_summary_tag_other_hint">Aner Manéier wéi Dir d\'Säit verbessert hutt</string>
   <string name="edit_conflict_title">Ännerungskonflikt</string>
+  <string name="edit_notices_please_read">Liest wgl. virum Änneren</string>
   <string name="find_next">Den nächste fannen</string>
   <string name="find_previous">Vireg fannen</string>
   <string name="find_first_occurence">Dëst ass déi éischte Kéier</string>
@@ -251,6 +256,7 @@
   <string name="gallery_save_progress">Fichier gëtt erofgelueden…</string>
   <string name="gallery_save_success">Fichier gespäichert.</string>
   <string name="gallery_error_video_failed">De Video konnt net gespillt ginn.</string>
+  <string name="gallery_edit_button_content_description">Bildbeschreiwung änneren</string>
   <string name="err_cannot_save_file">Fichier kann net gespäichert ginn</string>
   <string name="expand_refs">Tippe fir opzeklappen</string>
   <string name="cc_logo">Creative-Commons-Lizenz</string>
@@ -416,6 +422,7 @@
   <string name="reading_list_remove_from_offline_cancel_button_text">Ofbriechen</string>
   <string name="reading_list_download_using_mobile_data_cancel_button_text">Ofbriechen</string>
   <string name="reading_list_split_dialog_ok_button_text">OK</string>
+  <string name="reading_list_activity_title">Lieslëscht: %s</string>
   <string name="user_option_sync_label">Astellungen</string>
   <string name="notification_reverted_title">Zréckgesaten Ännerung</string>
   <string name="notification_channel_description">Fortschrëtt vum Eroflueden</string>
@@ -462,6 +469,10 @@
   <string name="notifications_view_archived_button_text">Archivéiert Notifikatioune weisen</string>
   <string name="notification_preferences_title">Astellunge vun den Notifikatiounen</string>
   <string name="notifications_mark_unread">Als net gelies markéieren</string>
+  <string name="notifications_direct_reply_action">Äntweren</string>
+  <string name="notifications_direct_reply_success">Äntwert publizéiert.</string>
+  <string name="notifications_mark_all_as_read_message">%d markéiert als geliest</string>
+  <string name="notifications_mark_all_as_unread_message">%d markéiert als net geliest</string>
   <string name="watchlist_title">Iwwerwaachungslëscht</string>
   <string name="preference_title_notification_system">System</string>
   <string name="preference_summary_notification_system">Message vum System</string>
@@ -473,7 +484,23 @@
   <string name="preference_title_notification_mention">Ernimmen</string>
   <string name="preference_summary_notification_mention">Et huet een Iech op enger Säit ernimmt</string>
   <string name="preference_title_notification_user_talk">Diskussiounssäit</string>
-  <string name="preference_summary_notification_user_talk">Message vun Diskussiounssäiten</string>
+  <string name="preference_summary_notification_user_talk" fuzzy="true">Message vun Diskussiounssäiten</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">Wikipedia</string>
+  <string name="notifications_filter_icon_content_description">Filter Notifikatiounen</string>
+  <string name="notifications_select_all_filters">All Filteren uwielen</string>
+  <string name="notifications_tab_filter_all">All</string>
+  <string name="notifications_tab_filter_mentions">Mentiounen</string>
+  <string name="notifications_tab_filter_unread">(%s)</string>
+  <string name="notifications_menu_mark_as_read">Als gelies markéieren</string>
+  <string name="notifications_menu_mark_as_unread">Als net gelies markéieren</string>
+  <string name="notifications_swipe_action_read">Liesen</string>
+  <string name="notifications_swipe_action_unread">Net gelies</string>
+  <string name="notifications_menu_check_all">All Elementer nokucken</string>
+  <string name="notifications_wiki_filter_header">Wiki-Filter</string>
+  <string name="notifications_type_filter_header">Typ Filter</string>
+  <string name="notifications_all_wikis_text">All \"Wiki\"</string>
+  <string name="notifications_all_types_text">All \"Typ\"</string>
+  <string name="notifications_menu_user_talk_page">Diskussiounssäit vum %s</string>
   <string name="view_because_you_read_card_title">Well Dir liest</string>
   <string name="view_random_card_title">Zoufallsgenerator</string>
   <string name="view_main_page_card_title">Haut op Wikipedia</string>
@@ -602,6 +629,7 @@
   <string name="suggested_edits_encourage_account_creation_title">Wousst Dir datt jidderee Wikipedia ännere kann?</string>
   <string name="suggested_edits_contribution_current_revision_text">Är Ännerung ass elo live op Wikipedia</string>
   <string name="file_page_suggestion_reason">Grond fir d\'Propos</string>
+  <string name="file_page_edit_button_content_description">%s änneren</string>
   <string name="description_edit_revert_subtitle">Merci fir d\'Änneren op Wikipedia!</string>
   <string name="description_edit_revert_reason2">Är Kontributioun gesäit aus wéi en Experiment oder Vandalismus.</string>
   <string name="description_edit_revert_history">Wann Dir interesséiert sidd da kuckt d\'&lt;a href=\"%1$s\"&gt;Lëscht vun de Versiounen&lt;/a&gt;.</string>
@@ -681,11 +709,14 @@
   <string name="talk_add_reply">Äntweren</string>
   <string name="talk_no_subject">(Kee Sujet)</string>
   <string name="talk_reply_subject">Sujet</string>
+  <string name="talk_snackbar_survey_action_text">Fir unzefänken</string>
+  <string name="menu_option_share_talk_discussion">Diskussioun deelen</string>
+  <string name="menu_option_share_talk_page">Diskussiounssäit deelen</string>
   <string name="menu_option_user_contributions">Kontributioune vum %s</string>
   <string name="watchlist_details_watching_label">Iwwerwaacht</string>
   <string name="watchlist_details_watch_label">Iwwerwaachen</string>
   <string name="thank_label">Merci soen</string>
-  <string name="go_to_user_page">Op d\'Benotzersäit goen</string>
+  <string name="view_user_page">Benotzersäit weisen</string>
   <string name="thank_dialog_positive_button_text">Merci soen</string>
   <string name="thank_dialog_negative_button_text">Ofbriechen</string>
   <string name="watchlist_page_add_to_watchlist_snackbar_action">Änneren</string>

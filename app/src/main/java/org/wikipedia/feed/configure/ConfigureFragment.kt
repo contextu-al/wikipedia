@@ -124,7 +124,7 @@ class ConfigureFragment : Fragment(), ConfigureItemView.Callback {
     private fun prepareContentTypeList() {
         orderedContentTypes.clear()
         orderedContentTypes.addAll(FeedContentType.values())
-        orderedContentTypes.sortWith { a, b -> a.order.compareTo(b.order) }
+        orderedContentTypes.sortBy { it.order }
         // Remove items for which there are no available languages
         val i = orderedContentTypes.iterator()
         while (i.hasNext()) {
@@ -181,6 +181,7 @@ class ConfigureFragment : Fragment(), ConfigureItemView.Callback {
 
     private inner class ConfigureItemHolder constructor(itemView: ConfigureItemView) : DefaultViewHolder<ConfigureItemView>(itemView) {
         fun bindItem(contentType: FeedContentType) {
+            view.contentDescription = getString(contentType.titleId) + ", " + getString(contentType.subtitleId)
             view.setContents(contentType)
         }
     }
@@ -252,7 +253,7 @@ class ConfigureFragment : Fragment(), ConfigureItemView.Callback {
         }
 
         private fun addDomainNamesAsLangCodes(outList: MutableList<String>, domainNames: List<String>) {
-            outList.addAll(domainNames.map { WikiSite(it).languageCode() })
+            outList.addAll(domainNames.map { WikiSite(it).languageCode })
         }
 
         fun newInstance(): ConfigureFragment {

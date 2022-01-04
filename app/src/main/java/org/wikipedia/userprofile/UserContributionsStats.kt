@@ -31,8 +31,8 @@ object UserContributionsStats {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
-                    if (it.query?.userInfo()?.isBlocked != true) {
-                        val editorTaskCounts = it.query?.editorTaskCounts()!!
+                    if (it.query?.userInfo?.isBlocked != true) {
+                        val editorTaskCounts = it.query?.editorTaskCounts!!
                         totalEdits = editorTaskCounts.totalEdits
                         totalDescriptionEdits = editorTaskCounts.totalDescriptionEdits
                         totalImageCaptionEdits = editorTaskCounts.totalImageCaptionEdits
@@ -55,7 +55,7 @@ object UserContributionsStats {
     fun getPageViewsObservable(response: MwQueryResponse): Observable<Long> {
         val qLangMap = HashMap<String, HashSet<String>>()
 
-        for (userContribution in response.query!!.userContributions()) {
+        for (userContribution in response.query!!.userContributions) {
             val descLang = userContribution.comment.split(" ")
                     .filter { "wbsetdescription" in it }
                     .flatMap { it.split("|") }
@@ -99,7 +99,7 @@ object UserContributionsStats {
                     Observable.zip(observableList) { resultList ->
                         resultList.filterIsInstance<MwQueryResponse>()
                                 .mapNotNull { it.query }
-                                .flatMap { it.pages()!! }
+                                .flatMap { it.pages!! }
                                 .flatMap { it.pageViewsMap.values }
                                 .sumOf { it ?: 0 }
                     }
@@ -119,7 +119,7 @@ object UserContributionsStats {
     }
 
     fun maybePauseAndGetEndDate(): Date? {
-        val pauseDate = Prefs.getSuggestedEditsPauseDate()
+        val pauseDate = Prefs.suggestedEditsPauseDate
         var pauseEndDate: Date? = null
 
         // Are we currently in a pause period?
@@ -131,18 +131,18 @@ object UserContributionsStats {
 
             if (Date().after((pauseEndDate))) {
                 // We've exceeded the pause period, so remove it.
-                Prefs.setSuggestedEditsPauseDate(Date(0))
+                Prefs.suggestedEditsPauseDate = Date(0)
                 pauseEndDate = null
             }
         }
 
         if (getRevertSeverity() > REVERT_SEVERITY_PAUSE_THRESHOLD) {
             // Do we need to impose a new pause?
-            if (totalReverts > Prefs.getSuggestedEditsPauseReverts()) {
+            if (totalReverts > Prefs.suggestedEditsPauseReverts) {
                 val cal = Calendar.getInstance()
                 cal.time = Date()
-                Prefs.setSuggestedEditsPauseDate(cal.time)
-                Prefs.setSuggestedEditsPauseReverts(totalReverts)
+                Prefs.suggestedEditsPauseDate = cal.time
+                Prefs.suggestedEditsPauseReverts = totalReverts
 
                 cal.add(Calendar.DAY_OF_YEAR, PAUSE_DURATION_DAYS)
                 pauseEndDate = cal.time

@@ -22,6 +22,7 @@ import org.wikipedia.analytics.SearchFunnel
 import org.wikipedia.database.AppDatabase
 import org.wikipedia.databinding.FragmentSearchBinding
 import org.wikipedia.history.HistoryEntry
+import org.wikipedia.json.JsonUtil
 import org.wikipedia.page.ExclusiveBottomSheetPresenter
 import org.wikipedia.page.PageActivity
 import org.wikipedia.page.PageTitle
@@ -37,7 +38,6 @@ import org.wikipedia.util.DeviceUtil.hideSoftKeyboard
 import org.wikipedia.util.FeedbackUtil.setButtonLongPressToast
 import org.wikipedia.util.FeedbackUtil.showTooltip
 import org.wikipedia.util.ResourceUtil.getThemedColor
-import org.wikipedia.util.StringUtil.listToJsonArrayString
 import org.wikipedia.views.LanguageScrollView
 import org.wikipedia.views.ViewUtil.formatLangButton
 import java.util.*
@@ -103,7 +103,7 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
         searchResultsFragment = childFragmentManager.findFragmentById(
                 R.id.fragment_search_results) as SearchResultsFragment
         binding.searchToolbar.setNavigationOnClickListener { requireActivity().supportFinishAfterTransition() }
-        initialLanguageList = listToJsonArrayString(app.language().appLanguageCodes)
+        initialLanguageList = JsonUtil.encodeToString(app.language().appLanguageCodes).orEmpty()
         binding.searchContainer.setOnClickListener { onSearchContainerClick() }
         binding.searchLangButtonContainer.setOnClickListener { onLangButtonClick() }
         initSearchView()
@@ -112,7 +112,7 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
 
     override fun onStart() {
         super.onStart()
-        setUpLanguageScroll(Prefs.getSelectedLanguagePositionInSearch())
+        setUpLanguageScroll(Prefs.selectedLanguagePositionInSearch)
         startSearch(query, langBtnClicked)
         binding.searchCabView.setCloseButtonVisibility(query)
         if (!query.isNullOrEmpty()) {
@@ -122,14 +122,14 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
 
     override fun onPause() {
         super.onPause()
-        Prefs.setSelectedLanguagePositionInSearch(binding.searchLanguageScrollView.selectedPosition)
+        Prefs.selectedLanguagePositionInSearch = binding.searchLanguageScrollView.selectedPosition
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.ACTIVITY_REQUEST_ADD_A_LANGUAGE_FROM_SEARCH) {
             var position = 0
-            val finalLanguageList = listToJsonArrayString(app.language().appLanguageCodes)
+            val finalLanguageList = JsonUtil.encodeToString(app.language().appLanguageCodes)
             if (finalLanguageList != initialLanguageList) {
                 requireActivity().setResult(RESULT_LANG_CHANGED)
             }
@@ -139,7 +139,7 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
                 position = app.language().appLanguageCodes.indexOf(searchLanguageCode)
             }
             searchResultsFragment.clearSearchResultsCountCache()
-            Prefs.setSelectedLanguagePositionInSearch(position)
+            Prefs.selectedLanguagePositionInSearch = position
         }
     }
 
@@ -173,14 +173,14 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
     }
 
     private fun showMultiLingualOnboarding() {
-        if (Prefs.isMultilingualSearchTutorialEnabled()) {
+        if (Prefs.isMultilingualSearchTutorialEnabled) {
             binding.searchLangButton.postDelayed({
                 if (isAdded) {
                     showTooltip(requireActivity(), binding.searchLangButton, getString(R.string.tool_tip_lang_button),
                             aboveOrBelow = false, autoDismiss = false)
                 }
             }, 500)
-            Prefs.setMultilingualSearchTutorialEnabled(false)
+            Prefs.isMultilingualSearchTutorialEnabled = false
         }
     }
 
@@ -319,7 +319,7 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
         binding.searchCabView.setOnQueryTextListener(searchQueryListener)
         binding.searchCabView.setOnCloseListener(searchCloseListener)
         binding.searchCabView.setSearchHintTextColor(getThemedColor(requireContext(),
-                R.attr.material_theme_de_emphasised_color))
+                R.attr.color_group_63))
 
         // remove focus line from search plate
         val searchEditPlate = binding.searchCabView
@@ -328,8 +328,8 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
     }
 
     private fun initLangButton() {
-        binding.searchLangButton.text = app.language().appLanguageCode.toUpperCase(Locale.ENGLISH)
-        formatLangButton(binding.searchLangButton, app.language().appLanguageCode.toUpperCase(Locale.ENGLISH),
+        binding.searchLangButton.text = app.language().appLanguageCode.uppercase(Locale.ENGLISH)
+        formatLangButton(binding.searchLangButton, app.language().appLanguageCode.uppercase(Locale.ENGLISH),
                 LANG_BUTTON_TEXT_SIZE_SMALLER, LANG_BUTTON_TEXT_SIZE_LARGER)
         setButtonLongPressToast(binding.searchLangButtonContainer)
     }
@@ -376,6 +376,7 @@ class SearchFragment : Fragment(), SearchResultsFragment.Callback, RecentSearche
         private const val PANEL_SEARCH_RESULTS = 1
         const val RESULT_LANG_CHANGED = 1
         const val LANG_BUTTON_TEXT_SIZE_LARGER = 12
+        const val LANG_BUTTON_TEXT_SIZE_MEDIUM = 10
         const val LANG_BUTTON_TEXT_SIZE_SMALLER = 8
 
         @JvmStatic

@@ -55,6 +55,10 @@
   <string name="app_settings">הגדרות היישום</string>
   <string name="search_tab_tooltip">לחץ על הסמל שוב כדי להתחיל ישר להקליד את מילת החיפוש.</string>
   <string name="history_list_title">היסטוריה</string>
+  <string name="image_content_description">תמונה: %s</string>
+  <string name="page_content_description">דף: %s</string>
+  <string name="wikimedia_commons">ויקישיתוף</string>
+  <string name="wikidata">ויקינתונים</string>
   <string name="dialog_title_clear_history">לנקות את היסטוריית הגלישה</string>
   <string name="dialog_message_clear_history">זה ימחק את כל היסטוריית הגלישה שלך ויסגור את כל הלשוניות שפתוחות עכשיו. לעשות את זה?</string>
   <string name="dialog_message_clear_history_yes">כן</string>
@@ -76,6 +80,7 @@
   <string name="feed_card_add_to_list">הוספה לרשימת קריאה</string>
   <string name="feed_card_add_to_default_list">שמירה</string>
   <string name="menu_page_share">שיתוף קישור</string>
+  <string name="menu_article_share">שיתוף ערך</string>
   <string name="menu_page_open_a_new_tab">פתיחת לשונית חדשה</string>
   <string name="menu_page_new_tab">לשונית חדשה</string>
   <string name="menu_page_reading_lists">רשימות קריאה</string>
@@ -165,7 +170,7 @@
   <string name="create_account_passwords_mismatch_error">הסיסמאות אינן תואמות</string>
   <string name="create_account_email_error">כתובת דוא\"ל שגויה</string>
   <string name="create_account_username_error">תווים בלתי־תקינים בשם המשתמש</string>
-  <string name="create_account_password_error">הסיסמה אינה תקינה</string>
+  <string name="create_account_password_error">הסיסמה צריכה להיות באורך 8 תווים לפחות</string>
   <string name="create_account_generic_error">לא היה ניתן ליצור חשבון</string>
   <string name="create_account_next">הבא</string>
   <string name="email_recommendation_dialog_title">ליצור חשבון ללא כתובת דואר אלקטרוני?</string>
@@ -179,6 +184,7 @@
   <string name="create_account_ip_block_help_url">https://he.wikipedia.org/wiki/WP:BLOCK</string>
   <string name="create_account_ip_block_details">פרטים</string>
   <string name="preferences_general_heading">כללי</string>
+  <string name="preferences_account_heading">חשבון</string>
   <string name="wikipedia_app_faq">שו\"ת יישום ויקיפדיה</string>
   <string name="send_feedback">לשלוח משוב על היישום</string>
   <string name="create_account_account_created_toast">החשבון נוצר!</string>
@@ -207,6 +213,7 @@
   <string name="page_protected_can_not_edit_title">הדף הזה מוגן</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_title">הוספה לרשימת המעקב</string>
   <string name="page_watchlist_overflow_menu_onboarding_tooltip_text">עקוב אחרי מה שקורה הערכים שמעניינים אותך. לחץ על תפריט הפעולות הנוספות ובחר &lt;b&gt;הוספה לרשימת המעקב&lt;/b&gt; כיד לראות את השינויים לערך.</string>
+  <string name="page_notification_tooltip">עכשיו ההתראות שלך נמצאות כאן.</string>
   <string name="settings_item_preferences">הגדרות</string>
   <string name="settings_activity_title">הגדרות</string>
   <string name="about_description">אודות יישום ויקיפדיה</string>
@@ -252,6 +259,10 @@
   <string name="edit_summary_tag_other_hint">איך עוד שיפרת את הדף</string>
   <string name="edit_conflict_title">התנגשות עריכה</string>
   <string name="edit_conflict_message">הדף כבר שוּנה על־ידי משתמש אחר, וזה מתנגש עם העריכה שלך. נא להעתיק את העריכות שלך, לחזור, לרענן את הדף, ולנסות לערוך שוב.</string>
+  <string name="edit_notices">הודעות לעורכים</string>
+  <string name="edit_notices_please_read">נא לקרוא לפני עריכה</string>
+  <string name="edit_notices_show_auto">להציג אוטומטית את ההודעות לעורכים</string>
+  <string name="edit_notices_tooltip">יש ללחוץ על הכפתור הזה כדי לצפות בהודעות לעורכים עבור הערך הזה.</string>
   <string name="find_next">חיפוש הבא</string>
   <string name="find_previous">חיפוש הקודם</string>
   <string name="find_first_occurence">זה המופע הראשון</string>
@@ -303,6 +314,7 @@
   <string name="gallery_save_success">הקובץ נשמר.</string>
   <string name="gallery_error_video_failed">לא היה אפשר לנגן את הסרטון.</string>
   <string name="gallery_save_image_write_permission_rationale">הרשאה לכתוב לאחסון במכשיר שלך דרושה לשמירת תמונות.</string>
+  <string name="gallery_edit_button_content_description">עריכת כיתוב תמונה</string>
   <string name="gallery_add_image_caption_button">הוספת כיתוב לתמונה</string>
   <string name="gallery_add_image_caption_in_language_button">הוספת כיתוב תמונה (%s)</string>
   <string name="err_cannot_save_file">לא ניתן לשמור קובץ</string>
@@ -366,6 +378,7 @@
   <string name="error_message_generic">אירעה שגיאה</string>
   <string name="view_link_preview_error_button_dismiss">סגירה</string>
   <string name="error_page_does_not_exist">הדף הזה אינו קיים</string>
+  <string name="error_user_page_does_not_exist">בוויקיפדיה אין &lt;a href=\"%1$s\"&gt;דף משתמש&lt;/a&gt; בעל שם כזה בדיוק. באופן כללי, הדף הזה צריך להיווצר ולהיערך על־ידי &lt;b&gt;%2$s&lt;/b&gt;. אם יש לך ספק, נא לוודא ששם המשתמש \"%3$s\" קיים.</string>
   <string name="view_wiki_error_message_offline">לא ניתן להתחבר לאינטרנט</string>
   <string name="view_wiki_error_message_timeout">לא ניתן להתחבר לוויקיפדיה. יש לבדוק את החיבור שלך לרשת או לנסות שוב מאוחר יותר</string>
   <string name="reference_title">הערת שוליים %s</string>
@@ -493,7 +506,7 @@
   <string name="reading_lists_sync_reminder_text">עכשיו אפשר לסנכרן ערכים שנשמרו לרשימות קריאה לחשבון הוויקיפדיה שלך. &lt;a href=\"https://www.mediawiki.org/wiki/Wikimedia_Apps/Android_FAQ#Synced_reading_lists\"&gt;מידע נוסף&lt;/a&gt;</string>
   <string name="reading_lists_login_reminder_text_with_link">אפשר לסנכרן רשימות קריאה במכשירים שונים. יש להיכנס לחשבון הוויקיפדיה שלך ולאפשר לרשימת להישמר. &lt;a href=\"https://www.mediawiki.org/wiki/Wikimedia_Apps/Android_FAQ#Synced_reading_lists\"&gt;מידע נוסף&lt;/a&gt;</string>
   <string name="reading_lists_sync_reminder_action">הפעלת סנכרון</string>
-  <string name="reading_list_login_reminder_title">סנכרן רשימות קריאה</string>
+  <string name="reading_list_login_reminder_title">סנכרון רשימות קריאה</string>
   <string name="reading_lists_login_reminder_text">עכשיו אפשר לסנכרן רשימות קריאה במכשירים שונים. נא להיכנס לחשבון הוויקיפדיה שלך ולאפשר את שמירת רשימות הקריאה שלך.</string>
   <string name="reading_lists_login_button">כניסה / הצטרפות לוויקיפדיה</string>
   <string name="reading_lists_ignore_button">לא כעת</string>
@@ -550,12 +563,15 @@
   <string name="reading_list_remove_from_offline_cancel_button_text">ביטול</string>
   <string name="reading_list_download_using_mobile_data_cancel_button_text">ביטול</string>
   <string name="reading_list_split_dialog_ok_button_text">אישור</string>
+  <string name="reading_list_activity_title">רשימת קריאה: %s</string>
   <string name="user_option_sync_label">העדפות</string>
   <string name="notification_reverted_title">עריכה משוחזרת</string>
+  <string name="notification_channel_title">הורדת ערכים</string>
   <string name="notification_channel_description">התקדמות הורדה</string>
   <string name="notification_syncing_pause_button">השהיה</string>
   <string name="notification_syncing_resume_button">המשך</string>
   <string name="notification_syncing_cancel_button">ביטול</string>
+  <string name="notification_syncing_reading_list_channel_title">מתבצע סנכרון רשימות קריאה</string>
   <string name="notification_syncing_reading_list_channel_description">התקדמות סנכרון רשימות קריאה</string>
   <string name="notification_many_unread">יש לך %d התראות שלא נקראו</string>
   <plurals name="notification_channel_name">
@@ -615,6 +631,25 @@
   <string name="notifications_view_archived_button_text">להציג הודעות בארכיון</string>
   <string name="notification_preferences_title">העדפות הודעות</string>
   <string name="notifications_mark_unread">סימון כהודעה שלא נקראה</string>
+  <string name="notifications_mark_all_as_read">לסמן שהכול נקרא</string>
+  <string name="notifications_direct_reply_action">תגובה</string>
+  <string name="notifications_direct_reply_progress">שליחת תגובה למשתמש %s...</string>
+  <string name="notifications_direct_reply_success">התגובה נשלחה.</string>
+  <string name="notifications_direct_reply_error">לא היה אפשר לשלוח תגובה אוטומטית.</string>
+  <string name="notifications_mark_all_as_read_message">%d סומנו כהודעות שנקראו</string>
+  <string name="notifications_mark_all_as_unread_message">%d סומנו כהודעות שלא נקראו</string>
+  <plurals name="notifications_mark_as_read_plural">
+    <item quantity="one">אחת סומנה בתור התראה שנקראה</item>
+    <item quantity="two">%d סומנו בתור התראות שנקראו</item>
+    <item quantity="many">%d סומנו בתור התראות שנקראו</item>
+    <item quantity="other">%d סומנו בתור התראות שנקראו</item>
+  </plurals>
+  <plurals name="notifications_mark_as_unread_plural">
+    <item quantity="one">אחת סומנה בתור התראה שלא נקראה</item>
+    <item quantity="two">%d סומנו בתור התראות שלא נקראו</item>
+    <item quantity="many">%d סומנו בתור התראות שלא נקראו</item>
+    <item quantity="other">%d סומנו בתור התראות שלא נקראו</item>
+  </plurals>
   <string name="watchlist_title">רשימת המעקב</string>
   <string name="preference_title_notification_poll">דגימת הודעות</string>
   <string name="preference_summary_notification_poll">לאפשר ליישום להשתמש בנתונים כדי לבדוק הודעות חדשות ברקע.</string>
@@ -632,12 +667,54 @@
   <string name="preference_title_notification_mention">אזכור</string>
   <string name="preference_summary_notification_mention">אוזכרת על ידי מישהו בדף</string>
   <string name="preference_title_notification_user_talk">דף שיחה</string>
-  <string name="preference_summary_notification_user_talk">הודעות מדפי שיחה</string>
+  <string name="preference_summary_notification_user_talk">הודעות ותשובות מדפי שיחה</string>
+  <string name="preference_title_notification_email_user">הגיעה דוא\"ל</string>
+  <string name="preference_summary_notification_email_user">מישהו שלח לך דוא\"ל דרך הוויקי</string>
+  <string name="preference_title_notification_user_rights">שינויי הרשאות משתמש</string>
+  <string name="preference_summary_notification_user_rights">מתקבלת כשהרשאות המשתמש שלך משתנות</string>
+  <string name="preference_title_notification_article_linked">קישורים לערכים שיצרת</string>
+  <string name="preference_summary_notification_article_linked">מתקבלת כשנוצר קישור חדש לערך שיצרת</string>
+  <string name="preference_category_push_notifications">הודעות דחיפה</string>
+  <string name="preference_title_customize_push_notifications">התאמה אישית של הודעות דחיפה</string>
+  <string name="preference_category_display_settings">הגדרות תצוגה</string>
+  <string name="preference_title_hide_read_notifications">הסתרת הודעות שנקראו</string>
+  <string name="notifications_channel_group_wikipedia_notifications_title">ויקיפדיה</string>
+  <string name="notifications_channel_group_wikipedia_notifications_description">התראות מוויקיפדיה</string>
+  <string name="notifications_channel_group_other_title">אחרות</string>
+  <string name="notifications_channel_group_other_description">התראות אחרות מהיישום</string>
+  <string name="notifications_filter_label">סינון התראות</string>
+  <string name="notifications_filter_icon_content_description">סינון התראות</string>
+  <string name="notifications_filter_update_app_languages">עדכון שפות היישום</string>
+  <string name="notifications_empty_search_message">נא לנסות להסיר את %s כדי לראות עוד התראות</string>
+  <plurals name="notifications_number_of_filters">
+    <item quantity="one">מסנן אחד</item>
+    <item quantity="two">%d מסננים</item>
+    <item quantity="many">%d מסננים</item>
+    <item quantity="other">%d מסננים</item>
+  </plurals>
+  <string name="notifications_select_all_filters">בחירת כל המסננים</string>
+  <string name="notifications_tab_filter_all">הכול</string>
+  <string name="notifications_tab_filter_mentions">אזכורים</string>
+  <string name="notifications_tab_filter_unread">(%s)</string>
+  <string name="notifications_search_bar_hint">חיפוש או סינון התראות</string>
+  <string name="notifications_search_bar_filter_hint">סינון התראות</string>
+  <string name="notifications_menu_mark_as_read">סימון כהודעה שנקראה</string>
+  <string name="notifications_menu_mark_as_unread">סימון כהודעה שלא נקראה</string>
+  <string name="notifications_swipe_action_read">נקראה</string>
+  <string name="notifications_swipe_action_unread">לא נקראה</string>
+  <string name="notifications_menu_check_all">סימון כל הפריטים</string>
+  <string name="notifications_menu_uncheck_all">ביטול סימון כל הפריטים</string>
+  <string name="notifications_wiki_filter_header">סינון ויקי</string>
+  <string name="notifications_type_filter_header">סינון סוג</string>
+  <string name="notifications_all_wikis_text">כל סימוני \"ויקי\"</string>
+  <string name="notifications_all_types_text">כל סימוני \"סוג\"</string>
+  <string name="notifications_menu_user_talk_page">דף השיחה של %s</string>
+  <string name="notifications_offline_disable_message">האפשרות הזאת אינה זמינה כשאין חיבור לרשת.</string>
   <string name="view_because_you_read_card_title">כי כבר קראת</string>
   <string name="view_random_card_title">ערך אקראי</string>
   <string name="view_random_article_card_title">ערך אקראי</string>
   <string name="view_random_article_card_action">ערכים אקראיים נוספים</string>
-  <string name="view_top_read_card_title">ערכים מובילים</string>
+  <string name="view_top_read_card_title">הנקראים ביותר</string>
   <string name="view_top_read_card_action">ערכים מובילים נוספים</string>
   <string name="view_top_read_card_pageviews_k_suffix">%d אלפים</string>
   <string name="view_top_read_card_pageviews_m_suffix">%d מיליון</string>
@@ -692,6 +769,7 @@
   <string name="feed_accessibility_card_text">הגעת לסוף ההזנה.</string>
   <string name="feed_accessibility_card_load_more_button">לטעון עוד</string>
   <string name="top_read_activity_title">ערכים מובילים ב%s</string>
+  <string name="tabs_activity_title">לשוניות</string>
   <string name="description_edit_text_hint">תיאור הערך</string>
   <string name="description_edit_article_description_label">ערך</string>
   <string name="description_edit_translate_article_description_label_per_language">תיאור הערך (%s)</string>
@@ -787,7 +865,7 @@
   <string name="suggested_edits_image_preview_dialog_image">קובץ</string>
   <string name="suggested_edits_image_preview_dialog_file_commons">קובץ מוויקישיתוף</string>
   <string name="suggested_edits_image_preview_dialog_artist">יוצר</string>
-  <string name="suggested_edits_image_preview_dialog_tags">תגיות</string>
+  <string name="suggested_edits_image_preview_dialog_tags">תגים</string>
   <string name="suggested_edits_image_preview_dialog_date">תאריך</string>
   <string name="suggested_edits_image_preview_dialog_source">מקור/צלם</string>
   <string name="suggested_edits_image_preview_dialog_licensing">רישיון</string>
@@ -800,7 +878,7 @@
   <string name="suggested_edits_article_cta_snackbar_action">הצגה</string>
   <string name="suggested_edits_feed_card_add_image_caption">הוספת כיתוב תמונה</string>
   <string name="suggested_edits_feed_card_translate_image_caption">הוספת כיתוב תמונה (%s)</string>
-  <string name="suggested_edits_feed_card_add_image_tags">הוספת תגיות תמונה</string>
+  <string name="suggested_edits_feed_card_add_image_tags">הוספת תגי תמונה</string>
   <string name="suggested_edits_snackbar_survey_text">איך הייתה חוויית העריכה שלך? נשמח אם יתאפשר לך להשקיע בנו רגע קט למלא סקר בנוגע לעריכה בעזרת היישום.</string>
   <string name="suggested_edits_snackbar_survey_action_text">מילוי הסקר</string>
   <string name="suggested_edits_task_action_text_add">הוספה</string>
@@ -812,7 +890,7 @@
   <string name="suggested_edits_image_tags_onboarding_title">תיוג תמונות עוזר לאחרים למצוא אותן.</string>
   <string name="suggested_edits_image_tags_onboarding_text">אימות התגים יעזור לאחרים למצוא אותן בוויקישיתוף, מאגר התמונות החופשיות שוויקיפדיה משתמשת בו לתמונות בערכים שלה.</string>
   <string name="suggested_edits_image_tags_onboarding_note">רק תגים שאישרת יוּספו לתמונות.</string>
-  <string name="suggested_edits_image_tags_task_detail">הוספת תגויות שונות לתמונות כדי שלאחרים יהיה קל יותר למצוא אותן.</string>
+  <string name="suggested_edits_image_tags_task_detail">הוסיפו תגים מותאמים אישית לתמונה כדי שיהיה קל יותר למצוא אותה.</string>
   <string name="suggested_edits_image_tags_choose">נא לבחור או להוסיף תגים תואמים</string>
   <string name="suggested_edits_image_tags_published_list">תגים שפורסמו</string>
   <string name="suggested_edits_image_tags_search">חיפוש תגים</string>
@@ -822,8 +900,8 @@
   <string name="suggested_edits_image_zoom_tooltip">אפשר לקרב את התמונה הזאת בשתי אצבעות.</string>
   <string name="suggested_edits_encouragement_message">%s, תודה על תרומתך. בהמשך הדף ניתן למצוא דרכים נוספות לתרום לוויקיפדיה.</string>
   <string name="suggested_edits_onboarding_message">&lt;b&gt;שלום %s&lt;/b&gt;, להלן אפשר למצוא כמה דרכים מהירות ופשוטות לעזור לשפר את ויקיפדיה. יהיה אפשר לראות את השינוי שאתה עושה מייד אחרי שתעשה אותו. עריכה מהנה!</string>
-  <string name="suggested_edits_image_captions_task_detail">נא לתאר את התמונה כדי לסייע לקוראים להבין את המשמעות וההקשר.</string>
-  <string name="suggested_edits_add_descriptions_task_detail">נא לסכם את הערך כדי לעזור לקוראים להבין את הנושא במבט אחד.</string>
+  <string name="suggested_edits_image_captions_task_detail">תארו את התמונה כדי לסייע לקוראים להבין את המשמעות וההקשר.</string>
+  <string name="suggested_edits_add_descriptions_task_detail">סַכמו את הערך כדי לעזור לקוראים להבין את הנושא במבט אחד.</string>
   <string name="suggested_edits_contributions_stat_tooltip">המספר הכולל של התרומות שלך עד עכשיו.</string>
   <string name="suggested_edits_edit_streak_stat_tooltip">כמה ימים ברצף תרמת. אם לא תרמת במשך זמן־מה, זה מראה את תאריך התרומה האחרונה שלך.</string>
   <string name="suggested_edits_page_views_stat_tooltip">סך הצגות הדפים שתרמת להם ב־30 הימים האחרונים.</string>
@@ -857,11 +935,11 @@
     <item quantity="many">%d ימים</item>
     <item quantity="other">%d ימים</item>
   </plurals>
-  <string name="suggested_edits_what_is_title">מה זה ’עריכות מוצעות?’</string>
+  <string name="suggested_edits_what_is_title">מה זה עריכות מוצעות?</string>
   <string name="suggested_edits_what_is_text">עריכות מוצעות מציגות הזדמנויות לתרומות קטנות, אבל מועילות לוויקיפדיה.</string>
   <string name="suggested_edits_learn_more">מידע נוסף</string>
   <string name="suggested_edits_paused_title">מושהה</string>
-  <string name="suggested_edits_disabled_title">מבוטל</string>
+  <string name="suggested_edits_disabled_title">כבוי</string>
   <string name="suggested_edits_ip_blocked_title">כתובת ה־IP חסומה</string>
   <string name="suggested_edits_last_edited">עריכה אחרונה</string>
   <string name="suggested_edits_last_edited_never">לעולם לא</string>
@@ -926,6 +1004,7 @@
   <string name="file_page_add_image_caption_button">הוספת כיתוב תמונה</string>
   <string name="file_page_add_image_tags_button">הוספת תגי תמונה</string>
   <string name="file_page_suggestion_reason">הסיבה להצעה</string>
+  <string name="file_page_edit_button_content_description">עריכת %s</string>
   <string name="description_edit_revert_subtitle">תודה על עריכת ויקיפדיה!</string>
   <string name="description_edit_revert_intro">אנחנו יודעים שניסית היטב, אבל לאחד מהסוקרים היה חשד. סיבות אפשריות לכך שהעריכה שלך בוטלה:</string>
   <string name="description_edit_revert_reason1">התרומה שלך הייתה מנוגדת ל&lt;a href=\"%1$s\"&gt;הוראות&lt;/a&gt;.</string>
@@ -1036,13 +1115,21 @@
   <string name="talk_response_submitted">התגובה פורסמה.</string>
   <string name="talk_snackbar_undo">ביטול</string>
   <string name="talk_last_modified">&lt;b&gt;נערך לאחרונה ב־%1$s&lt;/b&gt; על־ידי %2$s</string>
+  <string name="talk_snackbar_survey_text">תודה על השימוש בדפי שיחה. אפשר לבקש ממך לעזור לנו לשפר את היישום באמצעות השתתפות בסקר?</string>
+  <string name="talk_snackbar_survey_action_text">להתחיל</string>
+  <string name="talk_share_discussion_subject">ויקיפדיה – דיון בדף שיחה בנושא \"%s\"</string>
+  <string name="talk_share_talk_page">ויקיפדיה – דיונים בדף שיחה</string>
+  <string name="menu_option_share_talk_discussion">שיתוף דיון</string>
+  <string name="menu_option_share_talk_page">שיתוף דף שיחה</string>
   <string name="menu_option_share_edit">לשתף את העריכה</string>
   <string name="menu_option_user_profile">הפרופיל של %s</string>
   <string name="menu_option_user_contributions">התרומות של %s</string>
   <string name="watchlist_details_watching_label">במעקב</string>
   <string name="watchlist_details_watch_label">לעקוב</string>
+  <string name="watchlist_details_next_edit">העריכה הבאה</string>
+  <string name="watchlist_details_prev_edit">העריכה הקודמת</string>
   <string name="thank_label">תודה</string>
-  <string name="go_to_user_page">מעבר לדף משתמש</string>
+  <string name="view_user_page">הצגת דף המשתמש</string>
   <string name="thank_dialog_title_text">שליחת \"תודה\" באופן ציבורי</string>
   <string name="thank_dialog_text">\"תודה\" היא דרך קלה להראות הערכה לעבודה של עורך בוויקיפדיה. לא ניתן לבטל פעולות שליחת \"תודה\" והן מוצגות באופן ציבורי.</string>
   <string name="thank_dialog_positive_button_text">לשלוח תודה</string>

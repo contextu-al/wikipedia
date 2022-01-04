@@ -152,7 +152,7 @@
   <string name="create_account_passwords_mismatch_error">Hindi tugma ang dalawang password</string>
   <string name="create_account_email_error">Di-totoong adres pang-email</string>
   <string name="create_account_username_error">May nakitang bawal na karakter sa pangalan</string>
-  <string name="create_account_password_error">Bawal ang password na binigay</string>
+  <string name="create_account_password_error" fuzzy="true">Bawal ang password na binigay</string>
   <string name="create_account_generic_error">Di magawa ang account</string>
   <string name="create_account_next">Sunod</string>
   <string name="email_recommendation_dialog_title">Gumawa ng account nang walang adres pang-email?</string>
@@ -579,7 +579,7 @@
   <string name="preference_title_notification_mention">Pagbanggit</string>
   <string name="preference_summary_notification_mention">May nagbanggit sa\'yo sa isang pahina</string>
   <string name="preference_title_notification_user_talk">Usapan</string>
-  <string name="preference_summary_notification_user_talk">Mga mensahe mula sa pahina ng usapan</string>
+  <string name="preference_summary_notification_user_talk" fuzzy="true">Mga mensahe mula sa pahina ng usapan</string>
   <string name="view_because_you_read_card_title">Dahil binása mo</string>
   <string name="view_random_card_title">Kahit ano</string>
   <string name="view_random_article_card_title">Kahit anong artikulo</string>
@@ -958,7 +958,6 @@
   <string name="watchlist_details_watching_label">Binabantayan</string>
   <string name="watchlist_details_watch_label">Bantayán</string>
   <string name="thank_label">Magpasalamat</string>
-  <string name="go_to_user_page">Pumunta sa pahina ng tagagamit</string>
   <string name="thank_dialog_title_text">Hayagang magpasalamat</string>
   <string name="thank_dialog_text">Ang Magpasalamat ay isang madaling paraan para ipakita ang iyong pasasalamat sa isang gawa ng nag-edit sa Wikipedia. Hindi matatanggal ang pasasalamat at makikita ito ng lahat</string>
   <string name="thank_dialog_positive_button_text">Magpasalamat</string>
