@@ -54,9 +54,9 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         val date = simpleDateFormat.format(Date())
 
-       setUserId("pz-wiki-dev-bison $date")
+       setUserId("pz-wiki-demo $date")
 
-        //setUserId("iportal58@t.com")
+       // setUserId("xheghun-integration-test")
 
         setShortcuts(this)
         setImageZoomHelper()
