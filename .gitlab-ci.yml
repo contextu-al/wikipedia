@@ -42,7 +42,7 @@ dev:zebra:build:
       --group Collaborators
       --file "app/build/outputs/apk/debug/app-debug.apk"
       --release-notes 'Zebra server with dev version of sdk'
-      --app "Pointzi/Wikipedia-Dev-Zebra(PZDynamic_zebra)"
+      --app "Pointzi/Wikipedia-Dev-Zebra-PZDynamic_zebra"
       --token "${APP_CENTER_TOKEN}"
       --quiet
   tags:
