@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.pointzi.BuildConfig
 import com.pointzi.Pointzi
 import com.pointzi.Pointzi.setLogLevel
 import com.pointzi.Pointzi.setUserId
@@ -16,6 +17,7 @@ import com.pointzi.debug.LogLevel
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.activity.SingleFragmentActivity
+import org.wikipedia.appshortcuts.AppShortcuts.Companion.setShortcuts
 import org.wikipedia.databinding.ActivityMainBinding
 import org.wikipedia.navtab.NavTab
 import org.wikipedia.onboarding.InitialOnboardingActivity
@@ -46,7 +48,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         val date = simpleDateFormat.format(Date())
 
-       setUserId("pz-wiki-demo $date")
+       setUserId("pz-wiki-demo - ${BuildConfig.PZ_VERSION_NAME} - $date")
 
        // setUserId("xheghun-integration-test")
 
