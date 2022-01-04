@@ -14,37 +14,37 @@ dev:bison:build:
   stage: build
   only:
     refs:
-    - bison_dev
+      - dev-bison
   script:
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assemble'
-    - appcenter distribute release \
-        --group Collaborators \
-        --file "app/build/outputs/apk/devBison/debug/app-devBison-debug.apk" \
-        --release-notes 'Bison release with dev version of sdk' \
-        --app "PZDynamic_bison" \
-        --token "${APP_CENTER_TOKEN}" \
-        --quiet
+    - ./gradlew assembleDebug
+    - appcenter distribute release
+      --group Collaborators
+      --file "app/build/outputs/apk/debug/app-debug.apk"
+      --release-notes 'Bison server with dev version of sdk'
+      --app "Pointzi/Wikipedia-Dev-Bison-PZDynamic_bison"
+      --token "${APP_CENTER_TOKEN}"
+      --quiet
   tags:
     - android
   artifacts:
     paths:
-      - app/build/outputs/apk/devBison/debug/app-devBison-debug.apk
+      - app/build/outputs/apk/debug/app-debug.apk
     expire_in: 10 h
 
 dev:zebra:build:
   stage: build
   only:
     refs:
-    - zebra
+      - dev-zebra
   script:
     - ./gradlew assembleDebug
     - appcenter distribute release
-        --group Collaborators
-        --file "app/build/outputs/apk/debug/app-debug.apk"
-        --release-notes 'Bison release with dev version of sdk'
-        --app "Pointzi/Wikipedia-Dev-Bison-PZDynamic_bison"
-        --token "${APP_CENTER_TOKEN}"
-        --quiet
+      --group Collaborators
+      --file "app/build/outputs/apk/debug/app-debug.apk"
+      --release-notes 'Zebra server with dev version of sdk'
+      --app "Pointzi/Wikipedia-Dev-Zebra(PZDynamic_zebra)"
+      --token "${APP_CENTER_TOKEN}"
+      --quiet
   tags:
     - android
   artifacts:
@@ -56,64 +56,62 @@ prod:bison:build:
   stage: build
   only:
     refs:
-    - bison
+      - prod-bison
   script:
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assemble'
-    - appcenter distribute release \
-        --group Collaborators \
-        --file "app/build/outputs/apk/prodBison/debug/app-prodBison-debug.apk" \
-        --release-notes 'Bison release with release version of sdk' \
-        --app "PZDynamic_bison" \
-        --token "${APP_CENTER_TOKEN}" \
-        --quiet
+    - ./gradlew assembleDebug
+    - appcenter distribute release
+      --group Collaborators
+      --file "app/build/outputs/apk/debug/app-debug.apk"
+      --release-notes 'Bison server with prod version of sdk'
+      --app "Pointzi/Wikipedia-Prod-Bison-PZDynamic_bison"
+      --token "${APP_CENTER_TOKEN}"
+      --quiet
   tags:
     - android
   artifacts:
     paths:
-      - app/build/outputs/apk/prodBison/debug/app-prodBison-debug.apk
+      - app/build/outputs/apk/debug/app-debug.apk
     expire_in: 10 h
 
 prod:zebra:build:
   stage: build
   only:
     refs:
-    - zebra_prod
+      - prod-zebra
   script:
-    - sed -i.bak 's/PZDynamic_bison/PZDynamic_zebra/g' app/src/main/AndroidManifest.xml
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
-    - appcenter distribute release \
-        --group Collaborators \
-        --file "app/build/outputs/apk/prodZebra/app-prodZebra-debug.apk" \
-        --release-notes 'Zebra release with release version of sdk' \
-        --app "PZDynamic_zebra" \
-        --token "${APP_CENTER_TOKEN}" \
-        --quiet
+    - ./gradlew assembleDebug
+    - appcenter distribute release
+      --group Collaborators
+      --file "app/build/outputs/apk/debug/app-debug.apk"
+      --release-notes 'Zebra server with prod version of sdk'
+      --app "Pointzi/Wikipedia-Prod-Zebra-PZDynamic_zebra"
+      --token "${APP_CENTER_TOKEN}"
+      --quiet
   tags:
     - android
   artifacts:
     paths:
-      - app/build/outputs/apk/prodZebra/debug/app-prodZebra-debug.apk
+      - app/build/outputs/apk/debug/app-debug.apk
     expire_in: 10 h
 
 prod:demo:build:
   stage: build
   only:
     refs:
-    - demo
+      - prod-demo
   script:
-    - sed -i.bak 's/PZDynamic_bison/wikipedia_demo/g' app/src/main/AndroidManifest.xml
-    - docker run -v $PWD:/build/ -t androidsdk/android-30:latest bash -c 'cd /build; ./gradlew assembleDebug'
-    - appcenter distribute release \
-        --group Collaborators \
-        --file "app/build/outputs/apk/prodDemo/app-prodDemo-debug.apk" \
-        --release-notes 'Wikipedia release with release version of sdk' \
-        --app "wikipedia_demo" \
-        --token "${APP_CENTER_TOKEN}" \
-        --quiet
+    - ./gradlew assembleDebug
+    - appcenter distribute release
+      --group Collaborators
+      --file "app/build/outputs/apk/debug/app-debug.apk"
+      --release-notes 'Zebra server with prod version of sdk'
+      --app "Pointzi/Wikipedia-Prod-Bison-wikipedia_demo"
+      --token "${APP_CENTER_TOKEN}"
+      --quiet
   tags:
     - android
   artifacts:
     paths:
-      - app/build/outputs/apk/prodDemo/debug/app-prodDemo-debug.apk
+      - app/build/outputs/apk/debug/app-debug.apk
     expire_in: 10 h
 
