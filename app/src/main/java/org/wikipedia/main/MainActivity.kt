@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.pointzi.BuildConfig
 import com.pointzi.Pointzi
 import com.pointzi.Pointzi.setLogLevel
 import com.pointzi.Pointzi.setUserId
@@ -48,15 +49,11 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       // setLogLevel(LogLevel.DEBUG)
-
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         val date = simpleDateFormat.format(Date())
 
-       setUserId("pz-wiki-dev-bison $date")
-
-        //setUserId("iportal58@t.com")
+       setUserId("pz-wiki-dev-bison - ${BuildConfig.PZ_VERSION_NAME} - $date")
 
         setShortcuts(this)
         setImageZoomHelper()
