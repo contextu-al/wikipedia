@@ -23,7 +23,7 @@ def computeVersionName(label) {
 final JavaVersion JAVA_VERSION = JavaVersion.VERSION_1_8
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     compileOptions {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
@@ -36,7 +36,7 @@ android {
     defaultConfig {
         applicationId 'org.wikipedia'
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 50370
         versionName "2.7 ${getDate()}"
         testApplicationId 'org.wikipedia.test'
@@ -127,8 +127,6 @@ apply from: '../gradle/src/checkstyle.gradle'
 apply from: '../gradle/src/ktlint.gradle'
 
 dependencies {
-   // implementation (files('libs/pointzi-sdk-android-release.aar'))
-
     // To keep the Maven Central dependencies up-to-date
     // use http://gradleplease.appspot.com/ or http://search.maven.org/.
     // Debug with ./gradlew -q app:dependencies --configuration compile
@@ -172,7 +170,7 @@ dependencies {
 
 
     implementation 'me.relex:circleindicator:2.1.6'
-9
+
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
