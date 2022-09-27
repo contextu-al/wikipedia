@@ -26,7 +26,7 @@ build-prod:
 build-dev:
   stage: build
   only:
-    - dev
+    - develop
   script:
     - ./gradlew assembleDebug
   artifacts:
@@ -37,7 +37,7 @@ build-dev:
 dev-deploy:
   stage: deploy
   only:
-    - dev
+    - develop
   image: vagsa2/appcenter-cli
   dependencies:
     - build-dev
@@ -46,7 +46,7 @@ dev-deploy:
       --token $APPCENTER_ACCESS_TOKEN
       --group Collaborators
       --file "app/build/outputs/apk/debug/app-debug.apk"
-      --release-notes 'Bison server with dev version of sdk'
+      --release-notes 'Prod server with dev version of sdk'
       --app "Contextual/Wikipedia-DevSDK-Prod-Wikipedia-1"
       --quiet
 
@@ -60,6 +60,6 @@ prod-deploy:
       --token $APPCENTER_ACCESS_TOKEN
       --group Collaborators
       --file "app/build/outputs/apk/debug/app-debug.apk"
-      --release-notes 'Bison server with Prod version of sdk'
+      --release-notes 'Prod server with Prod version of sdk'
       --app "Contextual/Wikipedia-ProdSDK-Prod-Wikipedia-1"
       --quiet
