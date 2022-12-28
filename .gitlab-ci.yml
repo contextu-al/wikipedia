@@ -1,65 +1,9 @@
-image: jangrewe/gitlab-ci-android
-
-cache:
-  key: ${CI_PROJECT_ID}
-  paths:
-    - .gradle/
-
-before_script:
-  - export GRADLE_USER_HOME=$(pwd)/.gradle
-  - chmod +x ./gradlew
-
 stages:
   - build
-  - deploy
 
-build-prod:
+build_project:
   stage: build
-  only:
-    - prod
   script:
-    - ./gradlew assembleDebug
-  artifacts:
-    paths:
-      - app/build/outputs/apk/debug/app-debug.apk
-
-build-dev:
-  stage: build
-  only:
-    - develop
-  script:
-    - ./gradlew assembleDebug
-  artifacts:
-    paths:
-      - app/build/outputs/apk/debug/app-debug.apk
-
-
-dev-deploy:
-  stage: deploy
-  only:
-    - develop
-  image: vagsa2/appcenter-cli
-  dependencies:
-    - build-dev
-  script:
-    - appcenter distribute release
-      --token $APPCENTER_ACCESS_TOKEN
-      --group Collaborators
-      --file "app/build/outputs/apk/debug/app-debug.apk"
-      --release-notes 'Prod server with dev version of sdk'
-      --app "Contextual/Wikipedia-DevSDK-Prod-Wikipedia-1"
-      --quiet
-
-prod-deploy:
-  stage: deploy
-  only:
-    - prod
-  image: vagsa2/appcenter-cli
-  script:
-    - appcenter distribute release
-      --token $APPCENTER_ACCESS_TOKEN
-      --group Collaborators
-      --file "app/build/outputs/apk/debug/app-debug.apk"
-      --release-notes 'Prod server with Prod version of sdk'
-      --app "Contextual/Wikipedia-ProdSDK-Prod-Wikipedia-1"
-      --quiet
+    - sh -x build.sh
+  tags:
+    - android
