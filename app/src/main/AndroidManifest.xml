@@ -54,7 +54,7 @@
 
         <meta-data
             android:name="com.pointzi.APP_KEY"
-            android:value="PZDynamic_bison" />
+            android:value="Wikipedia" />
 
         <!-- Multi-window support on Samsung devices -->
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
