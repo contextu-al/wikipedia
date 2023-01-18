@@ -39,6 +39,8 @@ LOWERCASE_APP_ENV=$( tr '[A-Z]' '[a-z]' <<< $APP_ENV)
 LOWERCASE_SDK_ENV=$( tr '[A-Z]' '[a-z]' <<< $SDK_ENV)
 
 echo "===== Build Wikipedia .apk for AppCenter ====="
+./gradlew build --refresh-dependencies
+./gradlew app:dependencies
 ./gradlew assembleDebug
 
 echo "===== Uploading .apk to AppCenter ====="
