@@ -52,12 +52,14 @@ object L10nUtil {
                                     @StringRes strings: IntArray): SparseArray<String> {
         val config = currentConfiguration
         val systemLocale = ConfigurationCompat.getLocales(config)[0]
-        if (systemLocale.language == targetLocale.language) {
-            val localizedStrings = SparseArray<String>()
-            strings.forEach {
-                localizedStrings.put(it, WikipediaApp.getInstance().getString(it))
+        if (systemLocale != null) {
+            if (systemLocale.language == targetLocale.language) {
+                val localizedStrings = SparseArray<String>()
+                strings.forEach {
+                    localizedStrings.put(it, WikipediaApp.getInstance().getString(it))
+                }
+                return localizedStrings
             }
-            return localizedStrings
         }
         setDesiredLocale(config, targetLocale)
         val localizedStrings = getTargetStrings(strings, config)

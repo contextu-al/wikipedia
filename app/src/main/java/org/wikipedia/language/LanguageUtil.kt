@@ -23,9 +23,11 @@ object LanguageUtil {
             // First, look at languages installed on the system itself.
             var localeList = LocaleListCompat.getDefault()
             for (i in 0 until localeList.size()) {
-                val languageCode = localeToWikiLanguageCode(localeList[i])
+                val languageCode = localeList[i]?.let { localeToWikiLanguageCode(it) }
                 if (!languages.contains(languageCode)) {
-                    languages.add(languageCode)
+                    if (languageCode != null) {
+                        languages.add(languageCode)
+                    }
                 }
             }
             if (languages.isEmpty()) {
@@ -67,9 +69,11 @@ object LanguageUtil {
             if (langTagList.isNotEmpty()) {
                 localeList = LocaleListCompat.forLanguageTags(StringUtil.listToCsv(langTagList))
                 for (i in 0 until localeList.size()) {
-                    val langCode = localeToWikiLanguageCode(localeList[i])
-                    if (langCode.isNotEmpty() && !languages.contains(langCode) && langCode != "und") {
-                        languages.add(langCode)
+                    val langCode = localeList[i]?.let { localeToWikiLanguageCode(it) }
+                    if (langCode != null) {
+                        if (langCode.isNotEmpty() && !languages.contains(langCode) && langCode != "und") {
+                            languages.add(langCode)
+                        }
                     }
                 }
             }
