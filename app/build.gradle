@@ -98,11 +98,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles 'test-proguard-rules.pro'
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "Wikipedia Dev"
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles 'test-proguard-rules.pro'
+            resValue "string", "app_name", "Wikipedia"
         }
     }
 
@@ -168,8 +171,8 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
-
+    releaseImplementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
+    debugImplementation project(":contextual")
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
