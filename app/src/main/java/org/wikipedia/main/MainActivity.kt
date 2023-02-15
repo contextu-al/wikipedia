@@ -52,7 +52,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
             // Use startActivityForResult to avoid preload the Feed contents before finishing the initial onboarding.
             // The ACTIVITY_REQUEST_INITIAL_ONBOARDING has not been used in any onActivityResult
-            startActivityForResult(InitialOnboardingActivity.newIntent(this), Constants.ACTIVITY_REQUEST_INITIAL_ONBOARDING)
+           // startActivityForResult(InitialOnboardingActivity.newIntent(this), Constants.ACTIVITY_REQUEST_INITIAL_ONBOARDING)
         }
         setNavigationBarColor(ResourceUtil.getThemedColor(this, R.attr.nav_tab_background_color))
         setSupportActionBar(binding.mainToolbar)
