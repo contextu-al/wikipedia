@@ -55,6 +55,8 @@ android {
 
         dimension 'default'
         signingConfig signingConfigs.debug
+        // Default app_key will always be Wikipedia unless stated otherwise
+        manifestPlaceholders += [app_key: "Wikipedia"]
 
         buildConfigField "String", "DEFAULT_RESTBASE_URI_FORMAT", '"%1$s://%2$s/api/rest_v1/"'
         buildConfigField "String", "META_WIKI_BASE_URI", '"https://meta.wikimedia.org"'
@@ -100,12 +102,18 @@ android {
             testProguardFiles 'test-proguard-rules.pro'
             applicationIdSuffix ".dev"
             resValue "string", "app_name", "Wikipedia Dev"
+            resValue "string", "app_key", "Wikipedia"
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles 'test-proguard-rules.pro'
             resValue "string", "app_name", "Wikipedia"
+            resValue "string", "app_key", "Wikipedia"
+        }
+        staging {
+            resValue "string", "app_name", "Wikipedia Staging"
+            resValue "string", "app_key", "Wikipedia_staging"
         }
     }
 
