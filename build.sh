@@ -20,7 +20,7 @@ SDK_ENV="Dev"
 
 GIT_VERSION=$(git log -1 --format="%h")
 BUILD_TIME=$(date)
-
+APK_LOCATION=""
 echo "===== Version of Contextual SDK installed ====="
 ./gradlew app:dependencies | grep pointzi
 
@@ -30,11 +30,13 @@ echo "===== Build NewPipe .apk for AppCenter ====="
 if [ "$GIT_BRANCH" = "staging" ]; then 
   APP_ENV="Staging"
   APP_KEY="Wikipedia_staging"
-  ./gradlew assembleDebugStaging
+  ./gradlew assembleStagingDebug
+  APK_LOCATION=app/build/outputs/apk/staging/debug/app-staging-debug.apk
 # Production
 elif [ "$GIT_BRANCH" = "main" ]; then
   SDK_ENV='Prod'
-  ./gradlew assembleDebugProd
+  ./gradlew assembleProdDebug
+  APK_LOCATION=app/build/outputs/apk/release/debug/app-release-debug.apk
 fi
 
 # We use lowercase variables as part of the Artifactory BDD path below
@@ -44,4 +46,4 @@ LOWERCASE_SDK_ENV=$( tr '[A-Z]' '[a-z]' <<< $SDK_ENV)
 
 
 echo "===== Uploading .apk to AppCenter ====="
-appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "app/build/outputs/apk/debug/app-debug.apk" --group "Collaborators"
+appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators"

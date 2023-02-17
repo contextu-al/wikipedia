@@ -195,10 +195,9 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
-
     if(getCurrentFlavor().toLowerCase().contains("debug")){
         implementation project(":contextual")
-    } else if(getCurrentFlavor().toLowerCase().contains("release")){
+    } else if(getCurrentFlavor().toLowerCase().contains("prod")){
         implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
     } else {
         implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
@@ -274,22 +273,13 @@ private static Properties loadProperties(File file) {
 // https://stackoverflow.com/questions/30621183/how-to-get-current-flavor-in-gradle
 def getCurrentFlavor() {
     Gradle gradle = getGradle()
-    String  tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+    String tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
 
-    Pattern pattern
-    if(tskReqStr.contains( "assemble" ) || tskReqStr.contains("staging")) // to run ./gradlew assembleRelease to build APK
-        pattern = Pattern.compile("assemble(\\w+)(Release|Debug)")
-    else if(tskReqStr.contains( "bundle" )) // to run ./gradlew bundleRelease to build .aab
-        pattern = Pattern.compile("bundle(\\w+)(Release|Debug)")
-    else
-        pattern = Pattern.compile("generate(\\w+)(Release|Debug)")
-
-    Matcher matcher = pattern.matcher( tskReqStr )
-
-    if(matcher.find()) {
-        return matcher.group(1).toLowerCase()
+    if( tskReqStr.contains( "prod" ) ){
+        return "prod"
+    } else if( tskReqStr.contains("dev") ){
+        return "dev"
     } else {
-        println "NO MATCH FOUND"
-        return ""
+        return "staging"
     }
 }
