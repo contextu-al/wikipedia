@@ -1,3 +1,6 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
@@ -24,7 +27,7 @@ def computeVersionName(label) {
 final JavaVersion JAVA_VERSION = JavaVersion.VERSION_1_8
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility = JAVA_VERSION
@@ -39,7 +42,7 @@ android {
         applicationId 'org.wikipedia'
         minSdkVersion 21
         targetSdkVersion 30
-        compileSdkVersion 31
+        compileSdkVersion 33
         versionCode 50370
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -179,8 +182,14 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    releaseImplementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
-    debugImplementation project(":contextual")
+    if(getCurrentFlavor().toLowerCase().contains("debug")){
+        implementation project(":contextual")
+    } else if(getCurrentFlavor().toLowerCase().contains("release")){
+        implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
+    } else {
+        implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
+    }
+
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -246,4 +255,28 @@ private static Properties loadProperties(File file) {
         System.err.println "\"${file}\" not found"
     }
     return props
+}
+
+// https://stackoverflow.com/questions/30621183/how-to-get-current-flavor-in-gradle
+def getCurrentFlavor() {
+    Gradle gradle = getGradle()
+    String  tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+
+    Pattern pattern
+
+    if(tskReqStr.contains( "assemble" ) ) // to run ./gradlew assembleRelease to build APK
+        pattern = Pattern.compile("assemble(\\w+)(Release|Debug)")
+    else if( tskReqStr.contains( "bundle" ) ) // to run ./gradlew bundleRelease to build .aab
+        pattern = Pattern.compile("bundle(\\w+)(Release|Debug)")
+    else
+        pattern = Pattern.compile("generate(\\w+)(Release|Debug)")
+
+    Matcher matcher = pattern.matcher( tskReqStr )
+
+    if( matcher.find() )
+        return matcher.group(1).toLowerCase()
+    else {
+        println "NO MATCH FOUND"
+        return ""
+    }
 }
