@@ -30,11 +30,11 @@ echo "===== Build NewPipe .apk for AppCenter ====="
 if [ "$GIT_BRANCH" = "staging" ]; then 
   APP_ENV="Staging"
   APP_KEY="Wikipedia_staging"
-  ./gradlew assembleStaging
+  ./gradlew assembleDebugStaging
 # Production
 elif [ "$GIT_BRANCH" = "main" ]; then
   SDK_ENV='Prod'
-  ./gradlew assembleRelease
+  ./gradlew assembleDebugProd
 fi
 
 # We use lowercase variables as part of the Artifactory BDD path below
@@ -44,4 +44,4 @@ LOWERCASE_SDK_ENV=$( tr '[A-Z]' '[a-z]' <<< $SDK_ENV)
 
 
 echo "===== Uploading .apk to AppCenter ====="
-appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "app/build/outputs/apk/release/app-release.apk" --group "Collaborators"
+appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "app/build/outputs/apk/debug/app-debug.apk" --group "Collaborators"

@@ -104,19 +104,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles 'test-proguard-rules.pro'
             applicationIdSuffix ".dev"
-            resValue "string", "app_name", "Wikipedia Dev"
-            resValue "string", "app_key", "Wikipedia"
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles 'test-proguard-rules.pro'
-            resValue "string", "app_name", "Wikipedia"
-            resValue "string", "app_key", "Wikipedia"
-        }
-        staging {
-            resValue "string", "app_name", "Wikipedia Staging"
-            resValue "string", "app_key", "Wikipedia_staging"
         }
     }
 
@@ -130,6 +122,28 @@ android {
     bundle {
         language {
             enableSplit false
+        }
+    }
+
+    flavorDimensions "dev"
+
+    productFlavors {
+        dev {
+            flavorDimensions "dev"
+            resValue "string", "app_name", "Wikipedia Dev"
+            resValue "string", "app_key", "Wikipedia"
+        }
+
+        prod {
+            flavorDimensions "prod"
+            resValue "string", "app_name", "Wikipedia"
+            resValue "string", "app_key", "Wikipedia"
+        }
+
+        staging {
+            flavorDimensions "staging"
+            resValue "string", "app_name", "Wikipedia Staging"
+            resValue "string", "app_key", "Wikipedia_staging"
         }
     }
 }
@@ -263,19 +277,18 @@ def getCurrentFlavor() {
     String  tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
 
     Pattern pattern
-
-    if(tskReqStr.contains( "assemble" ) ) // to run ./gradlew assembleRelease to build APK
+    if(tskReqStr.contains( "assemble" ) || tskReqStr.contains("staging")) // to run ./gradlew assembleRelease to build APK
         pattern = Pattern.compile("assemble(\\w+)(Release|Debug)")
-    else if( tskReqStr.contains( "bundle" ) ) // to run ./gradlew bundleRelease to build .aab
+    else if(tskReqStr.contains( "bundle" )) // to run ./gradlew bundleRelease to build .aab
         pattern = Pattern.compile("bundle(\\w+)(Release|Debug)")
     else
         pattern = Pattern.compile("generate(\\w+)(Release|Debug)")
 
     Matcher matcher = pattern.matcher( tskReqStr )
 
-    if( matcher.find() )
+    if(matcher.find()) {
         return matcher.group(1).toLowerCase()
-    else {
+    } else {
         println "NO MATCH FOUND"
         return ""
     }
