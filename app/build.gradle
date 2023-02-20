@@ -46,6 +46,7 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
 
         vectorDrawables.useSupportLibrary = true
+        manifestPlaceholders += [app_key: "Wikipedia"]
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -118,6 +119,23 @@ android {
             enableSplit false
         }
     }
+
+    productFlavors {
+        dev {
+            flavorDimensions "dev"
+            resValue "string", "app_key", "Wikipedia"
+        }
+
+        prod {
+            flavorDimensions "prod"
+            resValue "string", "app_key", "Wikipedia"
+        }
+
+        staging {
+            flavorDimensions "staging"
+            resValue "string", "app_key", "Wikipedia_staging"
+        }
+    }
 }
 
 configurations {
@@ -168,7 +186,13 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
+    if(getCurrentFlavor().toLowerCase().contains("debug")){
+        implementation project(":contextual")
+    } else if(getCurrentFlavor().toLowerCase().contains("release")){
+        implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
+    } else {
+        implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
+    }
 
     implementation 'me.relex:circleindicator:2.1.6'
 
@@ -235,4 +259,18 @@ private static Properties loadProperties(File file) {
         System.err.println "\"${file}\" not found"
     }
     return props
+}
+
+// https://stackoverflow.com/questions/30621183/how-to-get-current-flavor-in-gradle
+def getCurrentFlavor() {
+    Gradle gradle = getGradle()
+    String tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+
+    if( tskReqStr.contains( "prod" ) ){
+        return "prod"
+    } else if( tskReqStr.contains("dev") ){
+        return "dev"
+    } else {
+        return "staging"
+    }
 }

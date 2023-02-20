@@ -12,6 +12,7 @@ if [ -z "$CI_COMMIT_REF_NAME" ]; then
 else
     GIT_BRANCH=$CI_COMMIT_REF_NAME
 fi
+APK_LOCATION=""
 
 echo "===== Setting Default Environment Variables ======"
 APP_ENV="Prod"
@@ -21,27 +22,32 @@ SDK_ENV="Dev"
 GIT_VERSION=$(git log -1 --format="%h")
 BUILD_TIME=$(date)
 
+./gradlew build --refresh-dependencies
+./gradlew app:dependencies
+
+echo "===== Build Wikipedia .apk for AppCenter ====="
 # Default is Develop using above environment variables
 # Staging
 if [ "$GIT_BRANCH" = "staging" ]; then 
   APP_ENV="Staging"
   APP_KEY="Wikipedia_staging"
-  sed -i '' 's:"Wikipedia":"Wikipedia_staging":1' app/src/main/AndroidManifest.xml
+  ./gradlew assembleStagingDebug
+  APK_LOCATION=app/build/outputs/apk/staging/debug/app-staging-debug.apk
 # Production
 elif [ "$GIT_BRANCH" = "main" ]; then
   SDK_ENV='Prod'
-  # Update the build.gradle to point to the prod version of the SDK
-  sed -i '' 's:com.pointzi.dev\::com.pointzi\::1' app/build.gradle
+  ./gradlew assembleProdDebug
+  APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
+elif [ "$GIT_BRANCH" = "develop" ]; then
+  SDK_ENV='Dev'
+  ./gradlew assembleProdDebug
+  APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
 fi
 
 # We use lowercase variables as part of the Artifactory BDD path below
 LOWERCASE_APP_ENV=$( tr '[A-Z]' '[a-z]' <<< $APP_ENV)
 LOWERCASE_SDK_ENV=$( tr '[A-Z]' '[a-z]' <<< $SDK_ENV)
 
-echo "===== Build Wikipedia .apk for AppCenter ====="
-./gradlew build --refresh-dependencies
-./gradlew app:dependencies
-./gradlew assembleDebug
 
 echo "===== Uploading .apk to AppCenter ====="
-appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "app/build/outputs/apk/debug/app-debug.apk" --group "Collaborators"
+appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators"
