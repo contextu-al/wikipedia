@@ -128,8 +128,8 @@ class ReadingListFragment : Fragment(), ReadingListItemActionsDialog.Callback {
         val searchItem = menu.findItem(R.id.menu_search_lists)
         val sortOptionsItem = menu.findItem(R.id.menu_sort_options)
         val iconColor = if (toolbarExpanded) ContextCompat.getColor(requireContext(), android.R.color.white) else ResourceUtil.getThemedColor(requireContext(), R.attr.toolbar_icon_color)
-        searchItem.icon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(iconColor, BlendModeCompat.SRC_IN)
-        sortOptionsItem.icon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(iconColor, BlendModeCompat.SRC_IN)
+        searchItem.icon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(iconColor, BlendModeCompat.SRC_IN)
+        sortOptionsItem.icon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(iconColor, BlendModeCompat.SRC_IN)
         readingList?.let {
             if (it.isDefault) {
                 menu.findItem(R.id.menu_reading_list_rename)?.let { item ->
