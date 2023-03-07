@@ -36,11 +36,11 @@ if [ "$GIT_BRANCH" = "staging" ]; then
 # Production
 elif [ "$GIT_BRANCH" = "main" ]; then
   SDK_ENV='Prod'
-  ./gradlew assembleProdDebug
+  ./gradlew assembleProd
   APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
 elif [ "$GIT_BRANCH" = "develop" ]; then
   SDK_ENV='Dev'
-  ./gradlew assembleDevDebug
+  ./gradlew assembleContinuousIntegration
   APK_LOCATION=app/build/outputs/apk/dev/debug/app-dev-debug.apk
 fi
 

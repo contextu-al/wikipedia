@@ -121,8 +121,10 @@ android {
     }
 
     productFlavors {
-
-
+        continuousIntegration {
+            flavorDimensions "ci"
+            resValue "string", "app_key", "Wikipedia"
+        }
         localDev {
             flavorDimensions "dev"
             resValue "string", "app_key", "Wikipedia"
