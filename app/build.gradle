@@ -121,7 +121,9 @@ android {
     }
 
     productFlavors {
-        dev {
+
+
+        localDev {
             flavorDimensions "dev"
             resValue "string", "app_key", "Wikipedia"
         }
@@ -186,13 +188,16 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    if(getCurrentFlavor().toLowerCase().contains("debug")){
+    println("Current flavor selected: " + getCurrentFlavor())
+    if(getCurrentFlavor().contentEquals("localDev")){
         implementation project(":contextual")
-    } else if(getCurrentFlavor().toLowerCase().contains("release")){
+    } else if(getCurrentFlavor().contentEquals("prod")){
         implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
     } else {
+        // This is used by CI(dev and staging)
         implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
     }
+
 
     implementation 'me.relex:circleindicator:2.1.6'
 
@@ -261,16 +266,20 @@ private static Properties loadProperties(File file) {
     return props
 }
 
+
 // https://stackoverflow.com/questions/30621183/how-to-get-current-flavor-in-gradle
+// A gradle sync will not get the correct `tskReqStr` variable. A build is required(e.g. assembleLocalDevDebug)
 def getCurrentFlavor() {
     Gradle gradle = getGradle()
     String tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
-
-    if( tskReqStr.contains( "prod" ) ){
+    if (tskReqStr.contains("prod")) {
         return "prod"
-    } else if( tskReqStr.contains("dev") ){
-        return "dev"
-    } else {
+    } else if(tskReqStr.contains("LocalDev")) {
+        return "localDev"
+    } else if(tskReqStr.contains("staging")){
         return "staging"
+    } else {
+        // Invoked by CI
+        return "dev"
     }
 }
