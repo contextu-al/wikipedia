@@ -5,9 +5,9 @@ dev:build:
   stage: build
   inherit:
     variables:
-      - UPSTREAM_CI_COMMIT_SHORT_SHA
+      - UPSTREAM_VERSION_NAME
   script:
-    - echo "UPSTREAM VERSION -> ${UPSTREAM_CI_COMMIT_SHORT_SHA}"
+    - echo "UPSTREAM VERSION -> ${UPSTREAM_VERSION_NAME}"
     - sh -x build.sh
   tags:
     - android
