@@ -7,6 +7,7 @@ dev:build:
     variables:
       - UPSTREAM_CI_COMMIT_SHORT_SHA
   script:
+    - echo "UPSTREAM VERSION -> ${UPSTREAM_CI_COMMIT_SHORT_SHA}"
     - sh -x build.sh
   tags:
     - android
