@@ -23,7 +23,6 @@ GIT_VERSION=$(git log -1 --format="%h")
 BUILD_TIME=$(date)
 
 ./gradlew build --refresh-dependencies
-./gradlew app:dependencies
 
 echo "===== Build Wikipedia .apk for AppCenter ====="
 # Default is Develop using above environment variables

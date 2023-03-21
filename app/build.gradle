@@ -39,7 +39,6 @@ android {
         applicationId 'org.wikipedia'
         minSdkVersion 21
         targetSdkVersion 30
-        compileSdkVersion 33
         versionCode 50370
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -191,13 +190,14 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
     println("Current flavor selected: " + getCurrentFlavor())
+    println("SDK Version: " + getContextualSdkVersion())
     if(getCurrentFlavor().contentEquals("localDev")){
         implementation project(":contextual")
     } else if(getCurrentFlavor().contentEquals("prod")){
-        implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
+        implementation (group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion())
     } else {
         // This is used by CI(dev and staging)
-        implementation (group: "com.pointzi.dev", name: "pointzi", version: "2.+")
+        implementation (group: "com.pointzi.dev", name: "pointzi", version: getContextualSdkVersion())
     }
 
 
@@ -284,4 +284,10 @@ def getCurrentFlavor() {
         // Invoked by CI
         return "dev"
     }
+}
+
+def getContextualSdkVersion(){
+    def Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    return properties.getProperty("VERSION_NAME", "")
 }

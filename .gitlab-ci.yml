@@ -7,7 +7,7 @@ dev:build:
     variables:
       - UPSTREAM_VERSION_NAME
   script:
-    - echo "UPSTREAM VERSION -> ${UPSTREAM_VERSION_NAME}"
+    - echo "VERSION_NAME=${UPSTREAM_VERSION_NAME}" >> local.properties
     - sh -x build.sh
   tags:
     - android
