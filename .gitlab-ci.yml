@@ -3,12 +3,8 @@ stages:
 
 dev:build:
   stage: build
-  inherit:
-    variables:
-      - UPSTREAM_VERSION_NAME
   script:
-    - echo "Using ${UPSTREAM_VERSION_NAME} of SDK"
-    - echo "VERSION_NAME=${UPSTREAM_VERSION_NAME}" >> local.properties
+    - cat local.properties
     - sh -x build.sh
   tags:
     - android
