@@ -3,6 +3,9 @@ stages:
 
 dev:build:
   stage: build
+  inherit:
+    variables:
+      - UPSTREAM_CI_COMMIT_SHORT_SHA
   script:
     - sh -x build.sh
   tags:
