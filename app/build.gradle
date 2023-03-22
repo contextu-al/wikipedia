@@ -142,6 +142,11 @@ android {
     lintOptions {
         abortOnError false
     }
+    configurations {
+        all {
+            exclude group: 'org.json', module: 'json'
+        }
+    }
 
 }
 
