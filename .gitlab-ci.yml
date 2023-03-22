@@ -11,7 +11,7 @@ dev:build:
     - CONTEXTUAL_SDK_TAG=$(git describe --tags --abbrev=0)
     - UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}-${UPSTREAM_VERSION_NAME}
     - cd ..
-    - echo $UPSTREAM_VERSION >> local.properties
+    - echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
     - sh -x build.sh
   tags:
     - android
