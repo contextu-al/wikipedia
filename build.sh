@@ -1,6 +1,6 @@
 #!/bin/sh -x
 
-if [ -z "$CONTEXTUAL_SDK_VERSION" ]; then
+if [ "$CONTEXTUAL_SDK_VERSION" = '' ]; then
     git clone https://gitlab.com/contextual/sdks/android/contextual-sdk-android
     cd contextual-sdk-android
     git checkout $UPSTREAM_VERSION_NAME
