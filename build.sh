@@ -1,5 +1,19 @@
 #!/bin/sh -x
 
+if [ -z "$CONTEXTUAL_SDK_VERSION" ]; then
+    git clone https://gitlab.com/contextual/sdks/android/contextual-sdk-android
+    cd contextual-sdk-android
+    git checkout $UPSTREAM_VERSION_NAME
+    CONTEXTUAL_SDK_TAG=$(git describe --tags --abbrev=0)
+    UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}-${UPSTREAM_VERSION_NAME}
+    cd ..
+    echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
+    echo "Building ${UPSTREAM_VERSION} of SDK"
+else
+    echo "VERSION_NAME=${CONTEXTUAL_SDK_VERSION}" >> local.properties
+    echo "Building ${CONTEXTUAL_SDK_VERSION} of SDK"
+fi
+
 echo "===== Ensuring correct language encoding and paths on build machine ====="
 source ~/.profile
 

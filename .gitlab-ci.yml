@@ -4,15 +4,6 @@ stages:
 dev:build:
   stage: build
   script:
-    - git clone https://gitlab.com/contextual/sdks/android/contextual-sdk-android
-    - cd contextual-sdk-android
-    - git checkout $UPSTREAM_VERSION_NAME
-    - CONTEXTUAL_SDK_TAG=$(git describe --tags --abbrev=0)
-    - UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}-${UPSTREAM_VERSION_NAME}
-    - cd ..
-    - echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
-    - echo "Building ${UPSTREAM_VERSION} of SDK"
-    - cat local.properties
     - sh -x build.sh
   tags:
     - android
