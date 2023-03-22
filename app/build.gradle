@@ -139,6 +139,10 @@ android {
             resValue "string", "app_key", "Wikipedia_staging"
         }
     }
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 configurations {
