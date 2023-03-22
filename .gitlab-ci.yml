@@ -11,7 +11,8 @@ dev:build:
     - UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}-${UPSTREAM_VERSION_NAME}
     - cd ..
     - echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
-    - echo "Building ${VERSION_NAME} of SDK"
+    - echo "Building ${UPSTREAM_VERSION} of SDK"
+    - cat local.properties
     - sh -x build.sh
   tags:
     - android
