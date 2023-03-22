@@ -5,7 +5,6 @@ dev:build:
   stage: build
   script:
     - echo "Building ${UPSTREAM_VERSION_NAME} of SDK"
-    - cat local.properties
     - sh -x build.sh
   tags:
     - android
