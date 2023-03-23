@@ -19,4 +19,13 @@ This project is maintained by Contextual and its demonstration how easily you ca
 
 Contextual Integration can be done by following the documentation [here](https://dashboard.contextu.al/docs/sdks/android/integration/)
 
+To run this application on your device, simply run
+
+```
+./gradlew installProdDebug
+```
+
+The `app_key` for this app is `Wikipedia`, it can be found in `app/build.gradle`. You may have to change the `app_key` to your
+account's `app_key` for the application to work. 
+
 
