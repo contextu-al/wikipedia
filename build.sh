@@ -1,22 +1,23 @@
 #!/bin/sh -x
 
-# Invoked without variable
-if [ "$CONTEXTUAL_SDK_VERSION" = '' ]; then
-    echo "VERSION_NAME=2.+" >> local.properties
-    echo "SDK Version not specified. Building 2.+ of SDK"
-elif [ -z "$CONTEXTUAL_SDK_VERSION" ]; then
+# If user has set CONTEXTUAL_SDK_VERSION in environment, it will be used.
+if [ "$CONTEXTUAL_SDK_VERSION" ]; then
     echo "VERSION_NAME=${CONTEXTUAL_SDK_VERSION}" >> local.properties
     echo "Building ${CONTEXTUAL_SDK_VERSION} of SDK"
-else
-  # Invoked from upstream SDK.
-    git clone https://gitlab.com/contextual/sdks/android/contextual-sdk-android
-    cd contextual-sdk-android
-    git checkout $UPSTREAM_VERSION_NAME
-    CONTEXTUAL_SDK_TAG=$(git describe --tags --abbrev=0)
-    UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}-${UPSTREAM_VERSION_NAME}
-    cd ..
-    echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
-    echo "Building ${UPSTREAM_VERSION} of SDK"
+fi
+
+
+# Invoked from upstream SDK pipeline.
+if [ "$UPSTREAM_VERSION_NAME" ]; then
+   git clone https://gitlab.com/contextual/sdks/android/contextual-sdk-android
+   cd contextual-sdk-android
+   git checkout $UPSTREAM_VERSION_NAME
+   CONTEXTUAL_SDK_TAG=$(git describe --tags --abbrev=0)
+   UPSTREAM_VERSION_GIT_HASH=-${UPSTREAM_VERSION_NAME}
+   UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}${UPSTREAM_VERSION_GIT_HASH}
+   cd ..
+   echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
+   echo "Building ${UPSTREAM_VERSION} of SDK"
 fi
 
 echo "===== Ensuring correct language encoding and paths on build machine ====="
@@ -41,7 +42,9 @@ SDK_ENV="Dev"
 GIT_VERSION=$(git log -1 --format="%h")
 BUILD_TIME=$(date)
 
-./gradlew build --refresh-dependencies
+if [ ! -f local.properties ]; then
+  touch local.properties
+fi
 
 echo "===== Build Wikipedia .apk for AppCenter ====="
 # Default is Develop using above environment variables
