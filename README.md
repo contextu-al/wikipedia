@@ -29,3 +29,14 @@ The `app_key` for this app is `Wikipedia`, it can be found in `app/build.gradle`
 account's `app_key` for the application to work. 
 
 
+## Screenshots
+
+The following screenshots shows what our SDK can do using the dashboard and live device side by side
+
+Example of PopupModal
+![PopupModal](screenshots/PopupModal.png)
+
+
+Example of NPS Survey
+![NPSSurvey](screenshots/NPSSurvey.png)
+
