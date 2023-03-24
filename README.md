@@ -1,4 +1,4 @@
-# Pointzi
+# Contextual
 
 https://contextu.al/
 
