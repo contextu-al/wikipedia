@@ -1,3 +1,11 @@
+# Pointzi
+
+https://contextu.al/
+
+![Main View](https://contextu.al/wp-content/uploads/2022/01/Contextual-icon-560x285.png)
+[![Twitter](https://img.shields.io/badge/Twitter-%40contextu_al-blue.svg)](https://twitter.com/contextu_al)
+
+
 ### Wikipedia Android app
 
 This repository contains the source code for the official [Wikipedia Android app](https://play.google.com/store/apps/details?id=org.wikipedia).
