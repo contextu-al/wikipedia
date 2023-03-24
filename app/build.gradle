@@ -24,7 +24,7 @@ def computeVersionName(label) {
 final JavaVersion JAVA_VERSION = JavaVersion.VERSION_1_8
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility = JAVA_VERSION
@@ -39,13 +39,13 @@ android {
         applicationId 'org.wikipedia'
         minSdkVersion 21
         targetSdkVersion 30
-        compileSdkVersion 31
         versionCode 50370
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
 
         vectorDrawables.useSupportLibrary = true
+        manifestPlaceholders += [app_key: "Wikipedia"]
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -118,6 +118,36 @@ android {
             enableSplit false
         }
     }
+
+    productFlavors {
+        continuousIntegration {
+            flavorDimensions "ci"
+            resValue "string", "app_key", "Wikipedia"
+        }
+        localDev {
+            flavorDimensions "dev"
+            resValue "string", "app_key", "Wikipedia"
+        }
+
+        prod {
+            flavorDimensions "prod"
+            resValue "string", "app_key", "Wikipedia"
+        }
+
+        staging {
+            flavorDimensions "staging"
+            resValue "string", "app_key", "Wikipedia_staging"
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    configurations {
+        all {
+            exclude group: 'org.json', module: 'json'
+        }
+    }
+
 }
 
 configurations {
@@ -168,8 +198,17 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    implementation (group: "com.pointzi", name: "pointzi", version: "2.+")
-
+    println("Current flavor selected: " + getCurrentFlavor())
+    println("SDK Version: " + getContextualSdkVersion())
+    if(getCurrentFlavor().contentEquals("localDev")){
+        implementation project(":contextual")
+    } else if(getCurrentFlavor().contentEquals("prod")){
+        implementation (group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion())
+    } else {
+        // This is used by CI(dev and staging)
+        implementation (group: "com.pointzi.dev", name: "pointzi", version: getContextualSdkVersion())
+    }
+    
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -235,4 +274,28 @@ private static Properties loadProperties(File file) {
         System.err.println "\"${file}\" not found"
     }
     return props
+}
+
+
+// https://stackoverflow.com/questions/30621183/how-to-get-current-flavor-in-gradle
+// A gradle sync will not get the correct `tskReqStr` variable. A build is required(e.g. assembleLocalDevDebug)
+def getCurrentFlavor() {
+    Gradle gradle = getGradle()
+    String tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+    if (tskReqStr.contains("prod")) {
+        return "prod"
+    } else if(tskReqStr.contains("LocalDev")) {
+        return "localDev"
+    } else if(tskReqStr.contains("staging")){
+        return "staging"
+    } else {
+        // Invoked by CI
+        return "dev"
+    }
+}
+
+def getContextualSdkVersion(){
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    return properties.getProperty("VERSION_NAME", "2.+")
 }

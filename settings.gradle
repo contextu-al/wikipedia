@@ -1,1 +1,3 @@
 include ':app'
+include ':contextual'
+project(":contextual").projectDir = file("../contextual-sdk-android")
