@@ -7,3 +7,10 @@ dev:build:
     - sh -x build.sh
   tags:
     - android
+
+prod:build:
+  stage: build
+  script:
+    - sh -x build.sh
+  tags:
+    - android
