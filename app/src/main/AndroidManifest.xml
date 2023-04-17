@@ -69,6 +69,7 @@
         <activity
             android:name=".main.MainActivity"
             android:windowSoftInputMode="adjustResize"
+            android:exported="true"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,11 +83,13 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Page"
             android:launchMode="singleTask"
+            android:exported="true"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
-            <intent-filter>
+            <intent-filter
+                android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
