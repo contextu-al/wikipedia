@@ -120,6 +120,10 @@ android {
     }
 
     productFlavors {
+        demo {
+            flavorDimensions "ci"
+            resValue "string", "app_key", "Wikipedia_demo"
+        }
         continuousIntegration {
             flavorDimensions "ci"
             resValue "string", "app_key", "Wikipedia"
@@ -207,13 +211,12 @@ dependencies {
     println("SDK Version: " + getContextualSdkVersion())
     if(getCurrentFlavor().contentEquals("localDev")){
         implementation project(":contextual")
-    } else if(getCurrentFlavor().contentEquals("prod")){
+    } else if(getCurrentFlavor().contentEquals("prod") || getCurrentFlavor().contentEquals("demo")){
         implementation (group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion())
     } else {
         // This is used by CI(dev and staging)
         implementation (group: "com.pointzi.dev", name: "pointzi", version: getContextualSdkVersion())
     }
-
 
     implementation 'me.relex:circleindicator:2.1.6'
 
