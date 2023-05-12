@@ -39,7 +39,8 @@ android {
         applicationId 'org.wikipedia'
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 50370
+        versionCode 50371
+        versionName "1.0.0"
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -166,7 +167,7 @@ configurations {
 apply from: '../gradle/src/test.gradle'
 apply from: '../gradle/src/checkstyle.gradle'
 apply from: '../gradle/src/ktlint.gradle'
-
+apply from: '../gradle/src/version.gradle'
 dependencies {
 
     // To keep the Maven Central dependencies up-to-date
