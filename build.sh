@@ -41,7 +41,10 @@ SDK_ENV="Dev"
 
 GIT_VERSION=$(git log -1 --format="%h")
 BUILD_TIME=$(date)
-
+./gradlew bumpPatchVersion
+git add app/build.gradle
+git commit -m "Bump wiki app version"
+git push
 if [ ! -f local.properties ]; then
   touch local.properties
 fi
