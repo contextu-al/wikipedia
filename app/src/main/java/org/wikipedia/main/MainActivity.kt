@@ -34,6 +34,7 @@ import org.wikipedia.views.TabCountsView
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callback {
@@ -56,7 +57,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         val date = simpleDateFormat.format(Date())
         setUserId("pz-wiki-dev-user - ${BuildConfig.PZ_VERSION_NAME} - $date")
         tagString(StreetHawk.Tagger.sh_email, "qa@contextu.al.com")
-        tagDatetime(StreetHawk.Tagger.sh_date_of_birth, "2001-01-01 01:01:01")
+        tagDatetime(StreetHawk.Tagger.sh_date_of_birth, OffsetDateTime.of(2001, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
         tagString(StreetHawk.Tagger.sh_gender, "female")
         tagString(StreetHawk.Tagger.sh_first_name, "QA")
         tagString(StreetHawk.Tagger.sh_last_name, "Contextual")
