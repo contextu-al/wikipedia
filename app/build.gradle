@@ -37,7 +37,7 @@ android {
 
     defaultConfig {
         applicationId 'org.wikipedia'
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 50371
         versionName "1.0.0"
