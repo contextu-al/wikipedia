@@ -44,7 +44,6 @@ BUILD_TIME=$(date)
 ./gradlew bumpPatchVersion
 git add app/build.gradle
 git commit -m "Bump wiki app version"
-git push
 if [ ! -f local.properties ]; then
   touch local.properties
 fi
@@ -55,15 +54,18 @@ echo "===== Build Wikipedia .apk for AppCenter ====="
 if [ "$GIT_BRANCH" = "staging" ]; then 
   APP_ENV="Staging"
   APP_KEY="Wikipedia_staging"
+  git push origin HEAD:develop
   ./gradlew assembleStagingDebug
   APK_LOCATION=app/build/outputs/apk/staging/debug/app-staging-debug.apk
 # Production
 elif [ "$GIT_BRANCH" = "main" ]; then
   SDK_ENV='Prod'
+  git push origin HEAD:main
   ./gradlew assembleProdDebug
   APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
 elif [ "$GIT_BRANCH" = "develop" ]; then
-  SDK_ENV='Dev'
+    git push origin HEAD:develop
+    SDK_ENV='Dev'
   ./gradlew assembleContinuousIntegrationDebug
   APK_LOCATION=app/build/outputs/apk/continuousIntegration/debug/app-continuousIntegration-debug.apk
 fi
