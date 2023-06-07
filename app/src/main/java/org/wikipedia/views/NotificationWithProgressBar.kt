@@ -120,6 +120,6 @@ class NotificationWithProgressBar {
         resultIntent.putExtra(intentExtra, true)
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return PendingIntent.getBroadcast(context, requestCode,
-                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                resultIntent, PendingIntent.FLAG_IMMUTABLE)
     }
 }
