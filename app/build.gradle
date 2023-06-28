@@ -37,9 +37,10 @@ android {
 
     defaultConfig {
         applicationId 'org.wikipedia'
-        minSdkVersion 24
-        targetSdkVersion 30
-        versionCode 50370
+        minSdkVersion 28
+        targetSdkVersion 31
+        versionCode 50376
+        versionName '1.0.4'
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -120,6 +121,10 @@ android {
     }
 
     productFlavors {
+        demo {
+            flavorDimensions "ci"
+            resValue "string", "app_key", "Wikipedia_demo"
+        }
         continuousIntegration {
             flavorDimensions "ci"
             resValue "string", "app_key", "Wikipedia"
@@ -147,9 +152,7 @@ android {
             exclude group: 'org.json', module: 'json'
         }
     }
-
 }
-
 configurations {
     compileClasspath.extendsFrom(implementation)
 }
@@ -157,7 +160,7 @@ configurations {
 apply from: '../gradle/src/test.gradle'
 apply from: '../gradle/src/checkstyle.gradle'
 apply from: '../gradle/src/ktlint.gradle'
-
+apply from: '../gradle/src/version.gradle'
 dependencies {
 
     // To keep the Maven Central dependencies up-to-date
@@ -171,7 +174,7 @@ dependencies {
     String kotlinCoroutinesVersion = '1.3.9'
     String firebaseMessagingVersion = '22.0.0'
     String mlKitVersion = '16.1.1'
-    String roomVersion = "2.4.0"
+    String roomVersion = "2.5.1"
     String espressoVersion = '3.4.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -201,14 +204,27 @@ dependencies {
     println("Current flavor selected: " + getCurrentFlavor())
     println("SDK Version: " + getContextualSdkVersion())
     if(getCurrentFlavor().contentEquals("localDev")){
-        implementation project(":contextual")
+        implementation project(":contextual") {
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
+    } else if(getCurrentFlavor().contentEquals("prod") || getCurrentFlavor().contentEquals("demo")){
+        implementation (group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion()) {
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
     } else if(getCurrentFlavor().contentEquals("prod")){
-        implementation (group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion())
+        implementation (group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion()){
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
     } else {
         // This is used by CI(dev and staging)
-        implementation (group: "com.pointzi.dev", name: "pointzi", version: getContextualSdkVersion())
+        implementation (group: "com.pointzi.dev", name: "pointzi", version: getContextualSdkVersion()){
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
     }
-    
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -281,10 +297,10 @@ private static Properties loadProperties(File file) {
 // A gradle sync will not get the correct `tskReqStr` variable. A build is required(e.g. assembleLocalDevDebug)
 def getCurrentFlavor() {
     Gradle gradle = getGradle()
-    String tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+    String tskReqStr = gradle.getStartParameter().getTaskRequests().toString().toLowerCase()
     if (tskReqStr.contains("prod")) {
         return "prod"
-    } else if(tskReqStr.contains("LocalDev")) {
+    } else if(tskReqStr.contains("localdev")) {
         return "localDev"
     } else if(tskReqStr.contains("staging")){
         return "staging"
