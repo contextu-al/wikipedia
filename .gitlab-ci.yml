@@ -1,14 +1,7 @@
 stages:
   - build
 
-dev:build:
-  stage: build
-  script:
-    - sh -x build.sh
-  tags:
-    - android
-
-prod:build:
+build:
   stage: build
   script:
     - sh -x build.sh
