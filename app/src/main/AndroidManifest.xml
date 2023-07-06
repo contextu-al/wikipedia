@@ -53,7 +53,7 @@
         android:theme="@style/AppTheme">
 
         <meta-data
-            android:name="com.pointzi.APP_KEY"
+            android:name="com.contextu.al.APP_KEY"
             android:value="${app_key}"/>
 
         <!-- Multi-window support on Samsung devices -->
