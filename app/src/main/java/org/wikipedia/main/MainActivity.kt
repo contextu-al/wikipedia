@@ -10,6 +10,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.contextu.al.BuildConfig
+import com.contextu.al.Contextual
 import com.contextu.al.Contextual.setUserId
 import com.contextu.al.Contextual.tagString
 import org.wikipedia.Constants
@@ -44,7 +45,6 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         val date = simpleDateFormat.format(Date())
