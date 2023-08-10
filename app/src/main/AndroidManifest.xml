@@ -56,6 +56,11 @@
             android:name="com.contextu.al.APP_KEY"
             android:value="${app_key}"/>
 
+        <!--Kept for compatibility reasons. SDK 2.x searches for pointzi -->
+        <meta-data
+            android:name="com.pointzi.APP_KEY"
+            android:value="${app_key}"/>
+
         <!-- Multi-window support on Samsung devices -->
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
