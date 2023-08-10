@@ -221,11 +221,6 @@ dependencies {
         }
     }
 
-    implementation project(":contextual"), {
-            exclude group: 'com.github.bumptech.glide'
-            exclude group: 'androidx.room'
-        }
-
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
