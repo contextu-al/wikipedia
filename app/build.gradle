@@ -40,7 +40,7 @@ android {
         minSdkVersion 28
         targetSdkVersion 31
         versionCode 50376
-        versionName '1.0.4'
+        versionName '1.0.6'
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -204,22 +204,27 @@ dependencies {
     println("Current flavor selected: " + getCurrentFlavor())
     println("SDK Version: " + getContextualSdkVersion())
     if(getCurrentFlavor().contentEquals("localDev")){
-        implementation project(":contextual") {
+        implementation project(":contextual"), {
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
     } else if(getCurrentFlavor().contentEquals("prod") || getCurrentFlavor().contentEquals("demo")) {
-        implementation(group: "com.contextu.al", name: "contextual", version: getContextualSdkVersion()) {
+        implementation(group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion()) {
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
     } else {
         // This is used by CI(dev and staging)
-        implementation (group: "com.contextu.al.dev", name: "contextual", version: getContextualSdkVersion()){
+        implementation (group: "com.pointzi.dev", name: "pointzi", version: getContextualSdkVersion()){
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
     }
+
+    implementation project(":contextual"), {
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
 
     implementation 'me.relex:circleindicator:2.1.6'
 
