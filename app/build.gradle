@@ -208,7 +208,7 @@ dependencies {
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
-    } else if(getCurrentFlavor().contentEquals("prod") || getCurrentFlavor().contentEquals("demo")) {
+    } else if(getCurrentFlavor().contains("prod") || getCurrentFlavor().contains("demo")) {
         implementation(group: "com.pointzi", name: "pointzi", version: getContextualSdkVersion()) {
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
