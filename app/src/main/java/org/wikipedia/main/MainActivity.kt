@@ -3,7 +3,6 @@ package org.wikipedia.main
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -11,11 +10,8 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.pointzi.BuildConfig
-import com.pointzi.Pointzi
 import com.pointzi.Pointzi.setUserId
-import com.pointzi.Pointzi.tagDatetime
 import com.pointzi.Pointzi.tagString
-import com.pointzi.core.StreetHawk
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.WikipediaApp
@@ -32,9 +28,6 @@ import org.wikipedia.util.FeedbackUtil
 import org.wikipedia.util.ResourceUtil
 import org.wikipedia.views.TabCountsView
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import java.util.*
 
 class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callback {
@@ -51,16 +44,15 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         val date = simpleDateFormat.format(Date())
-        setUserId("pz-wiki-prod-user - ${BuildConfig.PZ_VERSION_NAME} - $date")
-        tagString(StreetHawk.Tagger.sh_email, "qa@contextu.al.com")
-        tagString(StreetHawk.Tagger.sh_gender, "female")
-        tagString(StreetHawk.Tagger.sh_first_name, "QA")
-        tagString(StreetHawk.Tagger.sh_last_name, "Contextual")
-        tagString(StreetHawk.Tagger.sh_phone, "+1-415-802-2600")
+        setUserId("pz-wiki-dev-user - ${BuildConfig.PZ_VERSION_NAME} - $date")
+        tagString("sh_email", "qa@contextu.al.com")
+        tagString("sh_gender", "female")
+        tagString("sh_first_name", "QA")
+        tagString("sh_last_name", "Contextual")
+        tagString("sh_phone", "+1-415-802-2600")
         setShortcuts(this)
         setImageZoomHelper()
      /*   if (Prefs.isInitialOnboardingEnabled() && savedInstanceState == null) {
