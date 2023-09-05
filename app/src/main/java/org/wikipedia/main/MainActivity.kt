@@ -9,9 +9,11 @@ import android.view.View
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import com.pointzi.BuildConfig
-import com.pointzi.Pointzi.setUserId
-import com.pointzi.Pointzi.tagString
+import com.contextu.al.BuildConfig
+import com.contextu.al.Contextual
+import com.contextu.al.Contextual.setUserId
+import com.contextu.al.Contextual.tagString
+import com.contextu.al.core.CtxEventObserver
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.WikipediaApp
@@ -46,13 +48,22 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         super.onCreate(savedInstanceState)
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
-        val date = simpleDateFormat.format(Date())
-        setUserId("pz-wiki-dev-user - ${BuildConfig.PZ_VERSION_NAME} - $date")
-        tagString("sh_email", "qa@contextu.al.com")
-        tagString("sh_gender", "female")
-        tagString("sh_first_name", "QA")
-        tagString("sh_last_name", "Contextual")
-        tagString("sh_phone", "+1-415-802-2600")
+        Contextual.init(this.application, getString(R.string.app_key), object : CtxEventObserver{
+            override fun onInstallRegistered(installId: String, context: Context) {
+                val date = simpleDateFormat.format(Date())
+                setUserId("pz-wiki-dev-user - ${BuildConfig.CTX_VERSION_NAME} - $date")
+                tagString("sh_email", "qa@contextu.al.com")
+                tagString("sh_gender", "female")
+                tagString("sh_first_name", "QA")
+                tagString("sh_last_name", "Contextual")
+                tagString("sh_phone", "+1-415-802-2600")
+            }
+
+            override fun onInstallRegisterError(errorMsg: String) {
+            }
+
+        })
+
         setShortcuts(this)
         setImageZoomHelper()
      /*   if (Prefs.isInitialOnboardingEnabled() && savedInstanceState == null) {
