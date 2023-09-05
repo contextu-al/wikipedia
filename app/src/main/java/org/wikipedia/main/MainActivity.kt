@@ -13,7 +13,9 @@ import com.contextu.al.BuildConfig
 import com.contextu.al.Contextual
 import com.contextu.al.Contextual.setUserId
 import com.contextu.al.Contextual.tagString
+import com.contextu.al.Contextual.tagStringArray
 import com.contextu.al.core.CtxEventObserver
+import com.contextu.al.debug.Log
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.WikipediaApp
@@ -51,15 +53,13 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         Contextual.init(this.application, getString(R.string.app_key), object : CtxEventObserver{
             override fun onInstallRegistered(installId: String, context: Context) {
                 val date = simpleDateFormat.format(Date())
-                setUserId("pz-wiki-dev-user - ${BuildConfig.CTX_VERSION_NAME} - $date")
-                tagString("sh_email", "qa@contextu.al.com")
-                tagString("sh_gender", "female")
-                tagString("sh_first_name", "QA")
-                tagString("sh_last_name", "Contextual")
-                tagString("sh_phone", "+1-415-802-2600")
+                tagStringArray(mutableMapOf("sh_email" to "qa@contextu.al.com","sh_gender" to "female",  "" +
+                    "sh_first_name" to "QA", "sh_last_name" to "Contextual",
+                    "sh_cuid" to "pz-wiki-dev-user - ${BuildConfig.CTX_VERSION_NAME} - $date"))
             }
 
             override fun onInstallRegisterError(errorMsg: String) {
+                Log.e("Integration", errorMsg)
             }
 
         })
