@@ -18,6 +18,7 @@ allprojects {
         google()
         mavenCentral()
         mavenLocal()
+        maven { url "https://repo.contextu.al/sdk/contextual/" }
         maven { url "https://repo.pointzi.com/sdk/pointzi/" }
     }
 }
