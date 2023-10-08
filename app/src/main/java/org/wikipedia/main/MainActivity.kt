@@ -95,6 +95,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
                    .setNegativeButton("Dismiss"){ _, _ ->
                        guidePayload.dismissGuide
                    }
+                   .show()
 
             }
 
