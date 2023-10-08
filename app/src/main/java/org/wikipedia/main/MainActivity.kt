@@ -2,10 +2,12 @@ package org.wikipedia.main
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -14,8 +16,10 @@ import com.contextu.al.Contextual
 import com.contextu.al.Contextual.setUserId
 import com.contextu.al.Contextual.tagString
 import com.contextu.al.Contextual.tagStringArray
+import com.contextu.al.CtxUiObserver
 import com.contextu.al.core.CtxEventObserver
 import com.contextu.al.debug.Log
+import com.contextu.al.model.GuidePayload
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.WikipediaApp
@@ -50,8 +54,8 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         super.onCreate(savedInstanceState)
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
-        Contextual.init(this.application, getString(R.string.app_key), object : CtxEventObserver{
-            override fun onInstallRegistered(installId: String, context: Context) {
+        Contextual.init(this.application, "Wikipedia", object : CtxEventObserver{
+            override fun onInstallRegistered(installId: UUID, context: Context) {
                 val date = simpleDateFormat.format(Date())
                 tagStringArray(mutableMapOf("sh_email" to "qa@contextu.al.com","sh_gender" to "female",  "" +
                     "sh_first_name" to "QA", "sh_last_name" to "Contextual",
@@ -80,6 +84,21 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.mainToolbar.navigationIcon = null
+        Contextual.ctxUiObserver = object : CtxUiObserver{
+            override fun onMatched(guidePayload: GuidePayload) {
+               AlertDialog.Builder(this@MainActivity)
+                   .setTitle("SDK Extensibility")
+                   .setMessage("Feed ID: " + guidePayload.feedId)
+                   .setPositiveButton("Ok") { _,_ ->
+                       guidePayload.nextGuide
+                   }
+                   .setNegativeButton("Dismiss"){ _, _ ->
+                       guidePayload.dismissGuide
+                   }
+
+            }
+
+        }
     }
 
     override fun onResume() {
