@@ -57,7 +57,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         Contextual.init(this.application, "Wikipedia", object : CtxEventObserver{
             override fun onInstallRegistered(installId: UUID, context: Context) {
                 val date = simpleDateFormat.format(Date())
-                tagStringArray(mutableMapOf("sh_email" to "qa@contextu.al.com","sh_gender" to "female",  "" +
+                tagStringArray(mutableMapOf("sh_email" to "qa@contextu.al.com",
                     "sh_first_name" to "QA", "sh_last_name" to "Contextual",
                     "sh_cuid" to "pz-wiki-dev-user - ${BuildConfig.CTX_VERSION_NAME} - $date"))
             }
@@ -84,22 +84,6 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.mainToolbar.navigationIcon = null
-        Contextual.ctxUiObserver = object : CtxUiObserver{
-            override fun onMatched(guidePayload: GuidePayload) {
-               AlertDialog.Builder(this@MainActivity)
-                   .setTitle("SDK Extensibility")
-                   .setMessage("Feed ID: " + guidePayload.feedId)
-                   .setPositiveButton("Ok") { _,_ ->
-                       guidePayload.nextGuide
-                   }
-                   .setNegativeButton("Dismiss"){ _, _ ->
-                       guidePayload.dismissGuide
-                   }
-                   .show()
-
-            }
-
-        }
     }
 
     override fun onResume() {
