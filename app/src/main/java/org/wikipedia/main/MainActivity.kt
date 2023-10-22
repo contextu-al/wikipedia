@@ -54,7 +54,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         super.onCreate(savedInstanceState)
         val pattern = "dd-MMM-yyyy hh:mm:ss"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
-        Contextual.init(this.application, "Wikipedia", object : CtxEventObserver{
+        Contextual.init(this.application, getString(R.string.app_key), object : CtxEventObserver{
             override fun onInstallRegistered(installId: UUID, context: Context) {
                 val date = simpleDateFormat.format(Date())
                 tagStringArray(mutableMapOf("sh_email" to "qa@contextu.al.com",
