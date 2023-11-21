@@ -2,24 +2,18 @@ package org.wikipedia.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.contextu.al.BuildConfig
 import com.contextu.al.Contextual
-import com.contextu.al.Contextual.setUserId
-import com.contextu.al.Contextual.tagString
 import com.contextu.al.Contextual.tagStringArray
-import com.contextu.al.CtxUiObserver
 import com.contextu.al.core.CtxEventObserver
 import com.contextu.al.debug.Log
-import com.contextu.al.model.GuidePayload
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.WikipediaApp
@@ -221,6 +215,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.mainToolbar.navigationIcon = null
+        //        Contextual.addGuide(guideJson)
     }
 
     override fun onResume() {

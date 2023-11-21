@@ -52,10 +52,6 @@
         android:name=".WikipediaApp"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="com.contextu.al.APP_KEY"
-            android:value="${app_key}"/>
-
         <!--Kept for compatibility reasons. SDK 2.x searches for pointzi -->
         <meta-data
             android:name="com.pointzi.APP_KEY"
