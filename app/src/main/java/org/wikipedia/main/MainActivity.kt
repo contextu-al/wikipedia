@@ -198,7 +198,6 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
             }
 
         })
-       // Contextual.addGuide(guideJson)
         setShortcuts(this)
         setImageZoomHelper()
      /*   if (Prefs.isInitialOnboardingEnabled() && savedInstanceState == null) {
