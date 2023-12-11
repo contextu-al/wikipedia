@@ -127,7 +127,7 @@ android {
         }
         continuousIntegration {
             flavorDimensions "ci"
-            resValue "string", "app_key", "Wikipedia"
+            resValue "string", "app_key", "Wikipedia_staging"
         }
         localDev {
             flavorDimensions "dev"
@@ -220,7 +220,6 @@ dependencies {
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
-    }
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
