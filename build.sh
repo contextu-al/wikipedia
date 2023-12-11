@@ -65,9 +65,7 @@ elif [ "$GIT_BRANCH" = "main" ]; then
   APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
 elif [ "$GIT_BRANCH" = "develop" ]; then
     git push origin HEAD:develop
-    APP_ENV="Staging"
     SDK_ENV='Dev'
-    APP_KEY="Wikipedia_staging"
   ./gradlew assembleContinuousIntegrationDebug
   APK_LOCATION=app/build/outputs/apk/continuousIntegration/debug/app-continuousIntegration-debug.apk
 fi
