@@ -183,7 +183,7 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val pattern = "dd-MMM-yyyy hh:mm:ss"
+        val pattern = "dd-MMM-yyyy hh:mm"
         @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat(pattern)
         Contextual.init(this.application, getString(R.string.app_key), object : CtxEventObserver{
             override fun onInstallRegistered(installId: UUID, context: Context) {
