@@ -310,5 +310,5 @@ def getCurrentFlavor() {
 def getContextualSdkVersion(){
     Properties properties = new Properties()
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
-    return properties.getProperty("VERSION_NAME", "2.+")
+    return properties.getProperty("VERSION_NAME", "3.+")
 }
