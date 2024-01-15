@@ -204,10 +204,24 @@ dependencies {
     println("Current flavor selected: " + getCurrentFlavor())
     println("SDK Version: " + getContextualSdkVersion())
 
-    implementation(group: "com.contextu.al.dev", name: "contextual", version: getContextualSdkVersion()) {
-        exclude group: 'com.github.bumptech.glide'
-        exclude group: 'androidx.room'
+    if(getCurrentFlavor().contentEquals("localDev")){
+        implementation project(":contextual"), {
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
+    } else if(getCurrentFlavor().contains("prod") || getCurrentFlavor().contains("demo")) {
+        implementation(group: "com.contextu.al", name: "pointzi", version: getContextualSdkVersion()) {
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
+    } else {
+        // This is used by CI(dev and staging)
+        implementation (group: "com.contextu.al.dev", name: "pointzi", version: getContextualSdkVersion()){
+            exclude group: 'com.github.bumptech.glide'
+            exclude group: 'androidx.room'
+        }
     }
+
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.google.code.gson:gson:2.8.6'
