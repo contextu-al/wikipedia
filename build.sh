@@ -13,7 +13,7 @@ if [ "$UPSTREAM_VERSION_NAME" ]; then
    cd contextual-sdk-android
    git checkout $UPSTREAM_VERSION_NAME
    CONTEXTUAL_SDK_TAG=$(git describe --tags --abbrev=0)
-   UPSTREAM_VERSION_GIT_HASH=-${UPSTREAM_VERSION_NAME}
+   UPSTREAM_VERSION_GIT_HASH=+${UPSTREAM_VERSION_NAME}
    UPSTREAM_VERSION=${CONTEXTUAL_SDK_TAG}${UPSTREAM_VERSION_GIT_HASH}
    cd ..
    echo "VERSION_NAME=${UPSTREAM_VERSION}" >> local.properties
@@ -64,8 +64,9 @@ elif [ "$GIT_BRANCH" = "main" ]; then
   ./gradlew assembleProdDebug
   APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
 elif [ "$GIT_BRANCH" = "develop" ]; then
-    git push origin HEAD:develop
-    SDK_ENV='Dev'
+  git push origin HEAD:develop
+  APP_ENV="Staging"
+  APP_KEY="Wikipedia_staging"
   ./gradlew assembleContinuousIntegrationDebug
   APK_LOCATION=app/build/outputs/apk/continuousIntegration/debug/app-continuousIntegration-debug.apk
 fi

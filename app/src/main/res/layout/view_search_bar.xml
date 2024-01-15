@@ -8,6 +8,7 @@
     android:layout_marginVertical="3dp"
     android:clickable="true"
     android:focusable="true"
+    android:contentDescription="searchBarWikipediaIdentifier"
     android:transitionName="@string/transition_search_bar"
     app:elevation="0dp"
     app:radius="22dp">

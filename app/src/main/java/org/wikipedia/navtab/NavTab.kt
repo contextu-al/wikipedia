@@ -10,23 +10,23 @@ import org.wikipedia.model.EnumCodeMap
 import org.wikipedia.readinglist.ReadingListsFragment
 import org.wikipedia.suggestededits.SuggestedEditsTasksFragment
 
-enum class NavTab constructor(private val text: Int, private val id: Int, private val icon: Int) : EnumCode {
-    EXPLORE(R.string.nav_item_feed, View.generateViewId(), R.drawable.ic_globe) {
+enum class NavTab constructor(private val text: Int, private val id: Int, private val icon: Int, private val contentDescription: String) : EnumCode {
+    EXPLORE(R.string.nav_item_feed, View.generateViewId(), R.drawable.ic_globe, "Explore") {
         override fun newInstance(): Fragment {
             return FeedFragment.newInstance()
         }
     },
-    READING_LISTS(R.string.nav_item_saved, View.generateViewId(), R.drawable.ic_bookmark_white_24dp) {
+    READING_LISTS(R.string.nav_item_saved, View.generateViewId(), R.drawable.ic_bookmark_white_24dp, "Saved") {
         override fun newInstance(): Fragment {
             return ReadingListsFragment.newInstance()
         }
     },
-    SEARCH(R.string.nav_item_search, View.generateViewId(), R.drawable.ic_search_themed_24dp) {
+    SEARCH(R.string.nav_item_search, View.generateViewId(), R.drawable.ic_search_themed_24dp, "Search") {
         override fun newInstance(): Fragment {
             return HistoryFragment.newInstance()
         }
     },
-    EDITS(R.string.nav_item_suggested_edits, View.generateViewId(), R.drawable.ic_mode_edit_themed_24dp) {
+    EDITS(R.string.nav_item_suggested_edits, View.generateViewId(), R.drawable.ic_mode_edit_themed_24dp, "Edits") {
         override fun newInstance(): Fragment {
             return SuggestedEditsTasksFragment.newInstance()
         }
@@ -44,6 +44,9 @@ enum class NavTab constructor(private val text: Int, private val id: Int, privat
         return id
     }
 
+    fun contentDescription(): String {
+        return contentDescription
+    }
     abstract fun newInstance(): Fragment
 
     override fun code(): Int {
