@@ -210,13 +210,13 @@ dependencies {
             exclude group: 'androidx.room'
         }
     } else if(getCurrentFlavor().contains("prod") || getCurrentFlavor().contains("demo")) {
-        implementation(group: "com.contextu.al", name: "pointzi", version: getContextualSdkVersion()) {
+        implementation(group: "com.contextu.al", name: "contextual", version: getContextualSdkVersion()) {
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
     } else {
         // This is used by CI(dev and staging)
-        implementation (group: "com.contextu.al.dev", name: "pointzi", version: getContextualSdkVersion()){
+        implementation (group: "com.contextu.al.dev", name: "contextual", version: getContextualSdkVersion()){
             exclude group: 'com.github.bumptech.glide'
             exclude group: 'androidx.room'
         }
