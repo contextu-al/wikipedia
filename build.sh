@@ -38,6 +38,7 @@ echo "===== Setting Default Environment Variables ======"
 APP_ENV="Prod"
 APP_KEY="Wikipedia"
 SDK_ENV="Dev"
+touch local.properties
 
 GIT_VERSION=$(git log -1 --format="%h")
 BUILD_TIME=$(date)
