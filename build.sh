@@ -57,24 +57,33 @@ if [ "$GIT_BRANCH" = "staging" ]; then
   git push origin HEAD:develop
   ./gradlew assembleStagingDebug
   APK_LOCATION=app/build/outputs/apk/staging/debug/app-staging-debug.apk
+
+  echo "===== Uploading .apk to AppCenter ====="
+  appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators" --release-notes "$(git log -1)"
+
 # Production
 elif [ "$GIT_BRANCH" = "main" ]; then
   SDK_ENV='Prod'
   git push origin HEAD:main
   ./gradlew assembleProdDebug
   APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
+
+  echo "===== Uploading .apk to AppCenter ====="
+  appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators" --release-notes "$(git log -1)"
+
 elif [ "$GIT_BRANCH" = "develop" ]; then
   git push origin HEAD:develop
   APP_ENV="Staging"
   APP_KEY="Wikipedia_staging"
   ./gradlew assembleContinuousIntegrationDebug
   APK_LOCATION=app/build/outputs/apk/continuousIntegration/debug/app-continuousIntegration-debug.apk
+  echo "===== Uploading staging .apk to AppCenter ====="
+  appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators" --release-notes "$(git log -1)"
+
+  APP_ENV="Prod"
+  APP_KEY="Wikipedia"
+  ./gradlew assembleProdDebug
+  APK_LOCATION=app/build/outputs/apk/prod/debug/app-prod-debug.apk
+  echo "===== Uploading staging .apk to AppCenter ====="
+  appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators" --release-notes "$(git log -1)"
 fi
-
-# We use lowercase variables as part of the Artifactory BDD path below
-LOWERCASE_APP_ENV=$( tr '[A-Z]' '[a-z]' <<< $APP_ENV)
-LOWERCASE_SDK_ENV=$( tr '[A-Z]' '[a-z]' <<< $SDK_ENV)
-
-
-echo "===== Uploading .apk to AppCenter ====="
-appcenter distribute release --app Contextual/Wikipedia-"$SDK_ENV"SDK-"$APP_ENV"-"$APP_KEY"-Android --file "$APK_LOCATION" --group "Collaborators" --release-notes "$(git log -1)"
